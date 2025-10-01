@@ -16,10 +16,12 @@ dnf install php-pdo
 dnf install php-mysqlnd
 
 #### General
+`cd code`
 `composer install`
 `npm install`
 `npm audit fix`
 `npm run build`
+`cp .env.example .env`
 
 Docker compose start: `./vendor/bin/sail up`
 Generate key: `./vendor/bin/sail artisan key:generate`
