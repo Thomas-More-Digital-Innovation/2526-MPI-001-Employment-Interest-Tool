@@ -19,6 +19,7 @@ dnf install php-mysqlnd
 `composer install`
 `npm install`
 `npm audit fix`
+`npm run build`
 
 Docker compose start: `./vendor/bin/sail up`
 Generate key: `./vendor/bin/sail artisan key:generate`
