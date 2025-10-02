@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-6 ">
+<div class="flex flex-col gap-6 m-5">
     <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')"/>
 
     <!-- Session Status -->
@@ -29,7 +29,7 @@
             />
 
             @if (Route::has('password.request'))
-                <flux:link class="absolute top-0 text-sm end-0 text-white" :href="route('password.request')" wire:navigate>
+                <flux:link class="absolute top-0 text-xs end-0 text-white" :href="route('password.request')" wire:navigate>
                     {{ __('Forgot your password?') }}
                 </flux:link>
             @endif
