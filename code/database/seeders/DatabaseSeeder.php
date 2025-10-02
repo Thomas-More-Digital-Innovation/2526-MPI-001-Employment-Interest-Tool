@@ -23,6 +23,11 @@ class DatabaseSeeder extends Seeder
             'language_name' => 'English',
         ]);
 
+        \App\Models\Language::create([
+            'language_code' => 'nl',
+            'language_name' => 'Dutch',
+        ]);
+
         // Create a specific test user
         User::factory()->create([
             'first_name' => 'Test',
