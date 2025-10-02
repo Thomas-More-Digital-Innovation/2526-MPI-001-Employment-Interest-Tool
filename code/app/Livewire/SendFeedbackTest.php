@@ -15,6 +15,7 @@ class SendFeedbackTest extends Component
     public $showModal;
     public $message = '';
     public $type = '';
+    public $class = '';
 
     //This function will send an email to mentor during a test
     public function sendMail()

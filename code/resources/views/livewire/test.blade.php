@@ -33,7 +33,12 @@
             <audio x-ref="ouch">
                 <source src="{{ $audio }}" type="audio/mpeg" />
             </audio>
-            <button class="text-2xl">?</button>
+            <livewire:send-feedback-test
+                :class="'size-6 md:size-16'"
+                :clientName="$clientName"
+                :questionNumber="$questionNumber"
+                :test="$testName"
+            />
             <button wire:click="next" class="text-6xl"><flux:icon.arrow-right class="size-12 md:size-32" /></button>
         </div>
 
