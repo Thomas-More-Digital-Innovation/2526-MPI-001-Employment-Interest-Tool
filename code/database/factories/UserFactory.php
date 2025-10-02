@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Language;
+use App\Models\Organisation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,6 +25,18 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // Create or get default organisation
+        $organisation = Organisation::firstOrCreate(
+            ['name' => 'Test Organisation'],
+            ['active' => true]
+        );
+
+        // Create or get default language
+        $language = Language::firstOrCreate(
+            ['language_code' => 'en'],
+            ['language_name' => 'English']
+        );
+
         return [
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
@@ -32,8 +46,8 @@ class UserFactory extends Factory
             'is_sound_on' => fake()->boolean(),
             'vision_type' => fake()->randomElement(['normal', 'colorblind', 'low-vision']),
             'mentor_id' => null, // or set to a valid user id if needed
-            'organisation_id' => 1, // set to a valid organisation id or random
-            'language_id' => 1, // set to a valid language id or random
+            'organisation_id' => $organisation->organisation_id,
+            'language_id' => $language->language_id,
             'first_login' => true,
             'active' => true,
             'profile_picture_url' => fake()->imageUrl(),
