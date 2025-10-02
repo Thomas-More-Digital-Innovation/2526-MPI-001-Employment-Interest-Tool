@@ -28,13 +28,13 @@
 
         <!-- Controls -->
         <div class="flex justify-around items-center m-4">
-            <button wire:click="previous" class="text-6xl"><flux:icon.arrow-left class="size-32" /></button>
-            <button class="text-2xl" @click="$refs.ouch.play()"><flux:icon.speaker-wave class="size-24" /></button>
+            <button wire:click="previous" class="text-6xl"><flux:icon.arrow-left class="size-12 md:size-32" /></button>
+            <button class="text-2xl" @click="$refs.ouch.play()"><flux:icon.speaker-wave class="size-8 md:size-24" /></button>
             <audio x-ref="ouch">
                 <source src="{{ $audio }}" type="audio/mpeg" />
             </audio>
             <button class="text-2xl">?</button>
-            <button wire:click="next" class="text-6xl"><flux:icon.arrow-right class="size-32" /></button>
+            <button wire:click="next" class="text-6xl"><flux:icon.arrow-right class="size-12 md:size-32" /></button>
         </div>
 
         <!-- Progress bar -->
