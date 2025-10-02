@@ -23,15 +23,15 @@ jobs:
           php-version: 8.4
           tools: composer:v2
           coverage: xdebug
-
+      
+      - name: Change Directory
+        run: cd code
+      
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-      
-      - name: Change Directory
-        run: cd code
 
       - name: Install Node Dependencies
         run: npm i
