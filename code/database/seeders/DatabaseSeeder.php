@@ -98,5 +98,8 @@ class DatabaseSeeder extends Seeder
         $client->roles()->attach($clientRole);
 
        Faq::factory(5)->create();
+
+       // Run the TestSeeder to populate test and question data
+       $this->call(TestSeeder::class);
     }
 }
