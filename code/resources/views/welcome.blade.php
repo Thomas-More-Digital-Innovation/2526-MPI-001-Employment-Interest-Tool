@@ -63,6 +63,6 @@
                 </section>
             @endauth
         @endif
-        <x-faq/>
+        <x-faq pageHeight="min-h-screen"/>
     </body>
 </html>
