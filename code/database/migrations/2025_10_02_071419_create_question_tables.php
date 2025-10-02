@@ -43,31 +43,6 @@ return new class extends Migration
             $table->string('image_description')->nullable();
             $table->timestamps();
         });
-
-
-
-        // Schema::create('language', function (Blueprint $table) {
-        //     $table->id('language_id');
-        //     $table->string('language_code');
-        //     $table->string('language_name');
-        //     $table->timestamps();
-        // });
-
-        // Schema::create('question_translation', function (Blueprint $table) {
-        //     $table->id('question_translation_id');
-        //     $table->foreignId('question_id') // Foreign key to question table
-        //         ->constrained('question', 'question_id')
-        //         ->onDelete('cascade')
-        //         ->onUpdate('cascade');
-        //     $table->foreignId('language_id') // Foreign key to language table
-        //         ->constrained('language', 'language_id')
-        //         ->onDelete('cascade')
-        //         ->onUpdate('cascade');
-        //     $table->string('question');
-        //     $table->string('media_link')->nullable();
-        //     $table->string('sound_link')->nullable();
-        //     $table->timestamps();
-        // });
     }
 
     /**
@@ -75,8 +50,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Schema::dropIfExists('question_translation');
-        // Schema::dropIfExists('language');
         Schema::dropIfExists('question');
         Schema::dropIfExists('interest_field');
         Schema::dropIfExists('test');
