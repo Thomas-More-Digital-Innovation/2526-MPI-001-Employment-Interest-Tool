@@ -10,22 +10,22 @@
 1. composer run dev
 
 ### Linux:
-##### Fedora packages
-- `dnf install composer`
-- `dnf install php-pdo`
-- `dnf install php-mysqlnd`
+#### Fedora packages
+- dnf install composer
+- dnf install php-pdo
+- dnf install php-mysqlnd
+- php artisan migrate
+- php artisan db:seed
 
-##### First run:
-- `cd code`
-- `composer install`
-- `npm install`
-- `npm audit fix`
-- `npm run build`
-- `cp .env.example .env`
-- Docker compose start: `./vendor/bin/sail up`
-- Generate key: `./vendor/bin/sail artisan key:generate`
-- Migrate database: `./vendor/bin/sail artisan migrate`
-- Seed database: `./vendor/bin/sail artisan db:seed`
+<!-- #### General
+`cd code`
+`composer install`
+`npm install`
+`npm audit fix`
+`npm run build`
+`cp .env.example .env`
 
-##### From then on:
-1. Docker compose start: `./vendor/bin/sail up`
+Docker compose start: `./vendor/bin/sail up`
+Generate key: `./vendor/bin/sail artisan key:generate`
+Migrate database: `./vendor/bin/sail artisan migrate`
+Seed database: `./vendor/bin/sail artisan db:seed` -->
