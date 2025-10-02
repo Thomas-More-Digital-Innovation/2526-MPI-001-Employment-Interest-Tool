@@ -51,8 +51,14 @@ return new class extends Migration
                 ->constrained('users', 'user_id')
                 ->onDelete('set null')
                 ->onUpdate('cascade');
-            $table->foreignId('organisation_id'); // Foreign key to organisation table            
-            $table->foreignId('language_id'); // Foreign key to language table
+            $table->foreignId('organisation_id') // Foreign key to organisation table
+                ->constrained('organisation', 'organisation_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreignId('language_id') // Foreign key to language table
+                ->constrained('language', 'language_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->boolean('first_login')->default(true);
             $table->boolean('active')->default(true);
             $table->string('profile_picture_url')->nullable();
@@ -126,7 +132,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->foreignId('user_id') // Foreign key to user table
-                ->constrained('user', 'user_id')
+                ->constrained('users', 'user_id')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->timestamps();

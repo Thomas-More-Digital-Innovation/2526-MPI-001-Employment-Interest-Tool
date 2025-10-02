@@ -12,9 +12,15 @@
             </a>
 
             <flux:navlist variant="outline">
-                <flux:navlist.group :heading="__('Platform')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                </flux:navlist.group>
+                @if(auth()->user()->isSuperAdmin())
+                    @include('components.layouts.app.sidebar-superadmin')
+                @elseif(auth()->user()->isAdmin())
+                    @include('components.layouts.app.sidebar-admin')
+                @elseif(auth()->user()->isMentor())
+                    @include('components.layouts.app.sidebar-mentor')
+                @elseif(auth()->user()->isClient())
+                    @include('components.layouts.app.sidebar-client')
+                @endif
             </flux:navlist>
 
             <flux:spacer />

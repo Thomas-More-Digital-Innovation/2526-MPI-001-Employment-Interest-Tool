@@ -47,6 +47,7 @@
     <!-- Mobile User Menu -->
     <flux:dropdown position="top" align="end" class="lg:hidden">
         <flux:profile
+            :name="$user->first_name . ' ' . $user->last_name"
             :initials="$user->initials()"
             icon-trailing="chevron-down"
         />
