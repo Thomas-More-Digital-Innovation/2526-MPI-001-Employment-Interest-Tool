@@ -1,5 +1,4 @@
-{{-- remove dashboard or repurpose --}}
-
+{{-- remove dashboard or repurpose--}}
 <x-layouts.app :title="__('Dashboard')">
     <h1>HELLO</h1>
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
