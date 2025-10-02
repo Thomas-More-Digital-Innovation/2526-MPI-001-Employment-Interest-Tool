@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Faq;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,12 +13,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
+        $organisation = \App\Models\Organisation::create([
+            'name' => 'Test Organisation',
+            'active' => true,
         ]);
+
+        $language = \App\Models\Language::create([
+            'language_code' => 'en',
+            'language_name' => 'English',
+        ]);
+       
+        // Create a specific test user
+        User::factory()->create([
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'username' => 'testuser',
+            'password' => bcrypt('password'),
+            'organisation_id' => $organisation->organisation_id,
+            'language_id' => $language->language_id,
+        ]);
+      
+       Faq::factory(5)->create();
     }
 }

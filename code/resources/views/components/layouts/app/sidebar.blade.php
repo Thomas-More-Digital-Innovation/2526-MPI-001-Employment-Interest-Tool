@@ -31,9 +31,14 @@
 
             <!-- Desktop User Menu -->
             <flux:dropdown class="hidden lg:block" position="bottom" align="start">
+                <!-- <flux:profile
+                    :name="auth()->user() ? auth()->firstname()->name : ''"
+                    :initials="auth()->user() ? auth()->user()->lastname() : ''"
+                    icon:trailing="chevrons-up-down"
+                /> -->
                 <flux:profile
-                    :name="auth()->user()->name"
-                    :initials="auth()->user()->initials()"
+                    :name="'name'"
+                    :initials="'ZZ'"
                     icon:trailing="chevrons-up-down"
                 />
 
@@ -45,13 +50,16 @@
                                     <span
                                         class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
                                     >
-                                        {{ auth()->user()->initials() }}
+                                    ABC
+                                        <!-- {{ auth()->user() ? auth()->user()->firstname() : '' }} -->
                                     </span>
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+                                    <!-- <span class="truncate font-semibold">{{ auth()->user() ? auth()->user()->name : '' }}</span>
+                                    <span class="truncate text-xs">{{ auth()->user() ? auth()->user()->email : '' }}</span> -->
+                                    <span class="truncate font-semibold">Z</span>
+                                    <span class="truncate text-xs">X</span>
                                 </div>
                             </div>
                         </div>
@@ -59,11 +67,11 @@
 
                     <flux:menu.separator />
 
-                    <flux:menu.radio.group>
+                    <!-- <flux:menu.radio.group>
                         <flux:menu.item :href="route('settings.profile')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                     </flux:menu.radio.group>
 
-                    <flux:menu.separator />
+                    <flux:menu.separator /> -->
 
                     <form method="POST" action="{{ route('logout') }}" class="w-full">
                         @csrf
@@ -83,7 +91,7 @@
 
             <flux:dropdown position="top" align="end">
                 <flux:profile
-                    :initials="auth()->user()->initials()"
+                    :initials="auth()->user() ? auth()->user()->firstname() : ''"
                     icon-trailing="chevron-down"
                 />
 
@@ -95,13 +103,13 @@
                                     <span
                                         class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
                                     >
-                                        {{ auth()->user()->initials() }}
+                                        {{ auth()->user() ? auth()->user()->initials() : '' }}
                                     </span>
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
+                                    <span class="truncate font-semibold">{{ auth()->user() ? auth()->user()->name : '' }}</span>
+                                    <span class="truncate text-xs">{{ auth()->user() ? auth()->user()->email : '' }}</span>
                                 </div>
                             </div>
                         </div>
