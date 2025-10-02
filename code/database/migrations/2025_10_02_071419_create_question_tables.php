@@ -31,8 +31,14 @@ return new class extends Migration
             $table->string('question');
             $table->string('media_link')->nullable();
             $table->string('sound_link')->nullable();
-            $table->string('test_id'); # Foreign key to test table
-            $table->string('intrest_field_id'); # Foreign key to interest field table
+            $table->foreignId('test_id') // Foreign key to test table
+                ->constrained('test', 'test_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreignId('interest_field_id') // Foreign key to interest field table
+                ->constrained('interest_field', 'interest_field_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->integer('question_number');
             $table->string('image_description')->nullable();
             $table->timestamps();
