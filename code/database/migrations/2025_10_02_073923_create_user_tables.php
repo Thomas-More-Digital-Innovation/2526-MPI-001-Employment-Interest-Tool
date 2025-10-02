@@ -168,11 +168,16 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // TODO: FIX ORDER
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('intrest_field_translation');
+        Schema::dropIfExists('answer');
+        Schema::dropIfExists('test_attempt');
+        Schema::dropIfExists('organisation_test');
+        Schema::dropIfExists('user_test');
         Schema::dropIfExists('question_translation');
+        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
         Schema::dropIfExists('language');
+        Schema::dropIfExists('organisation');
     }
 };
