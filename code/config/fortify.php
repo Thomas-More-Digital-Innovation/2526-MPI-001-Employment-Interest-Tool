@@ -47,8 +47,6 @@ return [
 
     'username' => 'username',
 
-    // 'email' => 'username',
-
     /*
     |--------------------------------------------------------------------------
     | Lowercase Usernames

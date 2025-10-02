@@ -39,7 +39,7 @@ class Profile extends Component
                 'required',
                 'string',
                 'max:255',
-                Rule::unique(User::class)->ignore($user->id),
+                Rule::unique(User::class)->ignore($user->user_id, 'user_id'),
             ],
         ]);
 
