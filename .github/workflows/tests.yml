@@ -24,29 +24,33 @@ jobs:
           tools: composer:v2
           coverage: xdebug
       
-      - name: Change Directory
-        run: cd code
-      
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
+          cache-dependency-path: 'code/package-lock.json'
 
       - name: Install Node Dependencies
-        run: npm i
+        run: npm ci
+        working-directory: ./code
 
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
+        working-directory: ./code
 
       - name: Copy Environment File
         run: cp .env.example .env
+        working-directory: ./code
 
       - name: Generate Application Key
         run: php artisan key:generate
+        working-directory: ./code
 
       - name: Build Assets
         run: npm run build
+        working-directory: ./code
 
       - name: Run Tests
         run: php artisan test
+        working-directory: ./code
