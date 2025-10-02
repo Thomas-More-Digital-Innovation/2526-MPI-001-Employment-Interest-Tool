@@ -20,9 +20,19 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'first_name',
+        'last_name',
+        'username',
         'password',
+        'email',
+        'is_sound_on',
+        'vision_type',
+        'mentor_id',
+        'organisation_id',
+        'language_id',
+        'first_login',
+        'active',
+        'profile_picture_url',
     ];
 
     /**
@@ -43,7 +53,12 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'is_sound_on' => 'boolean',
+            'first_login' => 'boolean',
+            'active' => 'boolean',
+            'mentor_id' => 'integer',
+            'organisation_id' => 'integer',
+            'language_id' => 'integer',
             'password' => 'hashed',
         ];
     }
@@ -53,7 +68,7 @@ class User extends Authenticatable
      */
     public function initials(): string
     {
-        return Str::of($this->name)
+        return Str::of($this->first_name . ' ' . $this->last_name)
             ->explode(' ')
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
