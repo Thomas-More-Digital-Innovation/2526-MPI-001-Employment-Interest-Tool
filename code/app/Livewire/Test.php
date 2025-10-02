@@ -15,6 +15,10 @@ class Test extends Component
 
     public $totalQuestions = 2;
 
+    public $testName = 'Arbeidsinteressetest';
+    public $clientName = 'Jef Los';
+
+
     public function render()
     {
         return view('livewire.test')->layout('components.layouts.test');
