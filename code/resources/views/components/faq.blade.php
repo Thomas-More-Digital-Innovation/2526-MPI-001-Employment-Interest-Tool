@@ -1,5 +1,10 @@
+@props([
+    'pageHeight' => 'min-height',
+])
+
 @if ($faqs->isNotEmpty())
-<div class="container mx-auto px-4 mt-8 py-8">
+<section class="{{ $pageHeight }} flex justify-center items-center">
+<div class="container  px-4 mt-8 py-8 h-min" >
     <h2 class="text-4xl mb-6">FAQ</h2>
     <div class="space-y-4">
         @foreach ($faqs as $faq)
@@ -36,4 +41,5 @@
         @endforeach
     </div>
 </div>
+</section>
 @endif
