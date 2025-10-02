@@ -13,12 +13,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $organisation = \App\Models\Organisation::create([
+            'name' => 'Test Organisation',
+            'active' => true,
+        ]);
 
+        $language = \App\Models\Language::create([
+            'language_code' => 'en',
+            'language_name' => 'English',
+        ]);
+
+        // Create a specific test user
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'username' => 'testuser',
             'password' => bcrypt('password'),
+            'organisation_id' => $organisation->organisation_id,
+            'language_id' => $language->language_id,
         ]);
     }
 }
