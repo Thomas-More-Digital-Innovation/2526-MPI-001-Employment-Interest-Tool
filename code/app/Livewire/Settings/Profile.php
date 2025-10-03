@@ -8,15 +8,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Profile extends Component
 {
+    use WithFileUploads;
+
     public string $first_name = '';
     public string $last_name = '';
     public string $username = '';
     public bool $is_sound_on= false;
     public string $vision_type ='';
     public string $language_id = '';
+    public $profile_picture;
 
     /**
      * Mount the component.
@@ -45,11 +49,24 @@ class Profile extends Component
             'is_sound_on' => ['boolean'],
             'vision_type'=>['required', 'string', 'max:255'],
             'language_id' => ['required', 'exists:language,language_id'],
+            'profile_picture' => ['nullable', 'image', 'max:1024'], // 1MB limit
         ]);
+
+        if ($this->profile_picture) {
+            $path = $this->profile_picture->store('profile_pictures', 'public');
+            $validated['profile_picture_url'] = $path;
+        }
 
         $user->fill($validated);
         $user->save();
-        $this->dispatch('profile-updated', first_name: $user->first_name, last_name: $user->last_name, is_sound_on: $user->is_sound_on, language_id: $user->language_id, vision_type: $user->vision_type);
+        $this->dispatch('profile-updated',
+            first_name: $user->first_name,
+            last_name: $user->last_name,
+            is_sound_on: $user->is_sound_on,
+            language_id: $user->language_id,
+            vision_type: $user->vision_type,
+            profile_picture_url: $user->profile_picture_url
+        );
     }
 
     /**

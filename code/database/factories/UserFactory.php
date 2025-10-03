@@ -50,7 +50,7 @@ class UserFactory extends Factory
             'language_id' => $language->language_id,
             'first_login' => true,
             'active' => true,
-            'profile_picture_url' => fake()->imageUrl(),
+            'profile_picture_url' => null,
             'remember_token' => Str::random(10),
         ];
     }
