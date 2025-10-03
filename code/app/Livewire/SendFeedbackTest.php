@@ -11,6 +11,8 @@ class SendFeedbackTest extends Component
     public $clientName ='';
     public $questionNumber ='';
     public $test ='';
+    public $mailMentor='';
+    public $website='';
 
     public $showModal;
     public $message = '';
@@ -22,9 +24,14 @@ class SendFeedbackTest extends Component
     {
         try {
             //Use the build in mail class from Livewire
-            Mail::raw('Uw klant, '. $this->clientName .' heeft een probleem gemeld bij vraag ' . $this->questionNumber . ' van de ' . $this->test . '.', function($message){
-                $message->to("maurits.groen06@gmail.com")
-                    ->subject("Probleem gemeld bij vraag");
+            Mail::send('emails.send-feedback-test', [
+                'clientName' => $this->clientName,
+                'questionNUmber' => $this->questionNumber,
+                'test' => $this->test,
+                'website' => $this->website
+            ], function($message){
+                $message->to($this->mailMentor)
+                    ->subject("Onduidelijke vraag gemeld");
             });
 
             $this->message = 'De mail is verzonden naar uw mentor.';
