@@ -5,7 +5,9 @@ namespace App\Livewire;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\TestAttempt;
+use App\Models\User;
 use Carbon\Carbon;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Test extends Component
@@ -14,6 +16,7 @@ class Test extends Component
     public $testId = 1;
     public $userId = 4;
     public $testAttemptId;
+    public $previousEnabled = true;
 
     public $startTime;
 
@@ -27,15 +30,27 @@ class Test extends Component
 
     public $totalQuestions;
 
+    // For feedback button
     public $testName;
     public $clientName;
+    public $mailMentor;
 
-    public $previousEnabled = true;
+
+    public const UNCLEAR_CLOSED_EVENT = 'unclearClosedEvent';
 
     public function mount()
     {
+
+        if ($this->questionNumber == 1) {
+            $this->previousEnabled = false;
+        }
+
         $this->totalQuestions = Question::where('test_id', $this->testId)->count();
         $this->testName = \App\Models\Test::where('test_id', $this->testId)->value('test_name');
+        $this->clientName = User::where('user_id', '=', $this->userId)->value('first_name');
+
+        $mentorId = User::where('user_id', '=', $this->userId)->value('mentor_id');
+        $this->mailMentor = User::where('user_id', '=', $mentorId)->value('email');
 
         if (!$this->testAttemptId) {
             $this->testAttemptId = TestAttempt::create([
@@ -62,36 +77,38 @@ class Test extends Component
         return view('livewire.test')->layout('components.layouts.test');
     }
 
-    private function close()
+    public function close()
     {
        return redirect()->route('dashboard');
     }
 
-    private function like()
+    public function like()
     {
-        $this->answer(true, null);
+        $this->answer(true, false);
         $this->nextQuestion();
     }
 
-    private function dislike()
+    public function dislike()
     {
-        $this->answer(false, null);
+        $this->answer(false, false);
 
         $this->nextQuestion();
     }
 
-    private function previous()
+    public function previous()
     {
-
         $this->previousQuestion();
     }
 
-    private function next()
+    public function next()
     {
+        $this->answer(null, false);
+
         $this->nextQuestion();
     }
 
     /* DRY */
+
     private function nextQuestion()
     {
         if ($this->questionNumber == $this->totalQuestions) {
@@ -115,9 +132,11 @@ class Test extends Component
         $this->newQuestion();
     }
 
-    private function unclear()
+    #[On(self::UNCLEAR_CLOSED_EVENT)]
+    public function unclear()
     {
-
+        $this->answer(null, true);
+        $this->nextQuestion();
     }
 
     private function newQuestion()
