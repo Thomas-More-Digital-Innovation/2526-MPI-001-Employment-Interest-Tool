@@ -2,9 +2,10 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
@@ -18,7 +19,7 @@ class ResetPassword extends Component
     #[Locked]
     public string $token = '';
 
-    public string $email = '';
+    public string $username = '';
 
     public string $password = '';
 
@@ -31,7 +32,7 @@ class ResetPassword extends Component
     {
         $this->token = $token;
 
-        $this->email = request()->string('email')->value();
+        $this->username = request()->string('username')->value();
     }
 
     /**
@@ -41,35 +42,46 @@ class ResetPassword extends Component
     {
         $this->validate([
             'token' => ['required'],
-            'email' => ['required', 'string', 'email'],
+            'username' => ['required', 'string'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
-            $this->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) {
-                $user->forceFill([
-                    'password' => Hash::make($this->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
+        // Check if the token is valid
+        $tokenRecord = DB::table('password_reset_tokens')
+            ->where('username', $this->username)
+            ->first();
 
-                event(new PasswordReset($user));
-            }
-        );
-
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        if ($status != Password::PasswordReset) {
-            $this->addError('email', __($status));
-
+        if (!$tokenRecord || !hash_equals($tokenRecord->token, hash('sha256', $this->token))) {
+            $this->addError('username', __('This password reset token is invalid.'));
             return;
         }
 
-        Session::flash('status', __($status));
+        // Check if token is expired (60 minutes)
+        if (now()->diffInMinutes($tokenRecord->created_at) > 60) {
+            $this->addError('username', __('This password reset token has expired.'));
+            return;
+        }
+
+        // Find the user
+        $user = User::where('username', $this->username)->first();
+
+        if (!$user) {
+            $this->addError('username', __('We can\'t find a user with that username.'));
+            return;
+        }
+
+        // Reset the password
+        $user->forceFill([
+            'password' => Hash::make($this->password),
+            'remember_token' => Str::random(60),
+        ])->save();
+
+        // Delete the token
+        DB::table('password_reset_tokens')->where('username', $this->username)->delete();
+
+        event(new PasswordReset($user));
+
+        Session::flash('status', __('Your password has been reset.'));
 
         $this->redirectRoute('login', navigate: true);
     }

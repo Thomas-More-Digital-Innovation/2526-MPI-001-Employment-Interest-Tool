@@ -5,13 +5,13 @@
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <form method="POST" wire:submit="resetPassword" class="flex flex-col gap-6">
-        <!-- Email Address -->
+        <!-- Username -->
         <flux:input
-            wire:model="email"
-            :label="__('Email')"
-            type="email"
+            wire:model="username"
+            :label="__('Username')"
+            type="text"
             required
-            autocomplete="email"
+            autocomplete="username"
         />
 
         <!-- Password -->
