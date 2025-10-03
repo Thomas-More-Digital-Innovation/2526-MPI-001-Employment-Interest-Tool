@@ -51,12 +51,12 @@
                             <p class="text-1xl">The Labor Interest Test (AIT) was developed by Thomas More Kempen. It is a simple online, visual test that maps my preferences for different work areas. By rating photos of various types of work as positive, negative, or neutral, the AIT shows which work areas best match my interests.</p>
                         </div>
                         <div class="flex items-end justify-between p-10 min-h-1/2">
-                            <img src="LogoMPI.svg" class="h-8" alt="MPI-Osterloo Logo">
-                            <img src="TMLogo.svg" class="h-14" alt="Thomas More Logo">
+                            <img src="LogoMPI.svg" class="h-8 w-1/4" alt="MPI-Osterloo Logo">
+                            <img src="TMLogo.svg" class="h-14 w-1/4" alt="Thomas More Logo">
                         </div>
                     </div>
                     <div class="w-full md:w-1/2 flex items-center justify-center bg-accent-content ">
-                        <div class="md:w-1/2 bg-mpi p-9 rounded-3xl">
+                        <div class="md:w-1/2 bg-mpi rounded-3xl">
                             <livewire:auth.login />
                         </div>
                     </div>
