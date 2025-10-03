@@ -62,7 +62,9 @@
                         </div>
 
                         @error('profile_picture')
-                            <span class="text-red-600 test-sm">{{ $message }}</span>
+                            <span class="text-red-600 test-sm">
+                                {{ ($message && $message !== 'The profile_picture failed to upload.') ? $message : 'File must be jpg, jpeg, or png and at most 1024 KB.' }}
+                            </span>
                         @enderror
                     </div>
                 @endif

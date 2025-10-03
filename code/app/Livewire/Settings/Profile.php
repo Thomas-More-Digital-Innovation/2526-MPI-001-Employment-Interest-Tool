@@ -51,7 +51,6 @@ class Profile extends Component
             'is_sound_on' => ['boolean'],
             'vision_type'=>['required', 'string', 'max:255'],
             'language_id' => ['required', 'exists:language,language_id'],
-            'profile_picture' => ['nullable', 'image', 'max:1024', 'mimes:jpg,jpeg,png'],
         ]);
 
         // Compare with the value from the database before saving
@@ -60,19 +59,31 @@ class Profile extends Component
         foreach ($validated as $key => $value) {
             $user->$key = $value;
         }
-                
+
+        // Handle profile picture upload separately with validation
         if ($this->profile_picture) {
+            $allowedExtensions = ['jpg', 'jpeg', 'png'];
+            $extension = strtolower($this->profile_picture->getClientOriginalExtension());
+            $sizeKB = $this->profile_picture->getSize() / 1024;
+            if (!in_array($extension, $allowedExtensions)) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'profile_picture' => 'File must be jpg, jpeg, or png.'
+                ]);
+            }
+            if ($sizeKB > 1024) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'profile_picture' => 'File must be at most 1024 KB.'
+                ]);
+            }
             do {
-                $filename = uniqid() .'.' . $this->profile_picture->getClientOriginalExtension();
-                // Check if file exists in the profile_pictures disk
+                $filename = uniqid() .'.' . $extension;
                 $exists = \Storage::disk('profile_pictures')->exists($filename);
             } while ($exists);
             $path = $this->profile_picture->storeAs('', $filename, 'profile_pictures');
-            $validated['profile_picture_url'] = $filename;
+            $user->profile_picture_url = $filename;
             $this->profile_picture = null; // Clear file input
         }
 
-        $user->fill($validated);
         $user->save();
         $this->dispatch('profile-updated',
             first_name: $user->first_name,
