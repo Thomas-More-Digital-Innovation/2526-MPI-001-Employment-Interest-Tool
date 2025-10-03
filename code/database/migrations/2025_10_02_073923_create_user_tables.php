@@ -140,7 +140,7 @@ return new class extends Migration
 
         Schema::create('answer', function (Blueprint $table) {
             $table->id('answer_id');
-            $table->boolean('answer')->default(false);
+            $table->boolean('answer')->nullable();
             $table->integer('response_time');
             $table->boolean('unclear')->default(false);
             $table->foreignId('question_id') // Foreign key to question table
