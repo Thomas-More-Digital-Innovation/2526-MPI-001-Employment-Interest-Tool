@@ -13,7 +13,7 @@
                     @click="open = !open"
                     class="w-full flex items-center justify-between gap-3 p-3 sm:p-4 text-left bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
-                    <h3 class="text-base sm:text-lg md:text-xl font-semibold leading-snug text-gray-900 dark:text-gray-100">{{ $faq->question }}</h3>
+                    <h3 class="text-base sm:text-lg md:text-m font-semibold leading-snug text-gray-900 dark:text-gray-100">{{ $faq->question }}</h3>
                     <svg 
                         :class="{ 'rotate-180': open }"
                         class="w-6 h-6 flex-shrink-0 text-gray-700 dark:text-gray-300 transition-transform duration-200"
