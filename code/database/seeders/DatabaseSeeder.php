@@ -94,7 +94,6 @@ class DatabaseSeeder extends Seeder
             'mentor_id' => $mentor->user_id,
             'organisation_id' => $organisation->organisation_id,
             'language_id' => $language->language_id,
-            'mentor_id' => $mentor->user_id,
         ]);
         $client->roles()->attach($clientRole);
 
