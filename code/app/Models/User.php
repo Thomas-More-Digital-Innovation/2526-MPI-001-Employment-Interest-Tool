@@ -42,6 +42,19 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get the full URL for the user's profile picture.
+     */
+    public function getProfilePictureUrlAttribute()
+    {
+        $filename = $this->attributes['profile_picture_url'] ?? null;
+        if (!$filename) {
+            return null;
+        }
+        // Use route for private profile pictures
+        return route('profile.picture', ['filename' => $filename]);
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>

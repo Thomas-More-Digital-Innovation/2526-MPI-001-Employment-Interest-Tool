@@ -27,6 +27,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 
+    // Serve private profile pictures
+        Route::get('/profile/picture/{filename}', function ($filename) {
+            $disk = \Illuminate\Support\Facades\Storage::disk('profile_pictures');
+            if (!$disk->exists($filename)) {
+                abort(404);
+            }
+            $path = $disk->path($filename);
+            return response()->file($path);
+        })->name('profile.picture');
+
     // Role-based routes
     Route::middleware(['role:SuperAdmin'])->group(function () {
         Route::view('superadmin/system', 'roles.superadmin.system')->name('superadmin.system');
