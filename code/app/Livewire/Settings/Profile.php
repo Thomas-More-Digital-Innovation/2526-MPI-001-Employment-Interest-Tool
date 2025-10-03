@@ -49,12 +49,18 @@ class Profile extends Component
             'is_sound_on' => ['boolean'],
             'vision_type'=>['required', 'string', 'max:255'],
             'language_id' => ['required', 'exists:language,language_id'],
-            'profile_picture' => ['nullable', 'image', 'max:1024'], // 1MB limit
+            'profile_picture' => ['nullable', 'image', 'max:1024', 'mimes:jpg,jpeg,png'],
         ]);
 
         if ($this->profile_picture) {
-            $path = $this->profile_picture->store('profile_pictures', 'public');
-            $validated['profile_picture_url'] = $path;
+            do {
+                $filename = uniqid() .'.' . $this->profile_picture->getClientOriginalExtension();
+                // Check if file exists in the profile_pictures disk
+                $exists = \Storage::disk('profile_pictures')->exists($filename);
+            } while ($exists);
+            $path = $this->profile_picture->storeAs('', $filename, 'profile_pictures');
+            $validated['profile_picture_url'] = $filename;
+            $this->profile_picture = null; // Clear file input
         }
 
         $user->fill($validated);
@@ -77,5 +83,4 @@ class Profile extends Component
         return Language::all();
     }
 
-    // Email verification is not used in this application anymore.
 }
