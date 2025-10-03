@@ -3,19 +3,17 @@
     <div class="flex flex-col gap-6 items-start">
         <!-- Title + Result -->
         <div>
-            <h1 class="text-3xl md:text-4xl font-semibold mb-2">Test finished!</h1>
-            <p class="text-lg md:text-xl">
-                Based on this AIT test you are most interested in
-                @foreach($mainInterest as $interest)
-                    <h1>{{$interest->name}}</h1>
-                @endforeach
-            </p>
-        </div>
-
-        <!-- Other interests -->
-        <div>
-            <h2 class="text-2xl font-semibold mb-2">Other Interests</h2>
-            <p class="text-lg">{{$otherInterests}}</p>
+            @if($mainInterest)
+                <h3>Main Interest</h3>
+                <h2 class="text-2xl font-semibold mb-2">
+                    Interest Field: <strong>{{ $mainInterest['interest_field_name'] }}</strong><br>
+                </h2>
+                <p class="text-2xl">
+                    Times Selected: {{ $mainInterest['total'] }}
+                </p>
+            @else
+                <p>No interests found for this attempt.</p>
+            @endif
         </div>
     </div>
 
