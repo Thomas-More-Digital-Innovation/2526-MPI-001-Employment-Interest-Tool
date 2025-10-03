@@ -28,14 +28,13 @@ class Profile extends Component
      */
     public function mount(): void
     {
-//      $this->user = Auth::user()->load('roles');
     $user = Auth::user();
       $this->first_name = $user->first_name;
       $this->last_name = $user->last_name;
       $this->is_sound_on=$user->is_sound_on;
       $this->vision_type=$user->vision_type;
-    $this->language_id = $user->language_id;
-    $this->original_language_id = $user->language_id;
+      $this->language_id = $user->language_id;
+      $this->original_language_id = $user->language_id;
     }
 
     /**
