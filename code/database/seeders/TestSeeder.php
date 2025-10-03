@@ -15,54 +15,54 @@ class TestSeeder extends Seeder
         // Create interest fields first
         $interestFields = [
             [
-                'name' => 'Technology',
-                'description' => 'Interest in technology and digital solutions',
+                'name' => 'Technologie',
+                'description' => 'Interesse in technologie en digitale oplossingen',
             ],
             [
-                'name' => 'Healthcare',
-                'description' => 'Interest in healthcare and medical field',
+                'name' => 'Gezondheidszorg',
+                'description' => 'Interesse in gezondheidszorg en medisch gebied',
             ],
             [
-                'name' => 'Education',
-                'description' => 'Interest in education and teaching',
+                'name' => 'Onderwijs',
+                'description' => 'Interesse in onderwijs en lesgeven',
             ],
         ];
 
         DB::table('interest_field')->insert($interestFields);
 
         // Get the inserted interest field IDs
-        $techFieldId = DB::table('interest_field')->where('name', 'Technology')->first()->interest_field_id;
-        $healthFieldId = DB::table('interest_field')->where('name', 'Healthcare')->first()->interest_field_id;
-        $eduFieldId = DB::table('interest_field')->where('name', 'Education')->first()->interest_field_id;
+        $techFieldId = DB::table('interest_field')->where('name', 'Technologie')->first()->interest_field_id;
+        $healthFieldId = DB::table('interest_field')->where('name', 'Gezondheidszorg')->first()->interest_field_id;
+        $eduFieldId = DB::table('interest_field')->where('name', 'Onderwijs')->first()->interest_field_id;
 
         // Create a test
         $testId = DB::table('test')->insertGetId([
-            'test_name' => 'Employment Interest Test',
+            'test_name' => 'Arbeidsinteresse Test',
             'active' => true,
         ]);
 
         // Create three questions with different interest fields
         $questions = [
             [
-                'question' => 'How comfortable are you with using computer software and digital tools?',
+                'question' => 'Hoe comfortabel voel je je bij het gebruik van computersoftware en digitale hulpmiddelen?',
                 'test_id' => $testId,
                 'interest_field_id' => $techFieldId,
                 'question_number' => 1,
-                'image_description' => 'Computer with software interface',
+                'image_description' => 'Computer met software-interface',
             ],
             [
-                'question' => 'Would you be interested in helping people with their health and wellbeing?',
+                'question' => 'Zou je geïnteresseerd zijn in het helpen van mensen met hun gezondheid en welzijn?',
                 'test_id' => $testId,
                 'interest_field_id' => $healthFieldId,
                 'question_number' => 2,
-                'image_description' => 'Healthcare professional helping a patient',
+                'image_description' => 'Zorgprofessional die een patiënt helpt',
             ],
             [
-                'question' => 'Do you enjoy explaining concepts and helping others learn new skills?',
+                'question' => 'Vind je het leuk om concepten uit te leggen en anderen te helpen nieuwe vaardigheden te leren?',
                 'test_id' => $testId,
                 'interest_field_id' => $eduFieldId,
                 'question_number' => 3,
-                'image_description' => 'Teacher presenting to students',
+                'image_description' => 'Leraar die presenteert aan studenten',
             ],
         ];
 
@@ -78,6 +78,30 @@ class TestSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            // Create a test attempt for the client user
+            $testAttemptId = DB::table('test_attempt')->insertGetId([
+                'test_id' => $testId,
+                'user_id' => $clientUser->user_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Get all questions for this test
+            $testQuestions = DB::table('question')->where('test_id', $testId)->get();
+
+            // Create answers for each question
+            foreach ($testQuestions as $question) {
+                DB::table('answer')->insert([
+                    'answer' => rand(0, 1), // Random true/false answer
+                    'response_time' => rand(1000, 15000), // Random response time between 1-15 seconds (in milliseconds)
+                    'unclear' => 0,
+                    'question_id' => $question->question_id,
+                    'test_attempt_id' => $testAttemptId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
     }
 }
