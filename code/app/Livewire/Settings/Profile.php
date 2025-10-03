@@ -17,6 +17,7 @@ class Profile extends Component
     public bool $is_sound_on= false;
     public string $vision_type ='';
     public string $language_id = '';
+    protected string $original_language_id = '';
 
     /**
      * Mount the component.
@@ -24,12 +25,13 @@ class Profile extends Component
     public function mount(): void
     {
 //      $this->user = Auth::user()->load('roles');
-      $user= Auth::user()->load('roles');
+    $user = Auth::user();
       $this->first_name = $user->first_name;
       $this->last_name = $user->last_name;
       $this->is_sound_on=$user->is_sound_on;
       $this->vision_type=$user->vision_type;
-      $this->language_id = $user->language_id;
+    $this->language_id = $user->language_id;
+    $this->original_language_id = $user->language_id;
     }
 
     /**
@@ -47,9 +49,17 @@ class Profile extends Component
             'language_id' => ['required', 'exists:language,language_id'],
         ]);
 
-        $user->fill($validated);
+        // Compare with the value from the database before saving
+        $languageChanged = $validated['language_id'] != $user->language_id;
+
+        foreach ($validated as $key => $value) {
+            $user->$key = $value;
+        }
         $user->save();
         $this->dispatch('profile-updated', first_name: $user->first_name, last_name: $user->last_name, is_sound_on: $user->is_sound_on, language_id: $user->language_id, vision_type: $user->vision_type);
+        if ($languageChanged) {
+            $this->dispatch('reload-page-for-language');
+        }
     }
 
     /**

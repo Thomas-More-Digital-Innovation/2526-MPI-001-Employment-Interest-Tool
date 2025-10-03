@@ -20,7 +20,7 @@ Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index
     ->middleware(['auth'])
     ->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\SetUserLocale::class])->group(function () {
 
     Route::get('/test', Test::class)->name('client.test');
 
