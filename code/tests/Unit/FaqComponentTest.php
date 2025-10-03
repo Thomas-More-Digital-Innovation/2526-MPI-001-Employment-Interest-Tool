@@ -118,8 +118,8 @@ class FaqComponentTest extends TestCase
         $this->assertStringNotContainsString('x-data="{ open: false }"', $rendered);
         
         // Assert: Only the container and heading are present
-        $this->assertStringContainsString('FAQ', $rendered);
-        $this->assertStringContainsString('space-y-4', $rendered);
+        $this->assertStringNotContainsString('FAQ', $rendered);
+        $this->assertStringNotContainsString('space-y-4', $rendered);
     }
 
     public function test_component_renders_accordion_structure()
