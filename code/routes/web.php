@@ -8,6 +8,7 @@ use App\Livewire\Test;
 use App\Models\Faq;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use App\Livewire\TestResults;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -29,6 +30,18 @@ Route::middleware(['auth', \App\Http\Middleware\SetUserLocale::class])->group(fu
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+
+    Route::get('/profile/picture/{filename}', function ($filename) {
+        $disk = \Illuminate\Support\Facades\Storage::disk('profile_pictures');
+        if (!$disk->exists($filename)) {
+            abort(404);
+        }
+        $path = $disk->path($filename);
+        return response()->file($path);
+    })->name('profile.picture');
+
+    // Route to view Test Results
+    Route::get('/test-results', TestResults::class);
 
     // Role-based routes
     Route::middleware(['role:SuperAdmin'])->group(function () {
