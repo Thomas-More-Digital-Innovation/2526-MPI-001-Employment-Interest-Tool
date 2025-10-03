@@ -168,6 +168,7 @@
                                                     <!-- Message -->
                                                     <p style="margin:0; font-family:Inter,Arial,sans-serif; font-size:15px; font-weight:500; line-height:22px; text-align:center; color:#424040;">
                                                         Uw klant, {{$clientName}} heeft een probleem gemeld bij vraag {{$questionNUmber}} van {{$test}}.
+                                                        De vraag : "{{$question}}"
                                                     </p>
 
                                                     <div style="line-height:40px; font-size:1px;">&nbsp;</div>
