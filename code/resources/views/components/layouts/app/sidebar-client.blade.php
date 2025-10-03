@@ -5,6 +5,6 @@
 
     <!-- Client specific navigation -->
     <flux:navlist.group :heading="__('Client Specific SideBar')" class="grid">
-        <flux:navlist.item icon="home" :href="route('client.example')" :current="request()->routeIs('client.example')" wire:navigate>{{ __('Example') }}</flux:navlist.item>
+        <flux:navlist.item icon="home" :href="route('client.example')" :current="request()->routeIs('client.example')" wire:navigate>{{ __('Take test') }}</flux:navlist.item>
     </flux:navlist.group>
 </flux:navlist>
