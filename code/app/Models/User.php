@@ -133,6 +133,30 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the test attempts that belong to the user.
+     */
+    public function testAttempts()
+    {
+        return $this->hasMany(TestAttempt::class, 'user_id', 'user_id');
+    }
+
+    /**
+     * Get the user tests that belong to the user.
+     */
+    public function userTests()
+    {
+        return $this->hasMany(UserTest::class, 'user_id', 'user_id');
+    }
+
+    /**
+     * Get the tests that are assigned to the user.
+     */
+    public function tests()
+    {
+        return $this->belongsToMany(Test::class, 'user_test', 'user_id', 'test_id');
+    }
+
+    /**
      * Check if user has a specific role.
      */
     public function hasRole(string $role): bool
