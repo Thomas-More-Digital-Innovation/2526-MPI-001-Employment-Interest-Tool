@@ -14,19 +14,22 @@ class Profile extends Component
     public string $first_name = '';
     public string $last_name = '';
     public string $username = '';
+    public bool $is_sound_on= false;
+    public string $vision_type ='';
     public string $language_id = '';
-    public $user;
 
     /**
      * Mount the component.
      */
     public function mount(): void
     {
-        $this->user = Auth::user()->load('roles');
-        $this->first_name = $this->user->first_name;
-        $this->last_name = $this->user->last_name;
-        $this->username = $this->user->username;
-        $this->language_id = $this->user->language_id;
+//      $this->user = Auth::user()->load('roles');
+      $user= Auth::user()->load('roles');
+      $this->first_name = $user->first_name;
+      $this->last_name = $user->last_name;
+      $this->is_sound_on=$user->is_sound_on;
+      $this->vision_type=$user->vision_type;
+      $this->language_id = $user->language_id;
     }
 
     /**
@@ -39,19 +42,14 @@ class Profile extends Component
         $validated = $this->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'username' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique(User::class)->ignore($user->user_id, 'user_id'),
-            ],
+            'is_sound_on' => ['boolean'],
+            'vision_type'=>['required', 'string', 'max:255'],
             'language_id' => ['required', 'exists:language,language_id'],
         ]);
 
         $user->fill($validated);
         $user->save();
-
-        $this->dispatch('profile-updated', username: $user->username);
+        $this->dispatch('profile-updated', first_name: $user->first_name, last_name: $user->last_name, is_sound_on: $user->is_sound_on, language_id: $user->language_id, vision_type: $user->vision_type);
     }
 
     /**
