@@ -24,6 +24,37 @@
                 </flux:select>
             </div>
 
+            <!-- Profile picture selection -->
+            <div class="flex flex-col space-y-2">
+                <flux:label>{{__('Profielfoto')}}</flux:label>
+
+                @if (!empty(Auth::user()->profile_picture_url))
+                    <img src="{{ asset('storage/' . Auth::user()->profile_picture_url) }}"
+                         alt="Profielfoto"
+                         class="w-24 h-24 rounded-full">
+                @else
+                    <div class="w-24 h-24 my-4 rounded-full bg-gray-200 flex items-center justify-center">
+                        <flux:icon.user class="w-12 h-12 text-gray-500" />
+                    </div>
+                @endif
+
+                <div>
+                    <label for="profile_picture"
+                           class="px-4 py-2 border rounded-md shadow-sm text-sm text-gray-700 bg-white cursor-pointer hover:bg-gray-100">
+                        {{ __('Kies bestand') }}
+                    </label>
+                    <input id="profile_picture"
+                           type="file"
+                           wire:model="profile_picture"
+                           accept="image/*"
+                           class="hidden">
+                </div>
+
+                @error('profile_picture')
+                    <span class="text-red-600 test-sm">{{ $message }}</span>
+                @enderror
+            </div>
+
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
                     <flux:button variant="primary" type="submit" class="w-full">{{ __('Opslaan') }}</flux:button>
