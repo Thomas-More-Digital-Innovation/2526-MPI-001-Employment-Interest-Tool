@@ -23,8 +23,6 @@ class DashboardController extends Controller
             return view('roles.mentor.dashboard');
         } elseif ($user->isClient()) {
             return view('roles.client.dashboard');
-        } else {
-            return view('welcome');
         }
         
         // Fallback for users without roles
