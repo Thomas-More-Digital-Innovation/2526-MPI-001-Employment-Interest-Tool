@@ -67,5 +67,17 @@ class TestSeeder extends Seeder
         ];
 
         DB::table('question')->insert($questions);
+
+        // Attach the test to the client user
+        $clientUser = DB::table('users')->where('username', 'client')->first();
+        
+        if ($clientUser) {
+            DB::table('user_test')->insert([
+                'user_id' => $clientUser->user_id,
+                'test_id' => $testId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

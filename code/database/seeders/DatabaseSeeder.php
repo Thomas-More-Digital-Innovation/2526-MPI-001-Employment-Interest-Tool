@@ -91,6 +91,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'client',
             'email' => 'client@example.com',
             'password' => bcrypt('password'),
+            'mentor_id' => $mentor->user_id,
             'organisation_id' => $organisation->organisation_id,
             'language_id' => $language->language_id,
             'mentor_id' => $mentor->user_id,
