@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Auth;
 class ClientTestPicker extends Component
 {
     public $tests;
-    protected $userId;
+    public $userId;
 
     public function startTest(int $testId) {
-        session([
-            'testId' => $testId,
-            'userId' => $this->userId,
-        ]);
+        session(['userId' => $this->userId]);
+        session()->flash(
+            'testId', $testId
+        );
         return redirect()->route('client.test');
     }
 

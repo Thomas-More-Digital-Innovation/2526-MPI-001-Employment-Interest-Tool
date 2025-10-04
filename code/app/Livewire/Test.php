@@ -2,13 +2,25 @@
 
 namespace App\Livewire;
 
+use App\Models\Answer;
 use App\Models\Question;
+use App\Models\TestAttempt;
+use App\Models\User;
+use Carbon\Carbon;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Test extends Component
 {
 
-    public $testId = 1;
+    public $testId;
+    public $userId;
+    public $testAttemptId;
+    public $previousEnabled = true;
+
+    public $startTime;
+
+    public $question;
     public $title;
     public $image;
     public $imageDescription;
@@ -18,16 +30,43 @@ class Test extends Component
 
     public $totalQuestions;
 
+    // For feedback button
     public $testName;
     public $clientName;
+    public $mailMentor;
 
-    public $previousEnabled = true;
+
+    public const UNCLEAR_CLOSED_EVENT = 'unclearClosedEvent';
 
     public function mount()
     {
+        $this->testId = session('testId');
+        $this->userId = session('userId');
+        $this->testAttemptId = session('testAttemptId');
+
+        if (!($this->userId and $this->testId)) {
+            return redirect()->route('dashboard');
+        }
+
+        if ($this->questionNumber == 1) {
+            $this->previousEnabled = false;
+        }
+
         $this->totalQuestions = Question::where('test_id', $this->testId)->count();
         $this->testName = \App\Models\Test::where('test_id', $this->testId)->value('test_name');
+        $this->clientName = User::where('user_id', '=', $this->userId)->value('first_name');
 
+        $mentorId = User::where('user_id', '=', $this->userId)->value('mentor_id');
+        $this->mailMentor = User::where('user_id', '=', $mentorId)->value('email');
+
+        if (!$this->testAttemptId) {
+            $this->testAttemptId = TestAttempt::create([
+                'test_id' => $this->testId,
+                'user_id' => $this->userId,
+            ])->test_attempt_id;
+        }
+
+        $this->newQuestion();
     }
 
     public function render()
@@ -52,34 +91,45 @@ class Test extends Component
 
     public function like()
     {
+        $this->answer(true, false);
         $this->nextQuestion();
     }
 
     public function dislike()
     {
+        $this->answer(false, false);
+
         $this->nextQuestion();
     }
 
     public function previous()
     {
-
         $this->previousQuestion();
     }
 
     public function next()
     {
+        $this->answer(null, false);
+
         $this->nextQuestion();
     }
 
     /* DRY */
+
     private function nextQuestion()
     {
         if ($this->questionNumber == $this->totalQuestions) {
-            return;
+
+            session()->flash(
+                    'testAttemptId', $this->testAttemptId
+            );
+
+            return redirect()->route('client.test-result');
         }
 
         $this->questionNumber++;
         $this->previousEnabled = true;
+        $this->newQuestion();
 
     }
 
@@ -91,5 +141,40 @@ class Test extends Component
 
         $this->questionNumber--;
         $this->previousEnabled = false;
+        $this->newQuestion();
     }
+
+    #[On(self::UNCLEAR_CLOSED_EVENT)]
+    public function unclear()
+    {
+        $this->answer(null, true);
+        $this->nextQuestion();
+    }
+
+    private function newQuestion()
+    {
+        $this->startTime = Carbon::now();
+    }
+
+    private function answer($answer, $unclear)
+    {
+        $now = Carbon::now();
+
+        $question = Question::where('test_id', $this->testId)
+            ->where('question_number', $this->questionNumber)
+            ->firstOrFail();
+
+        Answer::updateOrCreate(
+            [
+                'test_attempt_id' => $this->testAttemptId,
+                'question_id'     => $question->question_id,
+            ],
+            [
+                'answer' => $answer,
+                'unclear' => $unclear,
+                'response_time' => $this->startTime->diffInSeconds($now)
+            ]
+        );
+    }
+
 }

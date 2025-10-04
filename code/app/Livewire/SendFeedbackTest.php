@@ -20,6 +20,8 @@ class SendFeedbackTest extends Component
     public $type = '';
     public $class = '';
 
+    public $onCloseEvent = 'closeModal'; // Default event name
+
     //This function will send an email to mentor during a test
     public function sendMail()
     {
@@ -49,5 +51,11 @@ class SendFeedbackTest extends Component
     public function render()
     {
         return view('livewire.send-feedback-test');
+    }
+
+    public function closeModal() {
+        $this->dispatch($this->onCloseEvent);
+
+//        return $this->redirect('goole');
     }
 }
