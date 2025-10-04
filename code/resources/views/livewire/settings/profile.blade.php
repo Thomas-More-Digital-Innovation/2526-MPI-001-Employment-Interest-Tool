@@ -52,18 +52,18 @@
                         <div>
                             <label for="profile_picture"
                                    class="px-4 py-2 border rounded-md shadow-sm text-sm text-gray-700 bg-white cursor-pointer hover:bg-gray-100">
-                                {{ __('Kies bestand') }}
+                                {{ __('actions.choose_file') }}
                             </label>
                             <input id="profile_picture"
                                    type="file"
-                                   wire:model="profile_picture"
-                                   accept="image/png,image/jpeg"
-                                   class="hidden">
+                                   accept="image/png,image/jpeg,image/jpg"
+                                   class="hidden"
+                                   onchange="handleFileUpload(this)">
                         </div>
 
                         @error('profile_picture')
                             <span class="text-red-600 test-sm">
-                                {{ ($message && $message !== 'The profile_picture failed to upload.') ? $message : 'File must be jpg, jpeg, or png and at most 1024 KB.' }}
+                                {{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -84,11 +84,48 @@
 {{--        <livewire:settings.delete-user-form />--}}
     </x-settings.layout>
 </section>
-    
+
     @push('scripts')
     <script>
         Livewire.on('reload-page-for-language', () => {
             window.location.reload();
         });
+
+        function handleFileUpload(input) {
+            const file = input.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            // Clear any previous errors by calling a method that exists
+            @this.call('clearProfilePictureError');
+
+            // Validate file MIME type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!allowedTypes.includes(file.type)) {
+                @this.call('setProfilePictureError', 'invalid_format');
+                input.value = '';
+                return;
+            }
+
+            // Validate file size using environment configuration
+            const maxSizeKB = {{ config('app.profile_picture_max_size_kb', 1024) }};
+            const maxSizeBytes = maxSizeKB * 1024;
+            if (file.size > maxSizeBytes) {
+                @this.call('setProfilePictureError', 'too_large');
+                input.value = '';
+                return;
+            }
+
+            // If all validations pass, upload to Livewire
+            @this.upload('profile_picture', file, (uploadedFilename) => {
+                // Success callback
+            }, (error) => {
+                // Error callback
+                @this.call('setProfilePictureError', 'upload_failed');
+                input.value = '';
+            });
+        }
     </script>
     @endpush

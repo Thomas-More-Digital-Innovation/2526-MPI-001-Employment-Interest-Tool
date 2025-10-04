@@ -2,11 +2,10 @@
 
 namespace App\Livewire\Settings;
 
-use App\Models\User;
 use App\Models\Language;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -15,26 +14,56 @@ class Profile extends Component
     use WithFileUploads;
 
     public string $first_name = '';
+
     public string $last_name = '';
+
     public string $username = '';
-    public bool $is_sound_on= false;
-    public string $vision_type ='';
+
+    public bool $is_sound_on = false;
+
+    public string $vision_type = '';
+
     public string $language_id = '';
+
     protected string $original_language_id = '';
+
     public $profile_picture;
+
+    /**
+     * Clear profile picture error messages.
+     */
+    public function clearProfilePictureError()
+    {
+        $this->resetErrorBag('profile_picture');
+    }
+
+    /**
+     * Set profile picture error message.
+     */
+    public function setProfilePictureError($errorType)
+    {
+        $errorMessages = [
+            'too_large' => __('user.profile_picture_too_large'),
+            'invalid_format' => __('user.profile_picture_invalid_format'),
+            'upload_failed' => __('user.profile_picture_upload_failed'),
+        ];
+
+        $message = $errorMessages[$errorType] ?? __('user.profile_picture_upload_failed');
+        $this->addError('profile_picture', $message);
+    }
 
     /**
      * Mount the component.
      */
     public function mount(): void
     {
-    $user = Auth::user();
-      $this->first_name = $user->first_name;
-      $this->last_name = $user->last_name;
-      $this->is_sound_on=$user->is_sound_on;
-      $this->vision_type=$user->vision_type;
-      $this->language_id = $user->language_id;
-      $this->original_language_id = $user->language_id;
+        $user = Auth::user();
+        $this->first_name = $user->first_name;
+        $this->last_name = $user->last_name;
+        $this->is_sound_on = $user->is_sound_on;
+        $this->vision_type = $user->vision_type;
+        $this->language_id = $user->language_id;
+        $this->original_language_id = $user->language_id;
     }
 
     /**
@@ -48,7 +77,7 @@ class Profile extends Component
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'is_sound_on' => ['boolean'],
-            'vision_type'=>['required', 'string', 'max:255'],
+            'vision_type' => ['required', 'string', 'max:255'],
             'language_id' => ['required', 'exists:language,language_id'],
         ]);
 
@@ -59,28 +88,34 @@ class Profile extends Component
             $user->$key = $value;
         }
 
-        // Handle profile picture upload separately with validation
+        // Handle profile picture upload separately
         if ($this->profile_picture) {
-            $allowedExtensions = ['jpg', 'jpeg', 'png'];
-            $extension = strtolower($this->profile_picture->getClientOriginalExtension());
-            $sizeKB = $this->profile_picture->getSize() / 1024;
-            if (!in_array($extension, $allowedExtensions)) {
+            try {
+                // Check if file is valid and not already processed
+                if ($this->profile_picture->isValid()) {
+                    $extension = strtolower($this->profile_picture->getClientOriginalExtension());
+                    do {
+                        $filename = uniqid().'.'.$extension;
+                        $exists = Storage::disk('profile_pictures')->exists($filename);
+                    } while ($exists);
+
+                    // Store the file and update user attribute
+                    $path = $this->profile_picture->storeAs('', $filename, 'profile_pictures');
+                    if ($path) {
+                        // Use setAttribute to bypass the accessor
+                        $user->setAttribute('profile_picture_url', $filename);
+                    }
+                }
+                $this->profile_picture = null; // Clear file input
+            } catch (\Exception $e) {
+                // Clear the file input first
+                $this->profile_picture = null;
+
+                // Then throw the exception with custom message
                 throw \Illuminate\Validation\ValidationException::withMessages([
-                    'profile_picture' => 'File must be jpg, jpeg, or png.'
+                    'profile_picture' => __('user.profile_picture_upload_failed'),
                 ]);
             }
-            if ($sizeKB > 1024) {
-                throw \Illuminate\Validation\ValidationException::withMessages([
-                    'profile_picture' => 'File must be at most 1024 KB.'
-                ]);
-            }
-            do {
-                $filename = uniqid() .'.' . $extension;
-                $exists = \Storage::disk('profile_pictures')->exists($filename);
-            } while ($exists);
-            $path = $this->profile_picture->storeAs('', $filename, 'profile_pictures');
-            $user->profile_picture_url = $filename;
-            $this->profile_picture = null; // Clear file input
         }
 
         $user->save();
@@ -92,7 +127,7 @@ class Profile extends Component
             vision_type: $user->vision_type,
             profile_picture_url: $user->profile_picture_url
         );
-      
+
         if ($languageChanged) {
             $this->dispatch('reload-page-for-language');
         }
@@ -105,5 +140,4 @@ class Profile extends Component
     {
         return Language::all();
     }
-
 }
