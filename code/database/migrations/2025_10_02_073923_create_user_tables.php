@@ -95,6 +95,7 @@ return new class extends Migration
             $table->string('question');
             $table->string('media_link')->nullable();
             $table->string('sound_link')->nullable();
+            $table->string('image_description')->nullable();
             $table->timestamps();
         });
 
@@ -155,8 +156,8 @@ return new class extends Migration
         });
 
         // FK interest_field_id to interest_field table
-        Schema::create('intrest_field_translation', function (Blueprint $table) {
-            $table->id('intrest_field_translation_id');
+        Schema::create('interest_field_translation', function (Blueprint $table) {
+            $table->id('interest_field_translation_id');
             $table->foreignId('interest_field_id') // Foreign key to interest_field table
                 ->constrained('interest_field', 'interest_field_id')
                 ->onDelete('cascade')
@@ -165,6 +166,8 @@ return new class extends Migration
                 ->constrained('language', 'language_id')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->string('name');
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -174,7 +177,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('intrest_field_translation');
+        Schema::dropIfExists('interest_field_translation');
         Schema::dropIfExists('answer');
         Schema::dropIfExists('test_attempt');
         Schema::dropIfExists('organisation_test');
