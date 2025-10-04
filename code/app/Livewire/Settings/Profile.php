@@ -3,7 +3,6 @@
 namespace App\Livewire\Settings;
 
 use App\Models\Language;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
