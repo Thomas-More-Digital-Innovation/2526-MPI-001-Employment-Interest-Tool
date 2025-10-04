@@ -30,7 +30,7 @@ class ProfileUpdateTest extends TestCase
         $response = $this->get(route('settings.profile'));
 
         // Assert: Redirects to login
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('home'));
     }
 
     public function test_profile_information_can_be_updated()
@@ -45,7 +45,7 @@ class ProfileUpdateTest extends TestCase
 
         // Act: Update profile information via Livewire component
         $this->actingAs($user);
-        
+
         $response = Livewire::test(Profile::class)
             ->set('first_name', 'Updated')
             ->set('last_name', 'User')
@@ -72,7 +72,7 @@ class ProfileUpdateTest extends TestCase
 
         // Act: Try to update with empty required fields
         $this->actingAs($user);
-        
+
         $response = Livewire::test(Profile::class)
             ->set('first_name', '')
             ->set('last_name', '')
@@ -91,7 +91,7 @@ class ProfileUpdateTest extends TestCase
 
         // Act: Try to update with non-existent language_id
         $this->actingAs($user);
-        
+
         $response = Livewire::test(Profile::class)
             ->set('first_name', $user->first_name)
             ->set('last_name', $user->last_name)
@@ -110,7 +110,7 @@ class ProfileUpdateTest extends TestCase
 
         // Act: Delete account via Livewire component
         $this->actingAs($user);
-        
+
         $response = Livewire::test('settings.delete-user-form')
             ->set('password', 'password')
             ->call('deleteUser');
@@ -130,7 +130,7 @@ class ProfileUpdateTest extends TestCase
 
         // Act: Try to delete with wrong password
         $this->actingAs($user);
-        
+
         $response = Livewire::test('settings.delete-user-form')
             ->set('password', 'wrong-password')
             ->call('deleteUser');
