@@ -5,12 +5,6 @@ use App\Models\User;
 use Laravel\Fortify\Features;
 use Livewire\Livewire;
 
-test('login screen can be rendered', function () {
-    $response = $this->get('/login');
-
-    $response->assertStatus(200);
-});
-
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 

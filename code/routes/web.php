@@ -3,23 +3,35 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Settings\TwoFactor;
 use App\Livewire\Test;
-use App\Models\Faq;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Auth;
 use App\Livewire\TestResults;
 
 Route::get('/', function () {
-    if (auth()->check()) {
+    if (Auth::check()) {
         return redirect()->route('dashboard');
     }
     return view('home');
 })->name('home');
 
+// Override Fortify's login GET route to redirect to home
+Route::get('/login', function () {
+    // reroute to home page
+    return redirect()->route('home');
+});
+
 Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
+
+Route::get('/locale/{locale}', function ($locale) {
+    $validLocales = \App\Models\Language::pluck('language_code')->toArray();
+    if (in_array($locale, $validLocales)) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('locale.change');
 
 Route::middleware(['auth'])->group(function () {
 

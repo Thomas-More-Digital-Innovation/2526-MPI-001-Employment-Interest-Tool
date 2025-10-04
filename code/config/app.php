@@ -123,4 +123,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Profile Picture Settings
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for profile picture uploads including maximum file size.
+    |
+    */
+
+    'profile_picture_max_size_kb' => env('PROFILE_PICTURE_MAX_SIZE_KB', 1024),
+
 ];

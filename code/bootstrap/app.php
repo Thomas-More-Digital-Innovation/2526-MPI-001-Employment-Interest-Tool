@@ -11,9 +11,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append: [
+            \App\Http\Middleware\SetUserLocale::class,
+        ]);
+
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);
+
+        // Configure auth middleware to redirect to home route
+        $middleware->redirectGuestsTo(function () {
+            return route('home');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

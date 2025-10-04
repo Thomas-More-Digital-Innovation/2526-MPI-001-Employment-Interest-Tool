@@ -27,11 +27,11 @@
 
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full">{{ __('Opslaan') }}</flux:button>
+                    <flux:button variant="primary" type="submit" class="w-full">{{ __('Save') }}</flux:button>
                 </div>
 
                 <x-action-message class="me-3" on="password-updated">
-                    {{ __('Opgeslagen.') }}
+                    {{ __('Saved.') }}
                 </x-action-message>
             </div>
         </form>

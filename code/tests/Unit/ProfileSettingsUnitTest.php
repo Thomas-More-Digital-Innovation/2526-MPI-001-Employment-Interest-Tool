@@ -12,6 +12,12 @@ class ProfileSettingsUnitTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        app()->setLocale('nl');
+    }
+
     public function test_profile_component_renders()
     {
         $user = User::factory()->create();

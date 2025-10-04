@@ -4,7 +4,13 @@
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
-    <form method="POST" wire:submit="resetPassword" class="flex flex-col gap-6">
+    <style>
+        .reset-password-form input {
+            color: #374151 !important;
+        }
+    </style>
+
+    <form method="POST" wire:submit="resetPassword" class="flex flex-col gap-6 reset-password-form">
         <!-- Username -->
         <flux:input
             wire:model="username"
