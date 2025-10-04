@@ -4,7 +4,13 @@
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
-    <form method="POST" wire:submit="login" class="flex flex-col gap-6">
+    <style>
+        .login-form [data-flux-label]{
+            color: white !important;
+        }
+    </style>
+
+    <form method="POST" wire:submit="login" class="flex flex-col gap-6 login-form">
         <!-- Username -->
         <flux:input
             wire:model="username"
@@ -13,7 +19,7 @@
             required
             autofocus
             autocomplete="username"
-            placeholder="Username"
+            :placeholder="__('Username')"
         />
 
         <!-- Password -->

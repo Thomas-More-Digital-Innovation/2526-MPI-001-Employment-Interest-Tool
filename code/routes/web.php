@@ -3,15 +3,13 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Settings\TwoFactor;
 use App\Livewire\Test;
-use App\Models\Faq;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Auth;
 use App\Livewire\TestResults;
 
 Route::get('/', function () {
-    if (auth()->check()) {
+    if (Auth::check()) {
         return redirect()->route('dashboard');
     }
     return view('home');
@@ -21,7 +19,14 @@ Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index
     ->middleware(['auth'])
     ->name('dashboard');
 
-Route::middleware(['auth', \App\Http\Middleware\SetUserLocale::class])->group(function () {
+Route::get('/locale/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'nl'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('locale.change');
+
+Route::middleware(['auth'])->group(function () {
 
     Route::get('/test', Test::class)->name('client.test');
 
