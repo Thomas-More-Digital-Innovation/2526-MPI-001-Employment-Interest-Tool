@@ -42,6 +42,7 @@ class Test extends Component
     {
         $this->testId = session('testId');
         $this->userId = session('userId');
+        $this->testAttemptId = session('testAttemptId');
 
         if (!($this->userId and $this->testId)) {
             return redirect()->route('dashboard');
