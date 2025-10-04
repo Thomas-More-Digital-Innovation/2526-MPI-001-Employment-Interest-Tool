@@ -9,7 +9,7 @@ use Livewire\Component;
 
 class TestResults extends Component
 {
-    public $mainInterest = 'Gardening';
+    public $mainInterest;
     public $testAttemptId = 1;
     public function mount()
     {
