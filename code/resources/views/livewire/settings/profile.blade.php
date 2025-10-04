@@ -15,16 +15,13 @@
             </flux:select>
 
             <!-- Language selector dropdown -->
-            <div>
-                <flux:label>{{ __('user.language') }}</flux:label>
-                <flux:select wire:model="language_id" required>
-                    @foreach($this->languages as $language)
-                        <option value="{{ $language->language_id }}">
-                           {{ __("user.language_{$language->language_code}") !== "user.language_{$language->language_code}" ? __("user.language_{$language->language_code}") : $language->language_name }}
-                        </option>
-                    @endforeach
-                </flux:select>
-            </div>
+            <flux:select wire:model="language_id" :label="__('user.language')" required>
+                @foreach($this->languages as $language)
+                    <option value="{{ $language->language_id }}">
+                        {{ __("user.language_{$language->language_code}") !== "user.language_{$language->language_code}" ? __("user.language_{$language->language_code}") : $language->language_name }}
+                    </option>
+                @endforeach
+            </flux:select>
 
             <!-- Profile picture selection -->
             @if(!auth()->user()->isClient())
