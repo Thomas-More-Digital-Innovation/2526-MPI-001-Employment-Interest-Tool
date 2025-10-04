@@ -49,13 +49,22 @@ class Login extends Component
      */
     protected function validateCredentials(): User
     {
-        $user = Auth::getProvider()->retrieveByCredentials(['username' => $this->username, 'password' => $this->password]);
+        $user = Auth::getProvider()->retrieveByCredentials(['username' => $this->username]);
 
         if (! $user || ! Auth::getProvider()->validateCredentials($user, ['password' => $this->password])) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'username' => __('auth.failed'),
+            ]);
+        }
+
+        // Check if account is active
+        if (!$user->active) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'username' => __('Your account has been deactivated. Please contact your mentor or administrator.'),
             ]);
         }
 

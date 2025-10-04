@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Faq;
 use App\Models\Role;
+use App\Models\Organisation;
+use App\Models\Language;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,20 +16,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $organisation = \App\Models\Organisation::create([
-            'name' => 'Test Organisation',
-            'active' => true,
+        // Create roles first
+        $this->call([
+            RoleSeeder::class,
         ]);
 
-        $language = \App\Models\Language::create([
-            'language_code' => 'en',
-            'language_name' => 'English',
-        ]);
+        // Get the default roles
+        $clientRole = Role::where('role', Role::CLIENT)->firstOrFail();
+        $mentorRole = Role::where('role', Role::MENTOR)->firstOrFail();
+        $adminRole = Role::where('role', Role::ADMIN)->firstOrFail();
+        $superAdminRole = Role::where('role', Role::SUPER_ADMIN)->firstOrFail();
 
-        \App\Models\Language::create([
-            'language_code' => 'nl',
-            'language_name' => 'Dutch',
-        ]);
+        // Create test organisation
+        $organisation = Organisation::firstOrCreate(
+            ['name' => 'Test Organisation'],
+            ['active' => true]
+        );
+
+        // Create default languages
+        $english = Language::firstOrCreate(
+            ['language_code' => 'en'],
+            ['language_name' => 'English']
+        );
+
+        $dutch = Language::firstOrCreate(
+            ['language_code' => 'nl'],
+            ['language_name' => 'Dutch']
+        );
+
+        $language = $english;
 
         // Create roles
         $superAdminRole = Role::create([

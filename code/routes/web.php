@@ -17,10 +17,10 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'account.active'])
     ->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'account.active'])->group(function () {
 
     Route::get('/test', Test::class)->name('client.test');
 
@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Mentor'])->group(function () {
         Route::view('mentor/example', 'roles.mentor.example')->name('mentor.example');
+        Route::view('mentor/client-management', 'roles.mentor.client-management')->name('mentor.client-management');
     });
 
     Route::middleware(['role:Client'])->group(function () {
