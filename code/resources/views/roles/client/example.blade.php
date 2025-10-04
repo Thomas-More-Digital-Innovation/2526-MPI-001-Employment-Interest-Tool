@@ -4,7 +4,6 @@
             <div class="bg-white overflow-hidden shadow rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
                     <h2 class="text-2xl font-bold tracking-tight text-black">{{ __('Client voorbeeldpagina') }}</h2>
-                    @livewire('client-test-picker')
                 </div>
             </div>
         </div>
