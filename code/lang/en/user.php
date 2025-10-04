@@ -21,4 +21,6 @@ return [
     'profile_picture_upload_failed' => 'The profile picture upload failed.',
     'profile_picture_invalid_format' => 'Profile picture must be a JPG, JPEG or PNG file.',
     'profile_picture_too_large' => 'Profile picture must be at most 1024 KB.',
+    'change_password' => 'Change password',
+    'change_system_settings' => 'Change your system settings',
 ];

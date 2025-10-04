@@ -21,4 +21,6 @@ return [
     'profile_picture_upload_failed' => 'Het uploaden van de profielfoto is mislukt.',
     'profile_picture_invalid_format' => 'Profielfoto moet een JPG, JPEG of PNG bestand zijn.',
     'profile_picture_too_large' => 'Profielfoto mag maximaal 1024 KB groot zijn.',
+    'change_password' => 'Wachtwoord wijzigen',
+    'change_system_settings' => 'Wijzig uw systeeminstellingen',
 ];
