@@ -15,6 +15,12 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+// Override Fortify's login GET route to redirect to home
+Route::get('/login', function () {
+    // reroute to home page
+    return redirect()->route('home');
+});
+
 Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
