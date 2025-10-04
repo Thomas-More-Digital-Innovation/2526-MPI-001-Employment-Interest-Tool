@@ -20,7 +20,8 @@ Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index
     ->name('dashboard');
 
 Route::get('/locale/{locale}', function ($locale) {
-    if (in_array($locale, ['en', 'nl'])) {
+    $validLocales = \App\Models\Language::pluck('language_code')->toArray();
+    if (in_array($locale, $validLocales)) {
         session(['locale' => $locale]);
     }
     return redirect()->back();
