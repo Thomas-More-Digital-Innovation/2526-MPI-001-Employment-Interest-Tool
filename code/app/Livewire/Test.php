@@ -13,8 +13,8 @@ use Livewire\Component;
 class Test extends Component
 {
 
-    public $testId = 1;
-    public $userId = 4;
+    public $testId;
+    public $userId;
     public $testAttemptId;
     public $previousEnabled = true;
 
@@ -40,6 +40,12 @@ class Test extends Component
 
     public function mount()
     {
+        $this->testId = session('testId');
+        $this->userId = session('userId');
+
+        if (!($this->userId and $this->testId)) {
+            return redirect()->route('dashboard');
+        }
 
         if ($this->questionNumber == 1) {
             $this->previousEnabled = false;
@@ -112,7 +118,12 @@ class Test extends Component
     private function nextQuestion()
     {
         if ($this->questionNumber == $this->totalQuestions) {
-            return;
+
+            session()->flash(
+                    'testAttemptId', $this->testAttemptId
+            );
+
+            return redirect()->route('client.test-result');
         }
 
         $this->questionNumber++;

@@ -33,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Route to view Test Results
-    Route::get('/test-results', TestResults::class);
+    Route::get('/test-results', TestResults::class)->name('client.test-result');
 
 
     // Role-based routes

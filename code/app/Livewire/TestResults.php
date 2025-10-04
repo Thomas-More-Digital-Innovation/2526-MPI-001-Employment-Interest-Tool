@@ -10,9 +10,13 @@ use Livewire\Component;
 class TestResults extends Component
 {
     public $mainInterest;
-    public $testAttemptId = 1;
+    public $testAttemptId;
     public function mount()
     {
+        $this->testAttemptId = session('testAttemptId');
+        if (!$this->testAttemptId) {
+            return redirect()->route('dashboard');
+        }
         // 1) Load answers with the nested relation
         $answers = Answer::with('question.interestField')
             ->where('test_attempt_id', $this->testAttemptId)
