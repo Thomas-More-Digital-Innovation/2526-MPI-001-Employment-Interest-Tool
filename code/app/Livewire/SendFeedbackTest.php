@@ -11,6 +11,7 @@ class SendFeedbackTest extends Component
     public $clientName ='';
     public $questionNumber ='';
     public $test ='';
+    public $question ='';
     public $mailMentor='';
     public $website='';
 
@@ -28,7 +29,8 @@ class SendFeedbackTest extends Component
                 'clientName' => $this->clientName,
                 'questionNUmber' => $this->questionNumber,
                 'test' => $this->test,
-                'website' => $this->website
+                'website' => $this->website,
+                'question' => $this->question
             ], function($message){
                 $message->to($this->mailMentor)
                     ->subject("Onduidelijke vraag gemeld");
