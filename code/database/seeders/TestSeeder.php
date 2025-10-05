@@ -230,26 +230,26 @@ class TestSeeder extends Seeder
         $testTwoQuestion2Id = $testTwoQuestion2->question_id;
         $testTwoQuestion3Id = $testTwoQuestion3->question_id;
 
-        // Dutch translations for test 2
+        // Create translations for test 2 questions (English)
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion1Id,
-            'language_id' => $dutchLanguageId,
-            'question' => 'Testvraag één',
-            'image_description' => 'Eerste test afbeelding',
+            'language_id' => $englishLanguageId,
+            'question' => 'Test question one',
+            'image_description' => 'First test image',
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion2Id,
-            'language_id' => $dutchLanguageId,
-            'question' => 'Testvraag twee',
-            'image_description' => 'Tweede test afbeelding',
+            'language_id' => $englishLanguageId,
+            'question' => 'Test question two',
+            'image_description' => 'Second test image',
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion3Id,
-            'language_id' => $dutchLanguageId,
-            'question' => 'Testvraag drie',
-            'image_description' => 'Derde test afbeelding',
+            'language_id' => $englishLanguageId,
+            'question' => 'Test question three',
+            'image_description' => 'Third test image',
         ]);
 
         // Attach the test 2 to the client user

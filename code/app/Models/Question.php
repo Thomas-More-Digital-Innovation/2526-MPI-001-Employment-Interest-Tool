@@ -65,7 +65,7 @@ class Question extends Model
         if (!$languageCode) {
             return $this->question;
         }
-        
+
         $translation = $this->getTranslation($languageCode);
         return $translation && $translation->question ? $translation->question : $this->question;
     }
@@ -75,7 +75,7 @@ class Question extends Model
         if (!$languageCode) {
             return $this->media_link;
         }
-        
+
         $translation = $this->getTranslation($languageCode);
         return $translation && $translation->media_link ? $translation->media_link : $this->media_link;
     }
@@ -85,7 +85,7 @@ class Question extends Model
         if (!$languageCode) {
             return $this->sound_link;
         }
-        
+
         $translation = $this->getTranslation($languageCode);
         return $translation && $translation->sound_link ? $translation->sound_link : $this->sound_link;
     }
@@ -95,7 +95,7 @@ class Question extends Model
         if (!$languageCode) {
             return $this->image_description;
         }
-        
+
         $translation = $this->getTranslation($languageCode);
         return $translation && $translation->image_description ? $translation->image_description : $this->image_description;
     }

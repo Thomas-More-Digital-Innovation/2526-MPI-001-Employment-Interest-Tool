@@ -71,15 +71,17 @@ class Test extends Component
 
     public function render()
     {
-
-        $question = Question::where('test_id', $this->testId)
+        $question = Question::with(['questionTranslations.language'])
+            ->where('test_id', $this->testId)
             ->where('question_number', $this->questionNumber)
-            ->firstOrFail(['question', 'media_link', 'image_description', 'sound_link']);
+            ->firstOrFail();
 
-        $this->title = $question->question;
-        $this->image = $question->media_link;
-        $this->imageDescription = $question->image_description;
-        $this->audio = $question->sound_link;
+        $currentLocale = app()->getLocale();
+
+        $this->title = $question->getQuestion($currentLocale);
+        $this->image = $question->getMediaLink($currentLocale);
+        $this->imageDescription = $question->getImageDescription($currentLocale);
+        $this->audio = $question->getSoundLink($currentLocale);
 
         return view('livewire.test')->layout('components.layouts.test');
     }

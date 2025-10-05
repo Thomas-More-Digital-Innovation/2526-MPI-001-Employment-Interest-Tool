@@ -17,8 +17,8 @@ class TestResults extends Component
         if (!$this->testAttemptId) {
             return redirect()->route('dashboard');
         }
-        // 1) Load answers with the nested relation
-        $answers = Answer::with('question.interestField')
+        // 1) Load answers with the nested relation including translations
+        $answers = Answer::with(['question.interestField.interestFieldTranslations.language'])
             ->where('test_attempt_id', $this->testAttemptId)
             ->where('answer', true)
             ->get();
@@ -29,12 +29,14 @@ class TestResults extends Component
             ->sortByDesc(fn ($g) => $g->count())
             ->first();
 
-        // 3) Extract the InterestField model + count
+        // 3) Extract the InterestField model + count with translation
         if ($topGroup) {
             $field = $topGroup->first()->question->interestField; // Eloquent model
+            $currentLocale = app()->getLocale();
+
             $this->mainInterest = [
                 'interest_field_id'   => $field->interest_field_id,
-                'interest_field_name' => $field->name,
+                'interest_field_name' => $field->getName($currentLocale),
                 'total'               => $topGroup->count(),
             ];
         } else {
