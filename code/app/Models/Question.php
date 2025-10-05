@@ -23,6 +23,12 @@ class Question extends Model
         'image_description'
     ];
 
+    protected $attributes = [
+        'media_link' => null,
+        'sound_link' => null,
+        'image_description' => null,
+    ];
+
     // Relationships
     public function test()
     {
@@ -36,11 +42,61 @@ class Question extends Model
 
     public function questionTranslations()
     {
-//        return $this->hasMany(QuestionTranslation::class, 'questionId', 'questionId');
+        return $this->hasMany(QuestionTranslation::class, 'question_id', 'question_id');
     }
 
     public function answers()
     {
         return $this->hasMany(Answer::class, 'question_id', 'question_id');
+    }
+
+    // Helper methods for translations
+    public function getTranslation($languageCode)
+    {
+        return $this->questionTranslations()
+            ->whereHas('language', function ($query) use ($languageCode) {
+                $query->where('language_code', $languageCode);
+            })
+            ->first();
+    }
+
+    public function getQuestion($languageCode = null)
+    {
+        if (!$languageCode) {
+            return $this->question;
+        }
+        
+        $translation = $this->getTranslation($languageCode);
+        return $translation && $translation->question ? $translation->question : $this->question;
+    }
+
+    public function getMediaLink($languageCode = null)
+    {
+        if (!$languageCode) {
+            return $this->media_link;
+        }
+        
+        $translation = $this->getTranslation($languageCode);
+        return $translation && $translation->media_link ? $translation->media_link : $this->media_link;
+    }
+
+    public function getSoundLink($languageCode = null)
+    {
+        if (!$languageCode) {
+            return $this->sound_link;
+        }
+        
+        $translation = $this->getTranslation($languageCode);
+        return $translation && $translation->sound_link ? $translation->sound_link : $this->sound_link;
+    }
+
+    public function getImageDescription($languageCode = null)
+    {
+        if (!$languageCode) {
+            return $this->image_description;
+        }
+        
+        $translation = $this->getTranslation($languageCode);
+        return $translation && $translation->image_description ? $translation->image_description : $this->image_description;
     }
 }
