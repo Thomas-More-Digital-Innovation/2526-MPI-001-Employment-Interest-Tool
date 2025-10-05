@@ -72,6 +72,11 @@ class ClientsManager extends BaseCrudComponent
 
     public bool $toggleModalWillActivate = false;
 
+    /**
+     * Determines whether disabled clients are visible in the list.
+     */
+    public bool $showDisabled = false;
+
     public function mount(): void
     {
         parent::mount();
@@ -151,6 +156,9 @@ class ClientsManager extends BaseCrudComponent
         $this->resetFormState();
     }
 
+    /**
+     * Only show enabled clients in base query
+     */
     protected function baseQuery(): Builder
     {
         $this->ensureMentorContext();
@@ -159,12 +167,34 @@ class ClientsManager extends BaseCrudComponent
             ->where('mentor_id', $this->mentorId)
             ->where('organisation_id', $this->mentorOrganisationId)
             ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::CLIENT))
+            ->where('active', true)
             ->with([
                 'language',
                 'options' => fn ($query) => $query->where('type', Option::TYPE_DISABILITY),
             ])
             ->orderBy('first_name')
             ->orderBy('last_name');
+    }
+
+    protected function disabledClientsQuery(): Builder {
+        $this->ensureMentorContext();
+
+        return User::query()
+            ->where('mentor_id', $this->mentorId)
+            ->where('organisation_id', $this->mentorOrganisationId)
+            ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::CLIENT))
+            ->where('active', false)
+            ->with([
+                'language',
+                'options' => fn ($query) => $query->where('type', Option::TYPE_DISABILITY),
+            ])
+            ->orderBy('first_name')
+            ->orderBy('last_name');
+    }
+
+    public function getDisabledClientsProperty()
+    {
+        return $this->applySearch($this->disabledClientsQuery())->paginate($this->perPage());
     }
 
     protected function applySearch(Builder $query): Builder
@@ -184,8 +214,18 @@ class ClientsManager extends BaseCrudComponent
 
     protected function findRecord(int $id)
     {
-        return $this->baseQuery()->whereKey($id)->firstOrFail();
+        $record = $this->baseQuery()->whereKey($id)->first();
+
+        if (!$record) {
+            $record = $this->disabledClientsQuery()->whereKey($id)->first();
+        }
+
+        abort_unless($record, 404);
+
+        return $record;
     }
+
+    
 
     protected function transformRecordToForm($record): array
     {
@@ -210,6 +250,7 @@ class ClientsManager extends BaseCrudComponent
         return array_merge(parent::viewData(), [
             'languages' => $this->languages,
             'disabilityOptions' => $this->disabilityOptions,
+            'disabledClients' => $this->disabledClients,
         ]);
     }
 
@@ -344,6 +385,12 @@ class ClientsManager extends BaseCrudComponent
         $this->pendingToggleId = null;
         $this->toggleModalName = '';
         $this->toggleModalWillActivate = false;
+    }
+
+    public function toggleShowDisabled(): void
+    {
+        $this->showDisabled = !$this->showDisabled;
+        $this->resetPage();
     }
 
     protected function ensureMentorContext(bool $force = false): void
