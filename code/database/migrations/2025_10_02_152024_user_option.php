@@ -16,7 +16,8 @@ return new class extends Migration
     {
         Schema::create('option', function (Blueprint $table) {
             $table->id('option_id');
-            $table->string('option_name');
+            $table->string('option_name')->unique();
+            $table->string('type');
             $table->timestamps();
         });
 

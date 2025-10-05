@@ -66,6 +66,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Mentor'])->group(function () {
         Route::view('mentor/example', 'roles.mentor.example')->name('mentor.example');
+        Route::view('mentor/clients-manager', 'roles.mentor.clients-manager')->name('mentor.clients-manager');
     });
 
     Route::middleware(['role:Client'])->group(function () {

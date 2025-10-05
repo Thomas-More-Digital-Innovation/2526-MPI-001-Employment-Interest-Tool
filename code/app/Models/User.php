@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Models\Option;
 
 class User extends Authenticatable
 {
@@ -240,5 +241,21 @@ class User extends Authenticatable
     public function isClient(): bool
     {
         return $this->hasRole(Role::CLIENT);
+    }
+
+    /**
+     * Get the options associated with the user.
+     */
+    public function options()
+    {
+        return $this->belongsToMany(Option::class, 'user_option', 'user_id', 'option_id')->withTimestamps();
+    }
+
+    /**
+     * Get the disabilities associated with the user.
+     */
+    public function disabilities()
+    {
+        return $this->options()->where('type', Option::TYPE_DISABILITY);
     }
 }
