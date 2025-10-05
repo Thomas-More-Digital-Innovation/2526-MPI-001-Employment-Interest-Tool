@@ -72,6 +72,15 @@ class ClientsManager extends BaseCrudComponent
 
     public bool $toggleModalWillActivate = false;
 
+    public function mount(): void
+    {
+        parent::mount();
+
+        if (!isset($this->clientRole)) {
+            $this->clientRole = Role::where('role', Role::CLIENT)->firstOrFail();
+        }
+    }
+
     protected function initializeCrud(): void
     {
         $this->ensureMentorContext(force: true);
@@ -262,6 +271,10 @@ class ClientsManager extends BaseCrudComponent
         $client = null;
 
         DB::transaction(function () use (&$client, $attributes, $disabilityIds, $isEditing) {
+            if (!isset($this->clientRole)) {
+                $this->clientRole = Role::where('role', Role::CLIENT)->firstOrFail();
+            }
+
             if ($this->editingId) {
                 $client = $this->findRecord($this->editingId);
                 $client->fill($attributes);

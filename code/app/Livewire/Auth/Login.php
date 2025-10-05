@@ -58,6 +58,12 @@ class Login extends Component
             ]);
         }
 
+        if ($user instanceof User && $user->isClient() && !$user->active) {
+            throw ValidationException::withMessages([
+                'username' => __('Your account has been disabled. Please contact your mentor or administrator if you believe this is a mistake.'),
+            ]);
+        }
+
         return $user;
     }
 
