@@ -82,8 +82,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['role:Client'])->group(function () {
-        Route::view('client/example', 'roles.client.example')->name('client.example');
-        Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
+        //This is kept as reference
+//        Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
     });
 
     // Example of multiple roles
