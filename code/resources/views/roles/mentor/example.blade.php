@@ -1,4 +1,4 @@
-<x-layouts.app.sidebar>
+<x-layouts.app.headerAIT>
      <flux:main>
         <div class="space-y-6 p-6">
             <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -8,4 +8,4 @@
             </div>
         </div>
     </flux:main>
-</x-layouts.app.sidebar>
+</x-layouts.app.headerAIT>
