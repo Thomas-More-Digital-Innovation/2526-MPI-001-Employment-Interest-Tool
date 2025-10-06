@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
     <body>
-        <flux:header class="bg-zinc-300 dark:bg-zinc-900 border-b border-zinc-500/50 dark:border-zinc-700">
+        <flux:header class="bg-zinc-300/60 dark:bg-zinc-900 border-b border-zinc-500/50 dark:border-zinc-700">
             <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo-small />
             </a>       
@@ -23,8 +23,10 @@
                     </flux:navmenu>            
                 </flux:dropdown>         --}}
             </flux:navbar>        
-            <flux:spacer />                 
-            <livewire:user-profile />             
+            <flux:spacer />
+            <div class="background bg-zinc-400/30 dark:bg-zinc-600/40 rounded">
+                <livewire:user-profile /> 
+            </div>                             
         </flux:header>
         <flux:main>        
             <div class="flex max-md:flex-col items-start">
