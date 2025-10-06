@@ -11,20 +11,31 @@ class SendFeedbackTest extends Component
     public $clientName ='';
     public $questionNumber ='';
     public $test ='';
+    public $question ='';
+    public $mailMentor='';
+    public $website='';
 
     public $showModal;
     public $message = '';
     public $type = '';
     public $class = '';
 
+    public $onCloseEvent = 'closeModal'; // Default event name
+
     //This function will send an email to mentor during a test
     public function sendMail()
     {
         try {
             //Use the build in mail class from Livewire
-            Mail::raw('Uw klant, '. $this->clientName .' heeft een probleem gemeld bij vraag ' . $this->questionNumber . ' van de ' . $this->test . '.', function($message){
-                $message->to("maurits.groen06@gmail.com")
-                    ->subject("Probleem gemeld bij vraag");
+            Mail::send('emails.send-feedback-test', [
+                'clientName' => $this->clientName,
+                'questionNUmber' => $this->questionNumber,
+                'test' => $this->test,
+                'website' => $this->website,
+                'question' => $this->question
+            ], function($message){
+                $message->to($this->mailMentor)
+                    ->subject("Onduidelijke vraag gemeld");
             });
 
             $this->message = 'De mail is verzonden naar uw mentor.';
@@ -40,5 +51,11 @@ class SendFeedbackTest extends Component
     public function render()
     {
         return view('livewire.send-feedback-test');
+    }
+
+    public function closeModal() {
+        $this->dispatch($this->onCloseEvent);
+
+//        return $this->redirect('goole');
     }
 }

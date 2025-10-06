@@ -3,19 +3,35 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Settings\TwoFactor;
 use App\Livewire\Test;
-use App\Models\Faq;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Auth;
+use App\Livewire\TestResults;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('home');
 })->name('home');
+
+// Override Fortify's login GET route to redirect to home
+Route::get('/login', function () {
+    // reroute to home page
+    return redirect()->route('home');
+});
 
 Route::get('dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
+
+Route::get('/locale/{locale}', function ($locale) {
+    $validLocales = \App\Models\Language::pluck('language_code')->toArray();
+    if (in_array($locale, $validLocales)) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('locale.change');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -26,6 +42,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+
+    Route::get('/profile/picture/{filename}', function ($filename) {
+        $disk = \Illuminate\Support\Facades\Storage::disk('profile_pictures');
+        if (!$disk->exists($filename)) {
+            abort(404);
+        }
+        $path = $disk->path($filename);
+        return response()->file($path);
+    })->name('profile.picture');
+
+    // Route to view Test Results
+    Route::get('/test-results', TestResults::class)->name('client.test-result');
 
     // Role-based routes
     Route::middleware(['role:SuperAdmin'])->group(function () {
@@ -42,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Client'])->group(function () {
         Route::view('client/example', 'roles.client.example')->name('client.example');
+        Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
     });
 
     // Example of multiple roles

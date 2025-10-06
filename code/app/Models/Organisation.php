@@ -16,4 +16,24 @@ class Organisation extends Model
         'active',
         'expire_date',
     ];
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+
+    // Relationships
+    public function users()
+    {
+        return $this->hasMany(User::class, 'organisation_id', 'organisation_id');
+    }
+
+    public function organisationTests()
+    {
+        return $this->hasMany(OrganisationTest::class, 'organisation_id', 'organisation_id');
+    }
+
+    public function tests()
+    {
+        return $this->belongsToMany(Test::class, 'organisation_test', 'organisation_id', 'test_id');
+    }
 }

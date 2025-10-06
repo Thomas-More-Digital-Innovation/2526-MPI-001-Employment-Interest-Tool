@@ -17,11 +17,11 @@ class CheckRole
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->route('home');
         }
 
         $user = Auth::user();
-        
+
         if (!$user->hasAnyRole($roles)) {
             abort(403, 'Unauthorized. You do not have the required role to access this page.');
         }

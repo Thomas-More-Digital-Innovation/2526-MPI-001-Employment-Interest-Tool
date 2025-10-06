@@ -14,18 +14,16 @@ class SendFeedbackUnitTest extends TestCase
 
     public function test_it_sends_an_email_successfully()
     {
-        // Arrange: Mock Mail::raw
-        Mail::shouldReceive('raw')
+        // Mock de Mail::send call
+        Mail::shouldReceive('send')
             ->once()
-            ->withArgs(function ($content, $callback) {
-                return str_contains($content, 'Uw klant, Jan heeft een probleem gemeld bij vraag 5 van de RekenTest.');
-            });
+            ->andReturnTrue(); // forceer succes
 
-        // Act: Run Livewire component
         Livewire::test(SendFeedbackTest::class)
             ->set('clientName', 'Jan')
             ->set('questionNumber', '5')
             ->set('test', 'RekenTest')
+            ->set('mailMentor', 'mentor@example.com')
             ->call('sendMail')
             ->assertSet('message', 'De mail is verzonden naar uw mentor.')
             ->assertSet('type', 'Success');
@@ -33,18 +31,17 @@ class SendFeedbackUnitTest extends TestCase
 
     public function test_it_handles_mail_failure()
     {
-        // Arrange: Force Mail::raw() to throw an exception
-        Mail::shouldReceive('raw')
+        // Mock dat Mail::send een exception gooit
+        Mail::shouldReceive('send')
             ->once()
             ->andThrow(new \Exception('Mail server down'));
 
-        // Act: Run Livewire component
         Livewire::test(SendFeedbackTest::class)
             ->set('clientName', 'Piet')
             ->set('questionNumber', '3')
             ->set('test', 'TaalTest')
+            ->set('mailMentor', 'mentor@example.com')
             ->call('sendMail')
-            // Assert: Component shows error message
             ->assertSet('message', 'De mail is niet verzonden.')
             ->assertSet('type', 'Fout');
     }

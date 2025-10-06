@@ -1,37 +1,40 @@
 <section class="w-full">
     @include('partials.settings-heading')
 
-    <x-settings.layout :heading="__('Wachtwoord')" :subheading="__('Wijzig uw wachtwoord')">
+    <x-settings.layout :heading="__('Password')" :subheading="__('user.change_password')">
         <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
             <flux:input
                 wire:model="current_password"
-                :label="__('Huidig wachtwoord')"
+                :label="__('Current password')"
                 type="password"
                 required
                 autocomplete="current-password"
+                viewable
             />
             <flux:input
                 wire:model="password"
-                :label="__('Nieuw wachtwoord')"
+                :label="__('New password')"
                 type="password"
                 required
                 autocomplete="new-password"
+                viewable
             />
             <flux:input
                 wire:model="password_confirmation"
-                :label="__('Bevestig wachtwoord')"
+                :label="__('Confirm password')"
                 type="password"
                 required
                 autocomplete="new-password"
+                viewable
             />
 
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
-                    <flux:button variant="primary" type="submit" class="w-full">{{ __('Opslaan') }}</flux:button>
+                    <flux:button variant="primary" type="submit" class="w-full">{{ __('Save') }}</flux:button>
                 </div>
 
                 <x-action-message class="me-3" on="password-updated">
-                    {{ __('Opgeslagen.') }}
+                    {{ __('Saved.') }}
                 </x-action-message>
             </div>
         </form>

@@ -56,9 +56,12 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Admin',
             'username' => 'superadmin',
             'email' => 'superadmin@example.com',
+            'vision_type' => 'normal',
+            'is_sound_on' => false,
             'password' => bcrypt('password'),
             'organisation_id' => $organisation->organisation_id,
             'language_id' => $language->language_id,
+            'profile_picture_url' => 'default.png',
         ]);
         $superAdmin->roles()->attach($superAdminRole);
 
@@ -67,9 +70,12 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Admin',
             'username' => 'admin',
             'email' => 'admin@example.com',
+            'vision_type' => 'normal',
+            'is_sound_on' => false,
             'password' => bcrypt('password'),
             'organisation_id' => $organisation->organisation_id,
             'language_id' => $language->language_id,
+            'profile_picture_url' => 'default.png',
         ]);
         $admin->roles()->attach($adminRole);
 
@@ -78,9 +84,12 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Mentor',
             'username' => 'mentor',
             'email' => 'mentor@example.com',
+            'vision_type' => 'normal',
+            'is_sound_on' => false,
             'password' => bcrypt('password'),
             'organisation_id' => $organisation->organisation_id,
             'language_id' => $language->language_id,
+            'profile_picture_url' => 'default.png',
         ]);
         $mentor->roles()->attach($mentorRole);
 
@@ -90,10 +99,12 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Client',
             'username' => 'client',
             'email' => 'client@example.com',
+            'vision_type' => 'normal',
+            'is_sound_on' => false,
             'password' => bcrypt('password'),
+            'mentor_id' => $mentor->user_id,
             'organisation_id' => $organisation->organisation_id,
             'language_id' => $language->language_id,
-            'mentor_id' => $mentor->user_id,
         ]);
         $client->roles()->attach($clientRole);
 

@@ -83,6 +83,6 @@ class ResetPassword extends Component
 
         Session::flash('status', __('Your password has been reset.'));
 
-        $this->redirectRoute('login', navigate: true);
+        $this->redirectRoute('home', navigate: true);
     }
 }
