@@ -1,16 +1,16 @@
-{{-- <x-layouts.app.sidebar>
-     <flux:main>
-        <div class="space-y-6 p-6">
-            <div class="bg-white overflow-hidden shadow rounded-lg">
-                <div class="px-4 py-5 sm:px-6">
-                    <h2 class="text-2xl font-bold tracking-tight text-black">{{ __('Client voorbeeldpagina') }}</h2>
-                </div>
+<x-layouts.testlayout>
+    <section>
+        <div class="border dark:border-zinc-300/20 min-h-[40vh] bg-zinc-600/10 dark:bg-zinc-400/10 m-3 rounded-2xl">
+            @livewire('client-test-picker')
+        </div>
+        <div class="min-h-[50vh] flex grow w-full">
+            <div class="border dark:border-zinc-300/20 bg-zinc-600/10 dark:bg-zinc-400/10 m-3 rounded-2xl w-1/2 ">
+                <flux:heading class="px-3 py-1" size="xl">Previous Attempts</flux:heading>
+                @livewire('test-overview')
+            </div>
+            <div class="flex justify-center items-center border dark:border-zinc-300/20 bg-zinc-600/10 dark:bg-zinc-400/10 m-3 rounded-2xl w-1/2 ">
+                @livewire('show-mentor')
             </div>
         </div>
-        @livewire('client-test-picker')
-    </flux:main>
-
-</x-layouts.app.sidebar> --}}
-<x-layouts.testlayout>
-    @livewire('client-test-picker')
+    </section>
 </x-layouts.testlayout>
