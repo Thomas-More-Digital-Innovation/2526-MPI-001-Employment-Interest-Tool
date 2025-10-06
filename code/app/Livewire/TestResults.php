@@ -13,6 +13,11 @@ class TestResults extends Component
     public $secondInterest;
     public $lastInterest;
     public $testAttemptId;
+
+    public $mainInterestImg;
+    public $secondInterestImg;
+    public $lastInterestImg;
+
     public function mount()
     {
         $this->testAttemptId = session('testAttemptId');
@@ -32,6 +37,9 @@ class TestResults extends Component
             $this->mainInterest   = null;
             $this->secondInterest = null;
             $this->lastInterest   = null;
+            $this->mainInterestImg = null;
+            $this->secondInterestImg = null;
+            $this->lastInterestImg = null;
             return;
         }
 
@@ -103,11 +111,34 @@ class TestResults extends Component
             $this->lastInterest = null;
         }
 
-        // Optional debug
-        // dd($this->mainInterest, $this->secondInterest, $this->lastInterest, $allInterestsInTest);
+        // Assign images based on random questions linked to the interests
+        $this->mainInterestImg = $this->getRandomImageForInterest($mainId, $answers);
+        $this->secondInterestImg = $this->getRandomImageForInterest($secondId, $answers);
+        $this->lastInterestImg = $this->getRandomImageForInterest(
+            $this->lastInterest['interest_field_id'] ?? null,
+            $answers
+        );
     }
 
+    private function getRandomImageForInterest($interestFieldId, $answers)
+    {
+        $currentLocale = app()->getLocale();
+        if (!$interestFieldId) {
+            return null;
+        }
 
+        $filteredAnswers = $answers->filter(function ($a) use ($interestFieldId) {
+            return $a->question && $a->question->interest_field_id === $interestFieldId;
+        });
+
+        if ($filteredAnswers->isEmpty()) {
+            return null;
+        }
+
+        $answer = $filteredAnswers->random();
+
+        return $answer && $answer->question ? $answer->question->getImageUrl($currentLocale) : null;
+    }
 
     public $finished = true;
     public function render()

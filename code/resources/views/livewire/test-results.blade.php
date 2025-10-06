@@ -1,23 +1,9 @@
 <div class="flex flex-col h-full p-6">
 
         @php
-            $images = [
-                1 => 'https://images.pexels.com/photos/4974915/pexels-photo-4974915.jpeg?_gl=1*dvfhxi*_ga*OTk5Mjc1NDgwLjE3NTg4MDMyMTI.*_ga_8JE65Q40S6*czE3NTk1ODcxMTgkbzIkZzEkdDE3NTk1ODgyMDckajQ2JGwwJGgw',
-                2 => 'https://images.pexels.com/photos/7659567/pexels-photo-7659567.jpeg?_gl=1*18neo03*_ga*OTk5Mjc1NDgwLjE3NTg4MDMyMTI.*_ga_8JE65Q40S6*czE3NTk1ODcxMTgkbzIkZzEkdDE3NTk1ODgxNDUkajQzJGwwJGgw',
-                3 => 'https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg?_gl=1*1v23w7f*_ga*OTk5Mjc1NDgwLjE3NTg4MDMyMTI.*_ga_8JE65Q40S6*czE3NTk1ODcxMTgkbzIkZzEkdDE3NTk1ODgwNTUkajQ2JGwwJGgw',
-                4 => 'https://images.pexels.com/photos/7988079/pexels-photo-7988079.jpeg?_gl=1*1s4wdjs*_ga*OTk5Mjc1NDgwLjE3NTg4MDMyMTI.*_ga_8JE65Q40S6*czE3NTk3NDY4MTckbzMkZzEkdDE3NTk3NDY4MjgkajQ5JGwwJGgw',
-                5 => 'https://images.pexels.com/photos/6779716/pexels-photo-6779716.jpeg?_gl=1*i2oa1p*_ga*OTk5Mjc1NDgwLjE3NTg4MDMyMTI.*_ga_8JE65Q40S6*czE3NTk3NDY4MTckbzMkZzEkdDE3NTk3NDY4NzIkajUkbDAkaDA.',
-                6 => 'https://images.pexels.com/photos/6169027/pexels-photo-6169027.jpeg?_gl=1*e3sz2h*_ga*OTk5Mjc1NDgwLjE3NTg4MDMyMTI.*_ga_8JE65Q40S6*czE3NTk3NDY4MTckbzMkZzEkdDE3NTk3NDY5MzAkajI4JGwwJGgw',
-            ];
-
-            $firstInterestId  = (int)($mainInterest['interest_field_id'] ?? 0);
-            $firstUrl = $images[$firstInterestId] ?? null;
-
-            $secondInterestId = (int)($secondInterest['interest_field_id'] ?? 0);
-            $secondUrl = $images[$secondInterestId] ?? null;
-
-            $lastInterestId = (int)($lastInterest['interest_field_id'] ?? 0);
-            $lastUrl = $images[$lastInterestId] ?? null;
+            $firstUrl = $mainInterestImg ?? null;
+            $secondUrl = $secondInterestImg ?? null;
+            $lastUrl = $lastInterestImg ?? null;
         @endphp
 
     <div class="flex justify-items-start items-center gap-x-12">
