@@ -13,7 +13,7 @@
             <input
                 id="client-search"
                 type="search"
-                wire:model.debounce.400ms="search"
+                wire:model.live.debounce.400ms="search"
                 class="mt-1 w-full rounded-md border border-gray-300 bg-white dark:bg-gray-900 px-4 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring"
                 placeholder="{{ __('Search by name or username') }}" />
         </div>
