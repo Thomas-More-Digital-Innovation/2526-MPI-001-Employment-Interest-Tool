@@ -36,28 +36,28 @@ class TestSeeder extends Seeder
             'description' => 'Interesse in onderwijs en lesgeven',
         ]);
 
-        $creativeField = InterestField::create([
-            'name' => 'Creatieve Kunsten',
-            'description' => 'Interesse in creatieve en artistieke activiteiten',
+        $computerField = InterestField::create([
+            'name' => 'Computer/IT',
+            'description' => 'Interesse in computers, netwerken en programmeren',
         ]);
 
-        $businessField = InterestField::create([
-            'name' => 'Zakenleven',
-            'description' => 'Interesse in zakenleven en ondernemerschap',
+        $accountingField = InterestField::create([
+            'name' => 'Boekhouding',
+            'description' => 'Interesse in financiële administratie en boekhoudkundige taken',
         ]);
 
-        $scienceField = InterestField::create([
-            'name' => 'Wetenschap',
-            'description' => 'Interesse in wetenschappelijk onderzoek en ontdekking',
+        $retailField = InterestField::create([
+            'name' => 'Winkel/Detailhandel',
+            'description' => 'Interesse in klantenservice en winkelactiviteiten',
         ]);
 
         // Get the interest field IDs from the created models
         $techFieldId = $techField->interest_field_id;
         $healthFieldId = $healthField->interest_field_id;
         $eduFieldId = $eduField->interest_field_id;
-        $creativeFieldId = $creativeField->interest_field_id;
-        $businessFieldId = $businessField->interest_field_id;
-        $scienceFieldId = $scienceField->interest_field_id;
+        $computerFieldId = $computerField->interest_field_id;
+        $accountingFieldId = $accountingField->interest_field_id;
+        $retailFieldId = $retailField->interest_field_id;
 
         // Interest field translations (English)
         InterestFieldTranslation::create([
@@ -82,24 +82,24 @@ class TestSeeder extends Seeder
         ]);
 
         InterestFieldTranslation::create([
-            'interest_field_id' => $creativeFieldId,
+            'interest_field_id' => $computerFieldId,
             'language_id' => $englishLanguageId,
-            'name' => 'Creative Arts',
-            'description' => 'Interest in creative and artistic activities',
+            'name' => 'Computer/IT',
+            'description' => 'Interest in computers, networks and programming',
         ]);
 
         InterestFieldTranslation::create([
-            'interest_field_id' => $businessFieldId,
+            'interest_field_id' => $accountingFieldId,
             'language_id' => $englishLanguageId,
-            'name' => 'Business',
-            'description' => 'Interest in business and entrepreneurship',
+            'name' => 'Accounting',
+            'description' => 'Interest in financial administration and bookkeeping tasks',
         ]);
 
         InterestFieldTranslation::create([
-            'interest_field_id' => $scienceFieldId,
+            'interest_field_id' => $retailFieldId,
             'language_id' => $englishLanguageId,
-            'name' => 'Science',
-            'description' => 'Interest in scientific research and discovery',
+            'name' => 'Retail/Sales',
+            'description' => 'Interest in customer service and retail activities',
         ]);
 
         // Create test 1
@@ -197,59 +197,121 @@ class TestSeeder extends Seeder
 
         // Create test 2
         $testTwo = DB::table('test')->insertGetId([
-            'test_name' => '1-2-3',
+            'test_name' => 'Demo Test',
             'active' => true,
         ]);
 
         // Create questions for test 2
+        // Computer/IT questions
         $testTwoQuestion1 = Question::create([
-            'question' => 'Testvraag één',
+            'question' => 'Zou je geïnteresseerd zijn in het configureren en onderhouden van netwerkapparatuur zoals routers?',
             'test_id' => $testTwo,
-            'interest_field_id' => $creativeFieldId,
+            'interest_field_id' => $computerFieldId,
             'question_number' => 1,
-            'image_description' => 'Eerste test afbeelding',
+            'media_link' => 'network-tech.png',
+            'image_description' => 'Netwerktechnicus die routers configureert',
         ]);
 
         $testTwoQuestion2 = Question::create([
-            'question' => 'Testvraag twee',
+            'question' => 'Vind je het leuk om computerprogramma\'s te schrijven en code te ontwikkelen?',
             'test_id' => $testTwo,
-            'interest_field_id' => $businessFieldId,
+            'interest_field_id' => $computerFieldId,
             'question_number' => 2,
-            'image_description' => 'Tweede test afbeelding',
+            'media_link' => 'programming.png',
+            'image_description' => 'Programmeur die code schrijft op computer',
         ]);
 
+        // Accounting questions
         $testTwoQuestion3 = Question::create([
-            'question' => 'Testvraag drie',
+            'question' => 'Zou je het prettig vinden om administratieve taken op papier uit te voeren en documenten te organiseren?',
             'test_id' => $testTwo,
-            'interest_field_id' => $scienceFieldId,
+            'interest_field_id' => $accountingFieldId,
             'question_number' => 3,
-            'image_description' => 'Derde test afbeelding',
+            'media_link' => 'accounting.png',
+            'image_description' => 'Boekhouder die documenten op papier verwerkt',
+        ]);
+
+        $testTwoQuestion4 = Question::create([
+            'question' => 'Ben je geïnteresseerd in het tellen en beheren van geld en financiële transacties?',
+            'test_id' => $testTwo,
+            'interest_field_id' => $accountingFieldId,
+            'question_number' => 4,
+            'media_link' => 'money-counting.png',
+            'image_description' => 'Persoon die geld telt en financiën beheert',
+        ]);
+
+        // Retail questions
+        $testTwoQuestion5 = Question::create([
+            'question' => 'Zou je het leuk vinden om als kassamedewerker klanten te helpen bij het afrekenen?',
+            'test_id' => $testTwo,
+            'interest_field_id' => $retailFieldId,
+            'question_number' => 5,
+            'media_link' => 'cashier.png',
+            'image_description' => 'Kassamedewerker die klant helpt bij kassa',
+        ]);
+
+        $testTwoQuestion6 = Question::create([
+            'question' => 'Ben je geïnteresseerd in het beheren van voorraad en het organiseren van winkelproducten?',
+            'test_id' => $testTwo,
+            'interest_field_id' => $retailFieldId,
+            'question_number' => 6,
+            'media_link' => 'inventory-management.png',
+            'image_description' => 'Medewerker die voorraad organiseert in winkel',
         ]);
 
         $testTwoQuestion1Id = $testTwoQuestion1->question_id;
         $testTwoQuestion2Id = $testTwoQuestion2->question_id;
         $testTwoQuestion3Id = $testTwoQuestion3->question_id;
+        $testTwoQuestion4Id = $testTwoQuestion4->question_id;
+        $testTwoQuestion5Id = $testTwoQuestion5->question_id;
+        $testTwoQuestion6Id = $testTwoQuestion6->question_id;
 
         // Create translations for test 2 questions (English)
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion1Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Test question one',
-            'image_description' => 'First test image',
+            'question' => 'Would you be interested in configuring and maintaining network equipment such as routers?',
+            'image_description' => 'Network technician configuring routers',
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion2Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Test question two',
-            'image_description' => 'Second test image',
+            'question' => 'Do you enjoy writing computer programs and developing code?',
+            'media_link' => 'programming.png',
+            'image_description' => 'Programmer writing code on computer',
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion3Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Test question three',
-            'image_description' => 'Third test image',
+            'question' => 'Would you find it pleasant to perform administrative tasks on paper and organize documents?',
+            'media_link' => 'accounting.png',
+            'image_description' => 'Accountant processing paper documents',
+        ]);
+
+        QuestionTranslation::create([
+            'question_id' => $testTwoQuestion4Id,
+            'language_id' => $englishLanguageId,
+            'question' => 'Are you interested in counting and managing money and financial transactions?',
+            'media_link' => 'money-counting.png',
+            'image_description' => 'Person counting money and managing finances',
+        ]);
+
+        QuestionTranslation::create([
+            'question_id' => $testTwoQuestion5Id,
+            'language_id' => $englishLanguageId,
+            'question' => 'Would you enjoy working as a cashier helping customers with checkout?',
+            'media_link' => 'cashier.png',
+            'image_description' => 'Cashier helping customer at checkout',
+        ]);
+
+        QuestionTranslation::create([
+            'question_id' => $testTwoQuestion6Id,
+            'language_id' => $englishLanguageId,
+            'question' => 'Are you interested in managing inventory and organizing store products?',
+            'media_link' => 'inventory-management.png',
+            'image_description' => 'Employee organizing inventory in store',
         ]);
 
         // Attach the test 2 to the client user
