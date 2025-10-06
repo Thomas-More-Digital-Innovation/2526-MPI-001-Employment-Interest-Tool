@@ -49,7 +49,7 @@
 
     <!-- WIP Continue button that leads to test results -->
     <div class="mt-8 flex justify-center">
-        <a href="{{ route('client.taketest') }}">
+        <a href="{{ route('client.dashboard') }}">
             <button class="px-6 py-3 bg-teal-600 text-white rounded-md text-lg hover:bg-teal-700">
             Continue
             </button>
