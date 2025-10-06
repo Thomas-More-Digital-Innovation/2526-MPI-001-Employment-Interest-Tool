@@ -209,7 +209,8 @@ class TestSeeder extends Seeder
             'interest_field_id' => $computerFieldId,
             'question_number' => 1,
             'media_link' => 'network-tech.png',
-            'image_description' => 'Netwerktechnicus die routers configureert',
+            'image_description' => 'Netwerken instellen',
+            'sound_link' => 'netwerken.wav'
         ]);
 
         $testTwoQuestion2 = Question::create([
@@ -218,7 +219,9 @@ class TestSeeder extends Seeder
             'interest_field_id' => $computerFieldId,
             'question_number' => 2,
             'media_link' => 'programming.png',
-            'image_description' => 'Programmeur die code schrijft op computer',
+            'image_description' => 'Code schrijven',
+            'sound_link' => 'programmeren.wav'
+
         ]);
 
         // Accounting questions
@@ -228,7 +231,9 @@ class TestSeeder extends Seeder
             'interest_field_id' => $accountingFieldId,
             'question_number' => 3,
             'media_link' => 'accounting.png',
-            'image_description' => 'Boekhouder die documenten op papier verwerkt',
+            'image_description' => 'Boekhouden',
+            'sound_link' => 'boekhouden.wav'
+
         ]);
 
         $testTwoQuestion4 = Question::create([
@@ -237,7 +242,9 @@ class TestSeeder extends Seeder
             'interest_field_id' => $accountingFieldId,
             'question_number' => 4,
             'media_link' => 'money-counting.png',
-            'image_description' => 'Persoon die geld telt en financiën beheert',
+            'image_description' => 'Financiën beheren',
+            'sound_link' => 'financien.wav'
+
         ]);
 
         // Retail questions
@@ -247,7 +254,9 @@ class TestSeeder extends Seeder
             'interest_field_id' => $retailFieldId,
             'question_number' => 5,
             'media_link' => 'cashier.png',
-            'image_description' => 'Kassamedewerker die klant helpt bij kassa',
+            'image_description' => 'Kassamedewerker',
+            'sound_link' => 'kassa.wav'
+
         ]);
 
         $testTwoQuestion6 = Question::create([
@@ -256,7 +265,9 @@ class TestSeeder extends Seeder
             'interest_field_id' => $retailFieldId,
             'question_number' => 6,
             'media_link' => 'inventory-management.png',
-            'image_description' => 'Medewerker die voorraad organiseert in winkel',
+            'image_description' => 'Vakken vullen',
+            'sound_link' => 'vakken vuller.wav'
+
         ]);
 
         $testTwoQuestion1Id = $testTwoQuestion1->question_id;
@@ -272,6 +283,8 @@ class TestSeeder extends Seeder
             'language_id' => $englishLanguageId,
             'question' => 'Would you be interested in configuring and maintaining network equipment such as routers?',
             'image_description' => 'Network technician configuring routers',
+            'sound_link' => 'networking.wav'
+
         ]);
 
         QuestionTranslation::create([
@@ -280,6 +293,8 @@ class TestSeeder extends Seeder
             'question' => 'Do you enjoy writing computer programs and developing code?',
             'media_link' => 'programming.png',
             'image_description' => 'Programmer writing code on computer',
+            'sound_link' => 'programming.wav'
+
         ]);
 
         QuestionTranslation::create([
@@ -288,6 +303,8 @@ class TestSeeder extends Seeder
             'question' => 'Would you find it pleasant to perform administrative tasks on paper and organize documents?',
             'media_link' => 'accounting.png',
             'image_description' => 'Accountant processing paper documents',
+            'sound_link' => 'accounting.wav'
+
         ]);
 
         QuestionTranslation::create([
@@ -296,6 +313,8 @@ class TestSeeder extends Seeder
             'question' => 'Are you interested in counting and managing money and financial transactions?',
             'media_link' => 'money-counting.png',
             'image_description' => 'Person counting money and managing finances',
+            'sound_link' => 'finance.wav'
+
         ]);
 
         QuestionTranslation::create([
@@ -304,6 +323,8 @@ class TestSeeder extends Seeder
             'question' => 'Would you enjoy working as a cashier helping customers with checkout?',
             'media_link' => 'cashier.png',
             'image_description' => 'Cashier helping customer at checkout',
+            'sound_link' => 'cashier.wav'
+
         ]);
 
         QuestionTranslation::create([
@@ -312,6 +333,8 @@ class TestSeeder extends Seeder
             'question' => 'Are you interested in managing inventory and organizing store products?',
             'media_link' => 'inventory-management.png',
             'image_description' => 'Employee organizing inventory in store',
+            'sound_link' => 'stocking.wav'
+
         ]);
 
         // Attach the test 2 to the client user
