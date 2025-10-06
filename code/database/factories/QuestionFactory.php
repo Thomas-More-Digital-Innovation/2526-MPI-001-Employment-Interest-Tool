@@ -18,7 +18,7 @@ class QuestionFactory extends Factory
             'test_id' => Test::factory(),
             'interest_field_id' => InterestField::factory(),
             'question' => $this->faker->sentence() . '?',
-            'media_link' => $this->faker->imageUrl(640, 480, 'education', true),
+            'media_link' => null,
             'image_description' => $this->faker->sentence(),
             'sound_link' => $this->faker->url() . '/audio.mp3',
         ];

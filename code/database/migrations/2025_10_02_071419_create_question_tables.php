@@ -28,9 +28,6 @@ return new class extends Migration
 
         Schema::create('question', function (Blueprint $table) {
             $table->id('question_id');
-            $table->string('question');
-            $table->string('media_link')->nullable();
-            $table->string('sound_link')->nullable();
             $table->foreignId('test_id') // Foreign key to test table
                 ->constrained('test', 'test_id')
                 ->onDelete('cascade')
@@ -40,6 +37,9 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->integer('question_number');
+            $table->string('question');
+            $table->string('media_link')->nullable();
+            $table->string('sound_link')->nullable();
             $table->string('image_description')->nullable();
             $table->timestamps();
         });

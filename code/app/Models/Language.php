@@ -15,4 +15,15 @@ class Language extends Model
         'language_code',
         'language_name',
     ];
+
+    // Relationships
+    public function questionTranslations()
+    {
+        return $this->hasMany(QuestionTranslation::class, 'language_id', 'language_id');
+    }
+
+    public function interestFieldTranslations()
+    {
+        return $this->hasMany(InterestFieldTranslation::class, 'language_id', 'language_id');
+    }
 }
