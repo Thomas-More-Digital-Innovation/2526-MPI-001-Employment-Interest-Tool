@@ -17,10 +17,6 @@
 - php artisan migrate
 - php artisan db:seed
 
-### Prettier:
-### Install the plugins
-- npm i -D prettier prettier-plugin-blade prettier-plugin-tailwindcss
-
 <!-- #### General
 `cd code`
 `composer install`
