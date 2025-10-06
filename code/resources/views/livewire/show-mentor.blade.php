@@ -1,7 +1,7 @@
 <div class="flex flex-col items-center justify-center py-10">
     <div class="w-80 h-80 rounded-full overflow-hidden ring-4 ring-zinc-300 shadow-lg">
         <img
-            src="{{ $mentor->profile_picture_url ? asset('assets/' . $mentor->profile_picture_url) : asset('assets/default-avatar.png') }}"
+            src="{{ $mentor->profile_picture_url}}"
             alt="{{ $mentor->username }}"
             class="w-full h-full object-cover block"
         />
