@@ -73,9 +73,9 @@ class ClientsManager extends BaseCrudComponent
     public bool $toggleModalWillActivate = false;
 
     /**
-     * Determines whether disabled clients are visible in the list.
+     * Determines whether inactivated clients are visible in the list.
      */
-    public bool $showDisabled = false;
+    public bool $showInactivated = false;
 
     public function mount(): void
     {
@@ -176,7 +176,7 @@ class ClientsManager extends BaseCrudComponent
             ->orderBy('last_name');
     }
 
-    protected function disabledClientsQuery(): Builder {
+    protected function inactivatedClientsQuery(): Builder {
         $this->ensureMentorContext();
 
         return User::query()
@@ -192,9 +192,9 @@ class ClientsManager extends BaseCrudComponent
             ->orderBy('last_name');
     }
 
-    public function getDisabledClientsProperty()
+    public function getInactivatedClientsProperty()
     {
-        return $this->applySearch($this->disabledClientsQuery())->paginate($this->perPage());
+        return $this->applySearch($this->inactivatedClientsQuery())->paginate($this->perPage());
     }
 
     protected function applySearch(Builder $query): Builder
@@ -217,7 +217,7 @@ class ClientsManager extends BaseCrudComponent
         $record = $this->baseQuery()->whereKey($id)->first();
 
         if (!$record) {
-            $record = $this->disabledClientsQuery()->whereKey($id)->first();
+            $record = $this->inactivatedClientsQuery()->whereKey($id)->first();
         }
 
         abort_unless($record, 404);
@@ -250,7 +250,7 @@ class ClientsManager extends BaseCrudComponent
         return array_merge(parent::viewData(), [
             'languages' => $this->languages,
             'disabilityOptions' => $this->disabilityOptions,
-            'disabledClients' => $this->disabledClients,
+            'inactivatedClients' => $this->inactivatedClients,
         ]);
     }
 
@@ -374,7 +374,7 @@ class ClientsManager extends BaseCrudComponent
 
         $this->dispatch('crud-record-updated', id: $client->user_id, active: $client->active);
 
-        session()->flash('status', $client->active ? __('Client enabled successfully.') : __('Client disabled successfully.'));
+        session()->flash('status', $client->active ? __('Client enabled successfully.') : __('Client inactivated successfully.'));
 
         $this->closeToggleModal();
     }
@@ -387,9 +387,9 @@ class ClientsManager extends BaseCrudComponent
         $this->toggleModalWillActivate = false;
     }
 
-    public function toggleShowDisabled(): void
+    public function toggleShowInactivated(): void
     {
-        $this->showDisabled = !$this->showDisabled;
+        $this->showInactivated = !$this->showInactivated;
         $this->resetPage();
     }
 

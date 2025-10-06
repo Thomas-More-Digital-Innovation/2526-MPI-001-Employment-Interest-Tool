@@ -35,7 +35,7 @@
                 </td>
                 <td class="px-4 py-3">
                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $client->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                        {{ $client->active ? __('Active') : __('Disabled') }}
+                        {{ $client->active ? __('Active') : __('Inactive') }}
                     </span>
                 </td>
                 <td class="px-4 py-3">
@@ -44,13 +44,8 @@
                             type="button"
                             wire:click="startEdit({{ $client->user_id }})"
                             class="inline-flex items-center rounded-md border border-gray-300 px-3 py-1 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <flux:icon name="pencil" class="w-5 h-5" />&nbsp;
                             {{ __('Edit') }}
-                        </button>
-                        <button
-                            type="button"
-                            wire:click="requestToggle({{ $client->user_id }})"
-                            class="inline-flex items-center rounded-md {{ $client->active ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' : 'bg-green-100 text-green-800 hover:bg-green-200' }} px-3 py-1 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                            {{ $client->active ? __('Disable') : __('Enable') }}
                         </button>
                     </div>
                 </td>

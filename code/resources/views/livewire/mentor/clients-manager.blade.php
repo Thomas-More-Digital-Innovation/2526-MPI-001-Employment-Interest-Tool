@@ -32,16 +32,16 @@
     <div class="flex flex-wrap items-center gap-3">
         <button
             type="button"
-            wire:click="toggleShowDisabled"
-            class="inline-flex items-center rounded-md border {{ $showDisabled ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-gray-300 bg-white text-gray-700' }} px-3 py-1 text-xs font-semibold shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-            <flux:icon name="{{ $showDisabled ? 'eye-slash' : 'eye' }}" class="w-5 h-5" />
+            wire:click="toggleShowInactivated"
+            class="inline-flex items-center rounded-md border {{ $showInactivated ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-gray-300 bg-white text-gray-700' }} px-3 py-1 text-xs font-semibold shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <flux:icon name="{{ $showInactivated ? 'eye-slash' : 'eye' }}" class="w-5 h-5" />
             &nbsp;
-            {{ $showDisabled ? __('Showing disabled clients') : __('Hide disabled clients') }}
+            {{ $showInactivated ? __('Hide inactivated clients') :  __('Show inactivated clients') }}
         </button>
     </div>
-    @if ($showDisabled)
+    @if ($showInactivated)
         <div class="mt-4">
-            @include('livewire.mentor.clients-manager-table', ['records' => $disabledClients])
+            @include('livewire.mentor.clients-manager-table', ['records' => $inactivatedClients])
         </div>
     @endif
 
@@ -149,6 +149,12 @@
                             {{ __('Active') }}
                         </label>
                         <div class="mt-2 flex items-center gap-3">
+                        {{-- <button
+                            type="button"
+                            wire:click="requestToggle({{ $client->user_id }})"
+                            class="inline-flex items-center rounded-md {{ $client->active ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' : 'bg-green-100 text-green-800 hover:bg-green-200' }} px-3 py-1 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            {{ $client->active ? __('Disable') : __('Enable') }}
+                        </button>--}}
                             <input
                                 id="client-active"
                                 type="checkbox"

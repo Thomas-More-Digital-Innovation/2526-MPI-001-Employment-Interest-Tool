@@ -32,7 +32,7 @@ class EnsureClientIsActive
 
             return redirect()->route('home')->with(
                 'status',
-                __('Your account has been disabled. Please contact your mentor or administrator if you believe this is a mistake.')
+                __('Your account is inactivated. Please contact your mentor or administrator if you believe this is a mistake.')
             );
         }
 

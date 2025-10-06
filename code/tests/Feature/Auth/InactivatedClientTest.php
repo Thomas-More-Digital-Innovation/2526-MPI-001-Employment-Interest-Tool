@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class DisabledClientTest extends TestCase
+class InactivatedClientTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -26,17 +26,17 @@ class DisabledClientTest extends TestCase
     }
 
     /** @test */
-    public function test_disabled_client_cannot_login(): void
+    public function test_inactivated_client_cannot_login(): void
     {
         $client = User::factory()->create([
-            'username' => 'disabled_client',
+            'username' => 'inactivated_client',
             'password' => Hash::make('secret123!'),
             'active' => false,
         ]);
         $client->roles()->attach($this->clientRole->role_id);
 
         Livewire::test(Login::class)
-            ->set('username', 'disabled_client')
+            ->set('username', 'inactivated_client')
             ->set('password', 'secret123!')
             ->call('login')
             ->assertHasErrors(['username']);
@@ -45,10 +45,10 @@ class DisabledClientTest extends TestCase
     }
 
     /** @test */
-    public function test_disabled_client_is_logged_out_and_redirected_home(): void
+    public function test_inactivated_client_is_logged_out_and_redirected_home(): void
     {
         $client = User::factory()->create([
-            'username' => 'active_then_disabled',
+            'username' => 'active_then_inactivated',
             'password' => Hash::make('secret123!'),
             'active' => false,
         ]);
@@ -57,7 +57,7 @@ class DisabledClientTest extends TestCase
         $response = $this->actingAs($client)->get(route('dashboard'));
 
         $response->assertRedirect(route('home'));
-        $response->assertSessionHas('status', __('Your account has been disabled. Please contact your mentor or administrator if you believe this is a mistake.'));
+        $response->assertSessionHas('status', __('Your account has been inactivated. Please contact your mentor or administrator if you believe this is a mistake.'));
         $this->assertGuest();
     }
 }
