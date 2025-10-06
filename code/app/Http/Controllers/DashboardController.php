@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+
         if ($user->isSuperAdmin()) {
             return view('roles.superadmin.dashboard');
         } elseif ($user->isAdmin()) {
@@ -23,8 +23,10 @@ class DashboardController extends Controller
             return view('roles.mentor.dashboard');
         } elseif ($user->isClient()) {
             return view('roles.client.dashboard');
+        } elseif($user->isResearcher()){
+            return view('roles.researcher.dashboard');
         }
-        
+
         // Fallback for users without roles
         // NONE
     }

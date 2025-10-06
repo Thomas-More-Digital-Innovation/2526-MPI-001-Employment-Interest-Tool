@@ -258,4 +258,8 @@ class User extends Authenticatable
     {
         return $this->options()->where('type', Option::TYPE_DISABILITY);
     }
+    public function isResearcher(): bool
+    {
+        return $this->hasRole(Role::RESEARCHER);
+    }
 }

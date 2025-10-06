@@ -78,6 +78,10 @@ Route::middleware(['auth'])->group(function () {
         Route::view('mentor/clients-manager', 'roles.mentor.clients-manager')->name('mentor.clients-manager');
     });
 
+    Route::middleware(['role:Researcher'])->group(function () {
+        Route::view('researcher/example', 'roles.researcher.example')->name('researcher.example');
+    });
+
     Route::middleware(['role:Client'])->group(function () {
         Route::view('client/example', 'roles.client.example')->name('client.example');
         Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
