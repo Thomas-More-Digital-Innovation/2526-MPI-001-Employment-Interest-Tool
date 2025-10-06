@@ -79,31 +79,26 @@ Route::middleware(['auth'])->group(function () {
 
     // Role-based routes
     Route::middleware(['role:SuperAdmin'])->group(function () {
-        // Route::redirect('/', 'dashboard');
         Route::view('superadmin/dashboard', 'roles.superadmin.dashboard')->name('superadmin.dashboard');
         Route::view('superadmin/system', 'roles.superadmin.system')->name('superadmin.system');
     });
 
     Route::middleware(['role:Admin'])->group(function () {
-        // Route::redirect('/', 'dashboard');
         Route::view('admin/dashboard', 'roles.admin.dashboard')->name('admin.dashboard');
         Route::view('admin/example', 'roles.admin.example')->name('admin.example');
     });
 
     Route::middleware(['role:Mentor'])->group(function () {
-        // Route::redirect('/', 'dashboard');
         Route::view('mentor/dashboard', 'roles.mentor.dashboard')->name('mentor.dashboard');
         Route::view('mentor/example', 'roles.mentor.example')->name('mentor.example');
     });
 
     Route::middleware(['role:Researcher'])->group(function () {
-        // Route::redirect('/', 'dashboard');
         Route::view('researcher/dashboard', 'roles.researcher.dashboard')->name('researcher.dashboard');
         Route::view('researcher/example', 'roles.researcher.example')->name('researcher.example');
     });
 
     Route::middleware(['role:Client'])->group(function () {
-        // Route::redirect('/', 'dashboard');
         Route::view('client/dashboard', 'roles.client.dashboard')->name('client.dashboard');
         Route::view('client/example', 'roles.client.example')->name('client.example');
         Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
