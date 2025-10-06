@@ -19,28 +19,6 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="">
-        {{-- make proper header --}}
-            {{-- login register buttons, do not touch, even if you do then re-make the css as first one was BS --}}
-            {{-- @if (Route::has('login'))
-                <nav class="flex items-center justify-end gap-4">
-                    @auth
-                        <a
-                            href="{{ url('/dashboard') }}"
-                            class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal"
-                        >
-                            Dashboard
-                        </a>
-                    @else
-                        <a
-                            href="{{ route('login') }}"
-                            class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal"
-                        >
-                            Log in
-                        </a>
-                    @endauth
-                </nav>
-            @endif --}}
-        {{-- better if you repurpose this page so that login and register buttons are removed, replace it with the login form we have in /resources/viws/livewire/auth/login.blade.php --}}
         @if (Route::has('login'))
             @auth
             @else

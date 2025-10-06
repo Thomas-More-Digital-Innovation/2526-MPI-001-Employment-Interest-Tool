@@ -12,16 +12,24 @@ class ClientTestPicker extends Component
     protected $userId;
 
     public function startTest(int $testId) {
-        session([
-            'testId' => $testId,
-            'userId' => $this->userId,
-        ]);
+        session()->flash('testId', $testId);
+        session()->flash('userId', $this->userId);
         return redirect()->route('client.test');
     }
 
     public function mount() {
-        $this->tests = Test::all();
         $this->userId = Auth::id();
+
+        if (!$this->userId) {
+            $this->redirectRoute('home');
+            return;
+        }
+
+        $this->tests = Test::query()
+            ->join('user_test', 'test.test_id', '=', 'user_test.test_id')
+            ->where('user_test.user_id', $this->userId)
+            ->select('test.*')
+            ->get();
     }
     public function render()
     {

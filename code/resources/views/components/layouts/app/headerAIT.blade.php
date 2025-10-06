@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+    <head>
+        @include('partials.head')
+        @livewireStyles
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+    </head>
+    <body>
+        <flux:header container class="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700">
+            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+                <x-app-logo-small />
+            </a>       
+            <flux:navbar class="-mb-px max-lg:hidden">            
+                {{-- <flux:navbar.item icon="home" href="#" current>Home</flux:navbar.item>            
+                <flux:navbar.item icon="inbox" badge="12" href="#">Inbox</flux:navbar.item>             --}}          
+                <flux:separator vertical variant="subtle" class="my-2"/>            
+                {{-- <flux:dropdown class="max-lg:hidden">                
+                    <flux:navbar.item icon:trailing="chevron-down">Favorites</flux:navbar.item>                
+                    <flux:navmenu>                    
+                        <flux:navmenu.item href="#">Marketing site</flux:navmenu.item>                    
+                        <flux:navmenu.item href="#">Android app</flux:navmenu.item>                    
+                        <flux:navmenu.item href="#">Brand guidelines</flux:navmenu.item>                
+                    </flux:navmenu>            
+                </flux:dropdown>         --}}
+            </flux:navbar>        
+            <flux:spacer />                 
+            <livewire:user-profile />             
+        </flux:header>
+        <flux:main container>        
+            <div class="flex max-md:flex-col items-start">            
+                <div class="hidden md:flex pb-4 me-10">                
+                    <flux:navlist variant="outline">
+                        @if(auth()->user()->isSuperAdmin())
+                            @include('components.layouts.app.sidebar-superadmin')
+                        @elseif(auth()->user()->isAdmin())
+                            @include('components.layouts.app.sidebar-admin')
+                        @elseif(auth()->user()->isMentor())
+                            @include('components.layouts.app.sidebar-mentor')
+                        @elseif(auth()->user()->isClient())
+                            @include('components.layouts.app.sidebar-client')
+                        @endif
+                    </flux:navlist>          
+                </div>            
+                <flux:separator vertical variant="subtle" class="hidden md:block my-2 " />
+                <div class="w-full">
+                    {{ $slot }}
+                </div>       
+            </div>    
+        </flux:main>
+        @livewireScripts
+        @fluxScripts
+    </body>
