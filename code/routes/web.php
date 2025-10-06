@@ -10,7 +10,7 @@ use App\Livewire\TestResults;
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect('/dashboard');
+        return redirect('dashboard');
     }
     return view('home');
 })->name('home');
