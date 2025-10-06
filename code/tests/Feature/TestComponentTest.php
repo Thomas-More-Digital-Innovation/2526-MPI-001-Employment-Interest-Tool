@@ -177,6 +177,7 @@ class TestComponentTest extends TestCase
         Livewire::test(TestComponent::class)
             ->call('close')
             ->assertRedirect(route('dashboard'));
+            // TODO
     }
 
     public function test_mount_creates_test_attempt()

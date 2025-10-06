@@ -1,6 +1,6 @@
 <flux:navlist variant="outline">
     <flux:navlist.group :heading="__('Platform')" class="grid">
-        <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+        <flux:navlist.item icon="home" :href="route('client.dashboard')" :current="request()->routeIs('client.dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
     </flux:navlist.group>
 
     <!-- Client specific navigation -->

@@ -44,9 +44,9 @@ class Test extends Component
         $this->testId = session('testId');
         $this->userId = Auth::id();
         $this->testAttemptId = session('testAttemptId');
-        
+
         if (!($this->userId and $this->testId)) {
-            return redirect()->route('dashboard');
+            return redirect()->route('home');
         }
 
         if ($this->questionNumber == 1) {

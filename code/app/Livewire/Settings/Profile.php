@@ -139,4 +139,19 @@ class Profile extends Component
     {
         return Language::all();
     }
+
+
+    /**
+     * Render the component.
+     */
+    public function render()
+    {
+        $user = Auth::user();
+
+        if ($user->isClient()) {
+            return view('livewire.settings.profile')->layout('components.layouts.app.headerAIT');
+        }
+
+        return view('livewire.settings.profile')->layout('components.layouts.app');
+    }
 }
