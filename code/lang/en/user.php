@@ -23,4 +23,6 @@ return [
     'profile_picture_too_large' => 'Profile picture must be at most 1024 KB.',
     'change_password' => 'Change password',
     'change_system_settings' => 'Change your system settings',
+    'profile_picture' => 'Profile picture',
+    'profile_picture_preview' => 'Profile picture preview',
 ];

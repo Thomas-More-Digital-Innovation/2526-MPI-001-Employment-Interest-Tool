@@ -26,16 +26,16 @@
             <!-- Profile picture selection -->
             @if(!auth()->user()->isClient())
                     <div class="flex flex-col space-y-2">
-                        <flux:label>{{__('Profielfoto')}}</flux:label>
+                        <flux:label>{{__('user.profile_picture')}}</flux:label>
 
                         @if ($profile_picture)
                             <img src="{{ $profile_picture->temporaryUrl() }}"
-                                 alt="Profielfoto preview"
+                                 alt="{{ __('user.profile_picture_preview') }}"
                                  class="w-24 h-24 rounded-full border-2 border-blue-400">
                         @elseif (!empty(Auth::user()->profile_picture_url))
                             <div class="w-24 h-24 my-4 rounded-full bg-gray-200 flex items-center justify-center" id="profile-picture-wrapper">
                                 <img src="{{ Auth::user()->profile_picture_url }}"
-                                     alt="Profielfoto"
+                                     alt="{{ __('user.profile_picture') }}"
                                      class="w-24 h-24 rounded-full"
                                      onerror="this.style.display='none'; document.getElementById('profile-picture-icon').style.display='block';">
                                 <flux:icon.user id="profile-picture-icon" class="w-12 h-12 text-gray-500" style="display:none;" />
