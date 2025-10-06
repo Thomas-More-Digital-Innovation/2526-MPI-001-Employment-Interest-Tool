@@ -79,7 +79,7 @@ class Test extends Component
         $currentLocale = app()->getLocale();
 
         $this->title = $question->getQuestion($currentLocale);
-        $this->image = $question->getMediaLink($currentLocale);
+        $this->image = $question->getImageUrl($currentLocale);
         $this->imageDescription = $question->getImageDescription($currentLocale);
         $this->audio = $question->getSoundLink($currentLocale);
 

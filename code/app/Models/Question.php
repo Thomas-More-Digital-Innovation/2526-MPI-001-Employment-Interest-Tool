@@ -99,4 +99,14 @@ class Question extends Model
         $translation = $this->getTranslation($languageCode);
         return $translation && $translation->image_description ? $translation->image_description : $this->image_description;
     }
+
+    public function getImageUrl($languageCode = null)
+    {
+        $filename = $this->getMediaLink($languageCode);
+        if (!$filename) {
+            return null;
+        }
+
+        return route('question.image', ['filename' => $filename]);
+    }
 }
