@@ -202,61 +202,67 @@ class TestSeeder extends Seeder
         ]);
 
         // Create questions for test 2
-        // Computer/IT questions
+// Computer/IT questions
         $testTwoQuestion1 = Question::create([
-            'question' => 'Zou je geïnteresseerd zijn in het configureren en onderhouden van netwerkapparatuur zoals routers?',
+            'question' => 'Netwerkapparatuur configureren',
             'test_id' => $testTwo,
             'interest_field_id' => $computerFieldId,
             'question_number' => 1,
             'media_link' => 'network-tech.png',
             'image_description' => 'Netwerktechnicus die routers configureert',
+            'sound_link' => 'netwerken.wav',
         ]);
 
         $testTwoQuestion2 = Question::create([
-            'question' => 'Vind je het leuk om computerprogramma\'s te schrijven en code te ontwikkelen?',
+            'question' => 'Computerprogramma\'s schrijven',
             'test_id' => $testTwo,
             'interest_field_id' => $computerFieldId,
             'question_number' => 2,
             'media_link' => 'programming.png',
             'image_description' => 'Programmeur die code schrijft op computer',
+            'sound_link' => 'programmeren.wav',
         ]);
 
-        // Accounting questions
+// Accounting questions
         $testTwoQuestion3 = Question::create([
-            'question' => 'Zou je het prettig vinden om administratieve taken op papier uit te voeren en documenten te organiseren?',
+            'question' => 'Administratieve taken op papier',
             'test_id' => $testTwo,
             'interest_field_id' => $accountingFieldId,
             'question_number' => 3,
             'media_link' => 'accounting.png',
             'image_description' => 'Boekhouder die documenten op papier verwerkt',
+            'sound_link' => 'boekhouden.wav',
         ]);
 
         $testTwoQuestion4 = Question::create([
-            'question' => 'Ben je geïnteresseerd in het tellen en beheren van geld en financiële transacties?',
+            'question' => 'Geld tellen en beheren',
             'test_id' => $testTwo,
             'interest_field_id' => $accountingFieldId,
             'question_number' => 4,
             'media_link' => 'money-counting.png',
             'image_description' => 'Persoon die geld telt en financiën beheert',
+            'sound_link' => 'financien.wav',
         ]);
 
-        // Retail questions
+// Retail questions
         $testTwoQuestion5 = Question::create([
-            'question' => 'Zou je het leuk vinden om als kassamedewerker klanten te helpen bij het afrekenen?',
+            'question' => 'Klanten helpen bij afrekenen',
             'test_id' => $testTwo,
             'interest_field_id' => $retailFieldId,
             'question_number' => 5,
             'media_link' => 'cashier.png',
             'image_description' => 'Kassamedewerker die klant helpt bij kassa',
+            'sound_link' => 'kassa.wav',
         ]);
 
         $testTwoQuestion6 = Question::create([
-            'question' => 'Ben je geïnteresseerd in het beheren van voorraad en het organiseren van winkelproducten?',
+            'question' => 'Voorraad beheren en organiseren',
             'test_id' => $testTwo,
             'interest_field_id' => $retailFieldId,
             'question_number' => 6,
             'media_link' => 'inventory-management.png',
             'image_description' => 'Medewerker die voorraad organiseert in winkel',
+            'sound_link' => 'vakken vuller.wav',
         ]);
 
         $testTwoQuestion1Id = $testTwoQuestion1->question_id;
@@ -270,48 +276,54 @@ class TestSeeder extends Seeder
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion1Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Would you be interested in configuring and maintaining network equipment such as routers?',
+            'question' => 'Configuring network equipment',
             'image_description' => 'Network technician configuring routers',
+            'sound_link' => 'networking.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion2Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Do you enjoy writing computer programs and developing code?',
+            'question' => 'Writing computer programs',
             'media_link' => 'programming.png',
             'image_description' => 'Programmer writing code on computer',
+            'sound_link' => 'programming.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion3Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Would you find it pleasant to perform administrative tasks on paper and organize documents?',
+            'question' => 'Administrative tasks on paper',
             'media_link' => 'accounting.png',
             'image_description' => 'Accountant processing paper documents',
+            'sound_link' => 'accounting.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion4Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Are you interested in counting and managing money and financial transactions?',
+            'question' => 'Counting and managing money',
             'media_link' => 'money-counting.png',
             'image_description' => 'Person counting money and managing finances',
+            'sound_link' => 'finance.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion5Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Would you enjoy working as a cashier helping customers with checkout?',
+            'question' => 'Helping customers at checkout',
             'media_link' => 'cashier.png',
             'image_description' => 'Cashier helping customer at checkout',
+            'sound_link' => 'cashier.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion6Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Are you interested in managing inventory and organizing store products?',
+            'question' => 'Managing inventory and organizing products',
             'media_link' => 'inventory-management.png',
             'image_description' => 'Employee organizing inventory in store',
+            'sound_link' => 'stocking.wav'
         ]);
 
         // Attach the test 2 to the client user

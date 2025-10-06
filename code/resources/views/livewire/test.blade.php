@@ -1,4 +1,3 @@
-
     <div class="flex flex-col h-full">
         <!-- Close button -->
         <div class="hidden md:flex justify-end ">
@@ -31,11 +30,20 @@
         <div class="flex justify-around items-center m-4">
             <button wire:click="previous" class="text-6xl @if(!$previousEnabled) invisible @endif"><flux:icon.arrow-left class="size-12 md:size-32" /></button>
 
-            <button class="text-2xl @if(!$audio) invisible @endif" @click="$refs.ouch.play()"><flux:icon.speaker-wave class="size-8 md:size-24" /></button>
+            <button class="text-2xl @if(!$audio) invisible @endif"
+                    @click="
+        let audio = $refs.questionaudio{{$questionNumber}};
+        audio.pause();
+        audio.currentTime = 0;
+        audio.load();
+        audio.play();
+    ">
+                <flux:icon.speaker-wave class="size-8 md:size-24" />
+            </button>
             @if ($audio)
-            <audio x-ref="ouch">
-                <source src="{{ $audio }}" type="audio/mpeg" />
-            </audio>
+                <audio x-ref="questionaudio{{$questionNumber}}">
+                    <source src="{{ $audio }}" type="audio/mpeg" />
+                </audio>
             @endif
 
             <livewire:send-feedback-test
@@ -52,7 +60,7 @@
         </div>
         <!-- Progress bar -->
         {{-- wire:key is needed to force the alpine component to re-render --}}
-        <div  wire:key="progress-{{ $questionNumber }}"  x-data="{ progress: {{$questionNumber / $totalQuestions}} * 100 }" class="w-full bg-gray-400">
+        <div  wire:key="progress-{{ $questionNumber }}"  x-data="{ progress: {{($questionNumber - 1) / $totalQuestions}} * 100 }" class="w-full bg-gray-400">
             <div class="bg-red-400 py-2" :style="`width: ${progress}%`"></div>
         </div>
     </div>
