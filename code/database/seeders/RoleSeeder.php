@@ -32,6 +32,12 @@ class RoleSeeder extends Seeder
             'receive_emails' => false,
         ]);
 
+        $clientRole = Role::firstOrCreate([
+            'role' => Role::CLIENT,
+        ], [
+            'receive_emails' => false,
+        ]);
+
         $researcherRole = Role::firstOrCreate([
             'role' => Role::RESEARCHER,
         ], [
