@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class ClientTestPicker extends Component
 {
     public $tests;
-    protected $userId;
+    public $userId;
 
     public function startTest(int $testId) {
         session()->flash('testId', $testId);
