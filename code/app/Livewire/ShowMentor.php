@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\User;
 use Livewire\Component;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 
 class ShowMentor extends Component
@@ -13,7 +13,7 @@ class ShowMentor extends Component
     public function mount() {
         $user = Auth::user();
 
-        $this->mentor = User::where('user_id', $user->mentor_id)->first();
+        $this->mentor = User::find($user->mentor_id);
     }
 
     public function render()
