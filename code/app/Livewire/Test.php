@@ -2,13 +2,14 @@
 
 namespace App\Livewire;
 
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Answer;
+use Livewire\Component;
 use App\Models\Question;
 use App\Models\TestAttempt;
-use App\Models\User;
-use Carbon\Carbon;
 use Livewire\Attributes\On;
-use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Test extends Component
 {
@@ -41,9 +42,9 @@ class Test extends Component
     public function mount()
     {
         $this->testId = session('testId');
-        $this->userId = session('userId');
+        $this->userId = Auth::id();
         $this->testAttemptId = session('testAttemptId');
-
+        
         if (!($this->userId and $this->testId)) {
             return redirect()->route('dashboard');
         }
