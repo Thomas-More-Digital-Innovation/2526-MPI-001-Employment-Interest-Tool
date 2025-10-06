@@ -52,6 +52,15 @@ Route::middleware(['auth'])->group(function () {
         return response()->file($path);
     })->name('profile.picture');
 
+    Route::get('/question/image/{filename}', function ($filename) {
+        $disk = \Illuminate\Support\Facades\Storage::disk('public');
+        if (!$disk->exists($filename)) {
+            abort(404);
+        }
+        $path = $disk->path($filename);
+        return response()->file($path);
+    })->name('question.image');
+
     // Route to view Test Results
     Route::get('/test-results', TestResults::class)->name('client.test-result');
 
