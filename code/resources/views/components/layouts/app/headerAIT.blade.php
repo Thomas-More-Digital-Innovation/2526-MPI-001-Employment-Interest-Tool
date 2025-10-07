@@ -57,4 +57,5 @@
         </flux:main>
         @livewireScripts
         @fluxScripts
+        @stack('scripts')
     </body>
