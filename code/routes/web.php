@@ -99,11 +99,6 @@ Route::middleware(['auth'])->group(function () {
         Route::view('researcher/example', 'roles.researcher.example')->name('researcher.example');
     });
 
-    Route::middleware(['role:Researcher'])->group(function () {
-        Route::view('researcher/dashboard', 'roles.researcher.dashboard')->name('researcher.dashboard');
-        Route::view('researcher/example', 'roles.researcher.example')->name('researcher.example');
-    });
-
     Route::middleware(['role:Client'])->group(function () {
         Route::view('client/dashboard', 'roles.client.dashboard')->name('client.dashboard');
         //This is kept as reference
