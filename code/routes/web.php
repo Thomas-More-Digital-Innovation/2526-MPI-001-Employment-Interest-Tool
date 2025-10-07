@@ -7,6 +7,7 @@ use App\Livewire\Test;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\TestResults;
+use App\Models\User;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -58,14 +59,51 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile/picture/{filename}', function ($filename) {
         $disk = \Illuminate\Support\Facades\Storage::disk('profile_pictures');
-        // Client can only view the profile picture of their mentor
         $user = Auth::user();
-        if ($user->isClient()) {
-            $mentor = $user->mentor;
-            if (!$mentor || $mentor->profile_picture !== $filename) {
+        switch (true) {
+            case $user->isClient(): // Client can only view the profile picture of their mentor
+            $mentor = User::find($user->mentor_id);
+            if (
+                !$mentor ||
+                $filename !== $mentor->getRawProfilePictureName()
+            ) {
                 abort(403);
             }
+            break;
+            case $user->isMentor(): // Mentor can only view their own profile picture
+            case $user->isResearcher(): // Researcher can only view their own profile picture
+            if ($filename !== $user->getRawProfilePictureName()) {
+                abort(403);
+            }
+            break;
+            case $user->isAdmin(): // Admins can view their own profile picture and  all of the profile pictures of the mentors in their organisation
+            if ($filename === $user->getRawProfilePictureName()) {
+                break;
+            }
+            $mentor = User::where('organisation_id', $user->organisation_id)
+                ->where('role', 'Mentor')
+                ->where('profile_picture_url', $filename)
+                ->first();
+            if (!$mentor || $filename !== $mentor->getRawProfilePictureName()) {
+                abort(403);
+            }
+            break;
+            case $user->isSuperAdmin(): // Superadmins can view their own profile picture and can view the profile pictures of all the admins
+            if ($filename === $user->getRawProfilePictureName()) {
+                break;
+            }
+            $admin = User::where('organisation_id', $user->organisation_id)
+                ->where('role', 'Admin')
+                ->where('profile_picture_url', $filename)
+                ->first();
+            if (!$admin || $filename !== $admin->getRawProfilePictureName()) {
+                abort(403);
+            }
+            break;
+            default:
+            abort(403);
         }
+
         if (!$disk->exists($filename)) {
             abort(404);
         }
