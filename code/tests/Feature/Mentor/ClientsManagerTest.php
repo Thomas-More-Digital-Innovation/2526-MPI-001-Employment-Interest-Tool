@@ -40,6 +40,27 @@ class ClientsManagerTest extends TestCase
         $this->mentor->roles()->attach($mentorRole->role_id);
     }
 
+    protected function actingAsMentor(): User
+    {
+        Livewire::actingAs($this->mentor);
+
+        return $this->mentor;
+    }
+
+    protected function clientForMentor(array $overrides = []): User
+    {
+        $client = User::factory()->create(array_merge([
+            'mentor_id' => $this->mentor->user_id,
+            'organisation_id' => $this->mentor->organisation_id,
+            'language_id' => $this->mentor->language_id,
+            'active' => true,
+        ], $overrides));
+
+        $client->roles()->attach($this->clientRole->role_id);
+
+        return $client;
+    }
+
     /** @test */
     public function test_mentor_can_create_client_with_disabilities(): void
     {
@@ -74,13 +95,7 @@ class ClientsManagerTest extends TestCase
     /** @test */
     public function test_mentor_can_edit_existing_client(): void
     {
-        $client = User::factory()->create([
-            'mentor_id' => $this->mentor->user_id,
-            'organisation_id' => $this->mentor->organisation_id,
-            'language_id' => $this->mentor->language_id,
-            'active' => true,
-        ]);
-        $client->roles()->attach($this->clientRole->role_id);
+        $client = $this->clientForMentor();
 
         Livewire::actingAs($this->mentor)
             ->test(ClientsManager::class)
@@ -100,13 +115,7 @@ class ClientsManagerTest extends TestCase
     /** @test */
     public function test_mentor_can_toggle_client_active_state(): void
     {
-        $client = User::factory()->create([
-            'mentor_id' => $this->mentor->user_id,
-            'organisation_id' => $this->mentor->organisation_id,
-            'language_id' => $this->mentor->language_id,
-            'active' => true,
-        ]);
-        $client->roles()->attach($this->clientRole->role_id);
+        $client = $this->clientForMentor();
 
         Livewire::actingAs($this->mentor)
             ->test(ClientsManager::class)
@@ -132,5 +141,109 @@ class ClientsManagerTest extends TestCase
         Livewire::actingAs($client)
             ->test(ClientsManager::class)
             ->assertForbidden();
+    }
+
+    public function test_inactivated_clients_are_listed_when_flag_enabled(): void
+    {
+        $this->actingAsMentor();
+        $inactive = $this->clientForMentor(['first_name' => 'Ina', 'last_name' => 'Active', 'active' => false]);
+
+        Livewire::test(ClientsManager::class)
+            ->call('toggleShowInactivated')
+            ->assertSet('showInactivated', true)
+            ->assertSee($inactive->first_name)
+            ->assertSee($inactive->username);
+    }
+
+    public function test_editing_client_can_update_sound_and_vision_preferences(): void
+    {
+        $this->actingAsMentor();
+        $client = $this->clientForMentor([
+            'is_sound_on' => false,
+            'vision_type' => 'normal',
+        ]);
+
+        Livewire::test(ClientsManager::class)
+            ->call('startEdit', $client->user_id)
+            ->set('form.is_sound_on', true)
+            ->set('form.vision_type', 'deuteranopia')
+            ->set('form.password', '')
+            ->call('save')
+            ->assertDispatched('crud-record-saved');
+
+        $client->refresh();
+
+        $this->assertTrue($client->is_sound_on);
+        $this->assertSame('deuteranopia', $client->vision_type);
+    }
+
+    public function test_leaving_password_blank_during_edit_keeps_existing_password(): void
+    {
+        $this->actingAsMentor();
+        $client = $this->clientForMentor([
+            'password' => Hash::make('keep-me'),
+        ]);
+
+        Livewire::test(ClientsManager::class)
+            ->call('startEdit', $client->user_id)
+            ->set('form.password', '')
+            ->call('save');
+
+        $client->refresh();
+
+        $this->assertTrue(Hash::check('keep-me', $client->password));
+    }
+
+    public function test_setting_new_password_rehashes_credentials(): void
+    {
+        $this->actingAsMentor();
+        $client = $this->clientForMentor([
+            'password' => Hash::make('old-secret'),
+        ]);
+
+        Livewire::test(ClientsManager::class)
+            ->call('startEdit', $client->user_id)
+            ->set('form.password', 'new-secret-123')
+            ->call('save');
+
+        $client->refresh();
+
+        $this->assertTrue(Hash::check('new-secret-123', $client->password));
+        $this->assertFalse(Hash::check('old-secret', $client->password));
+    }
+
+    public function test_request_toggle_populates_modal_state(): void
+    {
+        $this->actingAsMentor();
+        $client = $this->clientForMentor([
+            'first_name' => 'Toggle',
+            'last_name' => 'Target',
+            'active' => true,
+        ]);
+
+        Livewire::test(ClientsManager::class)
+            ->call('requestToggle', $client->user_id)
+            ->assertSet('toggleModalVisible', true)
+            ->assertSet('toggleModalWillActivate', false)
+            ->assertSet('toggleModalName', 'Toggle Target');
+    }
+
+    public function test_confirm_toggle_switches_active_state_and_dispatches_event(): void
+    {
+        $this->actingAsMentor();
+        $client = $this->clientForMentor([
+            'active' => false,
+            'first_name' => 'Re',
+            'last_name' => 'Activate',
+        ]);
+
+        Livewire::test(ClientsManager::class)
+            ->call('requestToggle', $client->user_id)
+            ->call('confirmToggle')
+            ->assertDispatched('crud-record-updated', id: $client->user_id, active: true);
+
+        $client->refresh();
+
+        $this->assertTrue($client->active);
     }
 }
