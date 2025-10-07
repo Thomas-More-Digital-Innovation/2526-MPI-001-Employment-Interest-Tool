@@ -58,6 +58,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile/picture/{filename}', function ($filename) {
         $disk = \Illuminate\Support\Facades\Storage::disk('profile_pictures');
+        // Client can only view the profile picture of their mentor
+        $user = Auth::user();
+        if ($user->isClient()) {
+            $mentor = $user->mentor;
+            if (!$mentor || $mentor->profile_picture !== $filename) {
+                abort(403);
+            }
+        }
         if (!$disk->exists($filename)) {
             abort(404);
         }
