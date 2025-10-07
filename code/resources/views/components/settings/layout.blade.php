@@ -5,7 +5,7 @@
             <flux:navlist.item :href="route('settings.password')" wire:navigate :current="request()->routeIs('settings.password')">{{ __('Password') }}</flux:navlist.item>
             <flux:navlist.item :href="route('settings.appearance')" wire:navigate :current="request()->routeIs('settings.appearance')">{{ __('System') }}</flux:navlist.item>
             @if(Auth::user()->isClient())
-                <flux:navlist.item icon="arrow-left" :href="route('dashboard')" wire:navigate :current="request()->routeIs('dashboard')">{{ __('Return to dashboard') }}</flux:navlist.item>
+                <flux:navlist.item icon="arrow-left" :href="route('dashboard')" wire:navigate :current="request()->routeIs('dashboard')">{{ __('user.return_to_dashboard') }}</flux:navlist.item>
             @endif
         </flux:navlist>
     </div>
