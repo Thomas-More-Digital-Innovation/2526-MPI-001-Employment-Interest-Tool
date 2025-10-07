@@ -18,8 +18,6 @@
                     @include('components.layouts.app.sidebar-admin')
                 @elseif(auth()->user()->isMentor())
                     @include('components.layouts.app.sidebar-mentor')
-                @elseif(auth()->user()->isClient())
-                    @include('components.layouts.app.sidebar-client')
                 @elseif(auth()->user()->isResearcher())
                     @include('components.layouts.app.sidebar-researcher')
                 @endif
