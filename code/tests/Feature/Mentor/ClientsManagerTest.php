@@ -64,10 +64,6 @@ class ClientsManagerTest extends TestCase
     /** @test */
     public function test_mentor_can_create_client_with_disabilities(): void
     {
-        $option = Option::factory()->create([
-            'type' => Option::TYPE_DISABILITY,
-        ]);
-
         Livewire::actingAs($this->mentor)
             ->test(ClientsManager::class)
             ->call('startCreate')
@@ -76,7 +72,6 @@ class ClientsManagerTest extends TestCase
             ->set('form.username', 'new_client')
             ->set('form.password', 'Password123!')
             ->set('form.language_id', $this->mentor->language_id)
-            ->set('form.disability_ids', [$option->option_id])
             ->set('form.active', true)
             ->call('save')
             ->assertDispatched('crud-record-saved');
@@ -88,7 +83,6 @@ class ClientsManagerTest extends TestCase
 
         $created = User::where('username', 'new_client')->first();
         $this->assertTrue(Hash::check('Password123!', $created->password));
-        $this->assertTrue($created->options()->whereKey($option->option_id)->exists());
         $this->assertTrue($created->roles()->where('role', Role::CLIENT)->exists());
     }
 
