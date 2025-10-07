@@ -17,6 +17,21 @@ use Illuminate\Validation\Rules\Password;
 class ClientsManager extends BaseCrudComponent
 {
     /**
+     * Supported vision type options (value => translation key).
+     */
+    protected const VISION_TYPES = [
+        'normal' => 'user.vision_type_normal',
+        'deuteranopia' => 'user.vision_type_deuteranopia',
+        'protanopia' => 'user.vision_type_protanopia',
+        'tritanopia' => 'user.vision_type_tritanopia',
+    ];
+
+    /**
+     * Ensure we only register dynamic relations once.
+     */
+    protected static bool $relationsRegistered = false;
+
+    /**
      * Role instance for clients.
      */
     protected Role $clientRole;
@@ -77,8 +92,14 @@ class ClientsManager extends BaseCrudComponent
      */
     public bool $showInactivated = false;
 
+    public function boot(): void
+    {
+        $this->registerOptionRelations();
+    }
+
     public function mount(): void
     {
+        $this->registerOptionRelations();
         parent::mount();
 
         if (!isset($this->clientRole)) {
@@ -86,9 +107,15 @@ class ClientsManager extends BaseCrudComponent
         }
     }
 
+    public function hydrate(): void
+    {
+        $this->registerOptionRelations();
+    }
+
     protected function initializeCrud(): void
     {
         $this->ensureMentorContext(force: true);
+        $this->registerOptionRelations();
 
         $this->clientRole = Role::where('role', Role::CLIENT)->firstOrFail();
 
@@ -107,6 +134,8 @@ class ClientsManager extends BaseCrudComponent
             'language_id' => $this->defaultLanguageId,
             'disability_ids' => [],
             'active' => true,
+            'is_sound_on' => false,
+            'vision_type' => $this->defaultVision(),
         ];
     }
 
@@ -165,6 +194,7 @@ class ClientsManager extends BaseCrudComponent
      */
     protected function baseQuery(): Builder
     {
+        $this->registerOptionRelations();
         $this->ensureMentorContext();
 
         return User::query()
@@ -181,6 +211,7 @@ class ClientsManager extends BaseCrudComponent
     }
 
     protected function inactivatedClientsQuery(): Builder {
+        $this->registerOptionRelations();
         $this->ensureMentorContext();
 
         return User::query()
@@ -241,6 +272,8 @@ class ClientsManager extends BaseCrudComponent
             'language_id' => $record->language_id,
             'disability_ids' => $record->options->pluck('option_id')->map(fn ($id) => (int) $id)->all(),
             'active' => (bool) $record->active,
+            'is_sound_on' => (bool) $record->is_sound_on,
+            'vision_type' => $this->normalizeVision($record->vision_type),
         ];
     }
 
@@ -255,6 +288,7 @@ class ClientsManager extends BaseCrudComponent
             'languages' => $this->languages,
             'disabilityOptions' => $this->disabilityOptions,
             'inactivatedClients' => $this->inactivatedClients,
+            'visionTypes' => $this->visionTypeOptions(),
         ]);
     }
 
@@ -287,6 +321,8 @@ class ClientsManager extends BaseCrudComponent
             'form.disability_ids' => ['array'],
             'form.disability_ids.*' => ['integer', Rule::in($this->disabilityUniverse)],
             'form.active' => ['boolean'],
+            'form.is_sound_on' => ['boolean'],
+            'form.vision_type' => ['required', 'string', Rule::in(array_keys(self::VISION_TYPES))],
         ];
     }
 
@@ -302,6 +338,8 @@ class ClientsManager extends BaseCrudComponent
             'username' => trim($this->form['username']),
             'language_id' => (int) $this->form['language_id'],
             'active' => (bool) $this->form['active'],
+            'is_sound_on' => (bool) $this->form['is_sound_on'],
+            'vision_type' => $this->form['vision_type'],
         ];
 
         $disabilityIds = collect($this->form['disability_ids'] ?? [])
@@ -335,8 +373,6 @@ class ClientsManager extends BaseCrudComponent
                 $client->organisation_id = $this->mentorOrganisationId;
                 $client->password = Hash::make($this->form['password']);
                 $client->first_login = true;
-                $client->is_sound_on = false;
-                $client->vision_type = 'normal';
 
                 $client->save();
                 $client->roles()->syncWithoutDetaching([$this->clientRole->role_id]);
@@ -452,5 +488,42 @@ class ClientsManager extends BaseCrudComponent
                 ->map(fn ($id) => (int) $id)
                 ->all();
         }
+    }
+
+    protected function defaultVision(): string
+    {
+        return array_key_first(self::VISION_TYPES) ?? 'normal';
+    }
+
+    protected function normalizeVision(?string $vision): string
+    {
+        return array_key_exists($vision, self::VISION_TYPES) ? $vision : $this->defaultVision();
+    }
+
+    protected function visionTypeOptions(): array
+    {
+        $options = [];
+        foreach (self::VISION_TYPES as $value => $translationKey) {
+            $options[$value] = __($translationKey);
+        }
+
+        return $options;
+    }
+
+    protected function registerOptionRelations(): void
+    {
+        if (self::$relationsRegistered) {
+            return;
+        }
+
+        User::resolveRelationUsing('options', function (User $user) {
+            return $user->belongsToMany(Option::class, 'user_option', 'user_id', 'option_id')->withTimestamps();
+        });
+
+        User::resolveRelationUsing('disabilities', function (User $user) {
+            return $user->options()->where('type', Option::TYPE_DISABILITY);
+        });
+
+        self::$relationsRegistered = true;
     }
 }

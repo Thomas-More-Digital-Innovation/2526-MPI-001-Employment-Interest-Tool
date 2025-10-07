@@ -10,7 +10,6 @@
                 <th class="px-4 py-3">{{ __('Last name') }}</th>
                 <th class="px-4 py-3">{{ __('Username') }}</th>
                 <th class="px-4 py-3">{{ __('Language') }}</th>
-                <th class="px-4 py-3">{{ __('Disabilities') }}</th>
                 <th class="px-4 py-3">{{ __('Status') }}</th>
                 <th class="px-4 py-3 text-right">{{ __('Actions') }}</th>
             </tr>
@@ -22,17 +21,6 @@
                 <td class="px-4 py-3">{{ $client->last_name }}</td>
                 <td class="px-4 py-3 font-mono">{{ $client->username }}</td>
                 <td class="px-4 py-3">{{ optional($client->language)->language_name }}</td>
-                <td class="px-4 py-3">
-                    @if ($client->options->isEmpty())
-                    <span class="text-gray-400">{{ __('None') }}</span>
-                    @else
-                    <ul class="list-disc space-y-1 pl-5">
-                        @foreach ($client->options as $option)
-                        <li>{{ $option->option_name }}</li>
-                        @endforeach
-                    </ul>
-                    @endif
-                </td>
                 <td class="px-4 py-3">
                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $client->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                         {{ $client->active ? __('Active') : __('Inactive') }}

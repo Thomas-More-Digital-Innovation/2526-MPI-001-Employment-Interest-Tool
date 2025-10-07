@@ -110,6 +110,31 @@
                     </div>
 
                     <div class="md:col-span-2">
+                        <flux:checkbox
+                            id="client-sound"
+                            wire:model.defer="form.is_sound_on"
+                            :label="$form['is_sound_on'] ? __('user.sound_on') : __('user.sound_off')" />
+                        @error('form.is_sound_on')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <flux:select
+                            id="client-vision-type"
+                            wire:model.defer="form.vision_type"
+                            :label="__('user.vision_type')"
+                            required>
+                            @foreach ($visionTypes as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
+                        </flux:select>
+                        @error('form.vision_type')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
                         <flux:select
                             id="client-language"
                             wire:model.defer="form.language_id"
