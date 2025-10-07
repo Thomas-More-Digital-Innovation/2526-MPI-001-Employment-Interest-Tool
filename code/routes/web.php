@@ -99,10 +99,16 @@ Route::middleware(['auth'])->group(function () {
         Route::view('researcher/example', 'roles.researcher.example')->name('researcher.example');
     });
 
+    Route::middleware(['role:Researcher'])->group(function () {
+        Route::view('researcher/dashboard', 'roles.researcher.dashboard')->name('researcher.dashboard');
+        Route::view('researcher/example', 'roles.researcher.example')->name('researcher.example');
+    });
+
     Route::middleware(['role:Client'])->group(function () {
         Route::view('client/dashboard', 'roles.client.dashboard')->name('client.dashboard');
-        Route::view('client/example', 'roles.client.example')->name('client.example');
-        Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
+        //This is kept as reference
+//        Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
+
     });
 
     // Example of multiple roles
