@@ -14,7 +14,7 @@ class SetLivewireLayout
 
         // Set layout based on user type
         if ($user && $user->isClient()) {
-            config(['livewire.layout' => 'components.layouts.app.headerAIT']);
+            config(['livewire.layout' => 'components.layouts.client']);
         } else {
             config(['livewire.layout' => 'components.layouts.app']);
         }

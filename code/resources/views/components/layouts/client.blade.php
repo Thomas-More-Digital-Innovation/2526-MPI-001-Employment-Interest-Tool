@@ -1,3 +1,3 @@
-<x-layouts.app.headerAIT :title="$title ?? null">
+<x-layouts.app.client-header :title="$title ?? null">
     {{ $slot }}
-</x-layouts.app.headerAIT>
+</x-layouts.app.client-header>
