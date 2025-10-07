@@ -139,4 +139,5 @@ class Profile extends Component
     {
         return Language::all();
     }
+
 }

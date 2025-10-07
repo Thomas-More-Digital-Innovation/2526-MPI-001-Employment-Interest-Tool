@@ -241,4 +241,9 @@ class User extends Authenticatable
     {
         return $this->hasRole(Role::CLIENT);
     }
+
+    public function isResearcher(): bool
+    {
+        return $this->hasRole(Role::RESEARCHER);
+    }
 }

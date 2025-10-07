@@ -60,4 +60,6 @@ class Role extends Model
     const ADMIN = 'Admin';
     const MENTOR = 'Mentor';
     const CLIENT = 'Client';
+    const RESEARCHER = 'Researcher';
+
 }
