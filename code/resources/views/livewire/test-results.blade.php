@@ -6,7 +6,16 @@
             $lastUrl = $lastInterestImg ?? null;
         @endphp
 
-    <div class="flex justify-items-start items-center gap-x-12 mb-12">
+    <div class="flex justify-center items-center gap-x-12 mb-12">
+
+        @if($noSelections)
+            <div class="flex justify-center items-center h-full">
+                <p class="text-xl text-gray-700 font-medium">
+                    No questions were selected in this test.
+                </p>
+            </div>
+        @endif
+
         @if($mainInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
                 <p class="text-xl font-medium text-gray-800 mb-2">

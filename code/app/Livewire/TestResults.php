@@ -18,6 +18,9 @@ class TestResults extends Component
     public $secondInterestImg;
     public $lastInterestImg;
 
+    public $noSelections = false;
+
+
     public function mount()
     {
         $this->testAttemptId = session('testAttemptId');
@@ -25,11 +28,20 @@ class TestResults extends Component
             return redirect()->route('dashboard');
         }
 
+
         // 1) Selected answers for this attempt
         $answers = Answer::with(['question.interestField.interestFieldTranslations.language'])
             ->where('test_attempt_id', $this->testAttemptId)
             ->where('answer', true)
             ->get();
+
+        // If user selected nothing positive, show message and stop
+        if ($answers->isEmpty()) {
+            $this->noSelections = true;
+            $this->mainInterest = $this->secondInterest = $this->lastInterest = null;
+            $this->mainInterestImg = $this->secondInterestImg = $this->lastInterestImg = null;
+            return;
+        }
 
         // 2) Get test_id from any answer (bail if none)
         $testId = optional($answers->first())->question->test_id;
@@ -77,12 +89,13 @@ class TestResults extends Component
         $main = $sortedDesc->first();
         $this->mainInterest = $main ?? null;
 
-        // second = first item with different id than main
+        // second = first item with >0 picks and different from main
         $this->secondInterest = null;
         if ($main) {
             $this->secondInterest = $sortedDesc->first(function ($item) use ($main) {
-                return $item['interest_field_id'] !== $main['interest_field_id'];
-            });
+                return $item['interest_field_id'] !== $main['interest_field_id']
+                    && ($item['total'] ?? 0) > 0;
+            }) ?: null;
         }
 
         // 7) Least-picked: only if there is a UNIQUE minimum (no ties).
