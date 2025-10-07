@@ -168,31 +168,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <flux:label class="block text-sm font-medium">
-                        {{ __('Disabilities (optional)') }}
-                    </flux:label>
-                    <div class="mt-2 grid gap-2 md:grid-cols-2">
-                        @forelse ($disabilityOptions as $option)
-                        <flux:checkbox
-                            id="disability-{{ $option['id'] }}"
-                            wire:model.defer="form.disability_ids"
-                            value="{{ $option['id'] }}"
-                            :label="$option['label']" />
-                        @empty
-                        <p class="text-sm text-gray-500">
-                            {{ __('No disability options available yet.') }}
-                        </p>
-                        @endforelse
-                    </div>
-                    @error('form.disability_ids')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    @error('form.disability_ids.*')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
                 <div class="flex flex-col gap-3 border-t border-gray-200 pt-4 md:flex-row md:items-center md:justify-end">
                     <flux:modal.close>
                         <flux:button

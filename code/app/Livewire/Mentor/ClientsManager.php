@@ -63,13 +63,6 @@ class ClientsManager extends BaseCrudComponent
     public array $languages = [];
 
     /**
-     * Disability options available for selection.
-     *
-     * @var list<array{id:int,label:string}>
-     */
-    public array $disabilityOptions = [];
-
-    /**
      * Form modal state.
      */
     public bool $formModalVisible = false;
@@ -92,14 +85,8 @@ class ClientsManager extends BaseCrudComponent
      */
     public bool $showInactivated = false;
 
-    public function boot(): void
-    {
-        $this->registerOptionRelations();
-    }
-
     public function mount(): void
     {
-        $this->registerOptionRelations();
         parent::mount();
 
         if (!isset($this->clientRole)) {
@@ -107,15 +94,9 @@ class ClientsManager extends BaseCrudComponent
         }
     }
 
-    public function hydrate(): void
-    {
-        $this->registerOptionRelations();
-    }
-
     protected function initializeCrud(): void
     {
         $this->ensureMentorContext(force: true);
-        $this->registerOptionRelations();
 
         $this->clientRole = Role::where('role', Role::CLIENT)->firstOrFail();
 
@@ -194,7 +175,6 @@ class ClientsManager extends BaseCrudComponent
      */
     protected function baseQuery(): Builder
     {
-        $this->registerOptionRelations();
         $this->ensureMentorContext();
 
         return User::query()
@@ -204,14 +184,12 @@ class ClientsManager extends BaseCrudComponent
             ->where('active', true)
             ->with([
                 'language',
-                'options' => fn ($query) => $query->where('type', Option::TYPE_DISABILITY),
             ])
             ->orderBy('first_name')
             ->orderBy('last_name');
     }
 
     protected function inactivatedClientsQuery(): Builder {
-        $this->registerOptionRelations();
         $this->ensureMentorContext();
 
         return User::query()
@@ -221,7 +199,6 @@ class ClientsManager extends BaseCrudComponent
             ->where('active', false)
             ->with([
                 'language',
-                'options' => fn ($query) => $query->where('type', Option::TYPE_DISABILITY),
             ])
             ->orderBy('first_name')
             ->orderBy('last_name');
@@ -270,7 +247,6 @@ class ClientsManager extends BaseCrudComponent
             'username' => $record->username,
             'password' => '',
             'language_id' => $record->language_id,
-            'disability_ids' => $record->options->pluck('option_id')->map(fn ($id) => (int) $id)->all(),
             'active' => (bool) $record->active,
             'is_sound_on' => (bool) $record->is_sound_on,
             'vision_type' => $this->normalizeVision($record->vision_type),
@@ -286,7 +262,6 @@ class ClientsManager extends BaseCrudComponent
     {
         return array_merge(parent::viewData(), [
             'languages' => $this->languages,
-            'disabilityOptions' => $this->disabilityOptions,
             'inactivatedClients' => $this->inactivatedClients,
             'visionTypes' => $this->visionTypeOptions(),
         ]);
@@ -318,8 +293,6 @@ class ClientsManager extends BaseCrudComponent
                 Password::defaults(),
             ]),
             'form.language_id' => ['required', 'integer', 'exists:language,language_id'],
-            'form.disability_ids' => ['array'],
-            'form.disability_ids.*' => ['integer', Rule::in($this->disabilityUniverse)],
             'form.active' => ['boolean'],
             'form.is_sound_on' => ['boolean'],
             'form.vision_type' => ['required', 'string', Rule::in(array_keys(self::VISION_TYPES))],
@@ -377,8 +350,6 @@ class ClientsManager extends BaseCrudComponent
                 $client->save();
                 $client->roles()->syncWithoutDetaching([$this->clientRole->role_id]);
             }
-
-            $client->options()->sync($disabilityIds);
         });
 
         $this->resetFormState();
@@ -470,24 +441,6 @@ class ClientsManager extends BaseCrudComponent
         } elseif (!$this->defaultLanguageId) {
             $this->defaultLanguageId = $this->mentorLanguageId;
         }
-
-        if ($force || empty($this->disabilityOptions) || empty($this->disabilityUniverse)) {
-            $disabilityCollection = Option::query()
-                ->where('type', Option::TYPE_DISABILITY)
-                ->orderBy('option_name')
-                ->get();
-
-            $this->disabilityOptions = $disabilityCollection
-                ->map(fn (Option $option) => [
-                    'id' => $option->option_id,
-                    'label' => $option->option_name,
-                ])->all();
-
-            $this->disabilityUniverse = $disabilityCollection
-                ->pluck('option_id')
-                ->map(fn ($id) => (int) $id)
-                ->all();
-        }
     }
 
     protected function defaultVision(): string
@@ -508,22 +461,5 @@ class ClientsManager extends BaseCrudComponent
         }
 
         return $options;
-    }
-
-    protected function registerOptionRelations(): void
-    {
-        if (self::$relationsRegistered) {
-            return;
-        }
-
-        User::resolveRelationUsing('options', function (User $user) {
-            return $user->belongsToMany(Option::class, 'user_option', 'user_id', 'option_id')->withTimestamps();
-        });
-
-        User::resolveRelationUsing('disabilities', function (User $user) {
-            return $user->options()->where('type', Option::TYPE_DISABILITY);
-        });
-
-        self::$relationsRegistered = true;
     }
 }
