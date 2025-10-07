@@ -126,6 +126,8 @@ class ClientsManager extends BaseCrudComponent
         $this->formModalMode = 'create';
         $this->formModalVisible = true;
 
+        $this->dispatch('modal-open', name: 'mentor-client-form');
+
         $this->dispatch('crud-form-opened', mode: 'create');
     }
 
@@ -142,6 +144,7 @@ class ClientsManager extends BaseCrudComponent
         $this->resetErrorBag();
         $this->resetValidation();
 
+        $this->dispatch('modal-open', name: 'mentor-client-form');
         $this->dispatch('crud-form-opened', mode: 'edit');
     }
 
@@ -154,6 +157,7 @@ class ClientsManager extends BaseCrudComponent
     public function closeFormModal(): void
     {
         $this->resetFormState();
+        $this->dispatch('modal-close', name: 'mentor-client-form');
     }
 
     /**
@@ -345,6 +349,7 @@ class ClientsManager extends BaseCrudComponent
         $this->resetPage();
         session()->flash('status', $isEditing ? __('Client updated successfully.') : __('Client created successfully.'));
         $this->dispatch('crud-record-saved');
+        $this->dispatch('modal-close', name: 'mentor-client-form');
     }
 
     public function requestToggle(int $recordId): void
@@ -358,6 +363,8 @@ class ClientsManager extends BaseCrudComponent
         $this->toggleModalName = $name !== '' ? $name : $client->username;
         $this->toggleModalWillActivate = !$client->active;
         $this->toggleModalVisible = true;
+
+        $this->dispatch('modal-open', name: 'mentor-client-toggle');
     }
 
     public function confirmToggle(): void
@@ -385,6 +392,7 @@ class ClientsManager extends BaseCrudComponent
         $this->pendingToggleId = null;
         $this->toggleModalName = '';
         $this->toggleModalWillActivate = false;
+        $this->dispatch('modal-close', name: 'mentor-client-toggle');
     }
 
     public function toggleShowInactivated(): void

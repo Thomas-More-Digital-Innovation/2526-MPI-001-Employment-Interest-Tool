@@ -1,11 +1,11 @@
 @props([
-    'records' => [],
+'records' => [],
 ])
 
-<div class="overflow-x-scroll rounded-lg border border-gray-200 bg-white shadow-sm">
-    <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-            <tr class="text-left text-sm font-semibold text-gray-700">
+<div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white shadow-sm">
+    <x-table class="min-w-full divide-y divide-gray-800" border>
+        <thead class="bg-gray-50 dark:bg-zinc-600">
+            <tr class="text-left text-sm font-semibold text-gray-700 dark:text-gray-200">
                 <th class="px-4 py-3">{{ __('First name') }}</th>
                 <th class="px-4 py-3">{{ __('Last name') }}</th>
                 <th class="px-4 py-3">{{ __('Username') }}</th>
@@ -15,9 +15,9 @@
                 <th class="px-4 py-3 text-right">{{ __('Actions') }}</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200 text-sm text-gray-700">
+        <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
             @forelse ($records as $client)
-            <tr wire:key="client-{{ $client->user_id }}" class="hover:bg-gray-50">
+            <tr wire:key="client-{{ $client->user_id }}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
                 <td class="px-4 py-3">{{ $client->first_name }}</td>
                 <td class="px-4 py-3">{{ $client->last_name }}</td>
                 <td class="px-4 py-3 font-mono">{{ $client->username }}</td>
@@ -40,13 +40,16 @@
                 </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end gap-2">
-                        <button
-                            type="button"
-                            wire:click="startEdit({{ $client->user_id }})"
-                            class="inline-flex items-center rounded-md border border-gray-300 px-3 py-1 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                            <flux:icon name="pencil" class="w-5 h-5" />&nbsp;
-                            {{ __('Edit') }}
-                        </button>
+                        <flux:modal.trigger name="mentor-client-form">
+                            <flux:button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                icon="pencil"
+                                wire:click="startEdit({{ $client->user_id }})">
+                                {{ __('Edit') }}
+                            </flux:button>
+                        </flux:modal.trigger>
                     </div>
                 </td>
             </tr>
@@ -58,9 +61,11 @@
             </tr>
             @endforelse
         </tbody>
-    </table>
+    </x-table>
 
-    <div class="border-t border-gray-200 bg-gray-50 px-4 py-3">
+    @if (method_exists($records, 'links'))
+    <div class="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-zinc-600 px-4 py-3">
         {{ $records->links() }}
     </div>
+    @endif
 </div>
