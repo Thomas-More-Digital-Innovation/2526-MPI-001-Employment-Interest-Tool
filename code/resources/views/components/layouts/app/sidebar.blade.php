@@ -8,7 +8,7 @@
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
             <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                <x-app-logo />
+                <x-app-logo-small />
             </a>
 
             <flux:navlist variant="outline">
@@ -18,8 +18,8 @@
                     @include('components.layouts.app.sidebar-admin')
                 @elseif(auth()->user()->isMentor())
                     @include('components.layouts.app.sidebar-mentor')
-                @elseif(auth()->user()->isClient())
-                    @include('components.layouts.app.sidebar-client')
+                @elseif(auth()->user()->isResearcher())
+                    @include('components.layouts.app.sidebar-researcher')
                 @endif
             </flux:navlist>
 

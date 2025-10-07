@@ -40,4 +40,5 @@ class Password extends Component
 
         $this->dispatch('password-updated');
     }
+
 }

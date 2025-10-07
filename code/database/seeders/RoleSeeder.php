@@ -38,9 +38,15 @@ class RoleSeeder extends Seeder
             'receive_emails' => false,
         ]);
 
+        $researcherRole = Role::firstOrCreate([
+            'role' => Role::RESEARCHER,
+        ], [
+            'receive_emails' => false,
+        ]);
+
         // Assign roles to existing users if they don't have any
         $users = User::doesntHave('roles')->get();
-        
+
         foreach ($users as $user) {
             // Assign Client role as default for users without roles
             $user->roles()->attach($clientRole);

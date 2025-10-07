@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Livewire\Test as TestComponent;
+use App\Models\User;
 use App\Models\Answer;
 use App\Models\TestAttempt;
 use Carbon\Carbon;
@@ -14,11 +15,12 @@ class TestComponentTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected User $user;
+
     protected function setUp(): void
     {
         parent::setUp();
-
-        \App\Models\User::factory()->create(['user_id' => 4]);
+        $this->user = User::factory()->create();
     }
 
     public function test_mounts_with_correct_total_questions_and_test_name()
@@ -32,7 +34,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->assertSet('totalQuestions', 3)
@@ -48,7 +51,8 @@ class TestComponentTest extends TestCase
             ->number(1)
             ->create();
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->assertSet('title', $question->question)
@@ -68,7 +72,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->call('next')
@@ -87,7 +92,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->set('questionNumber', 2)
@@ -107,7 +113,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->set('questionNumber', 2)
@@ -126,7 +133,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->call('previous')
@@ -144,7 +152,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->call('like')
@@ -162,7 +171,8 @@ class TestComponentTest extends TestCase
             ->number(1)
             ->create();
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->call('close')
@@ -180,14 +190,15 @@ class TestComponentTest extends TestCase
 
         $this->assertDatabaseCount('test_attempt', 0);
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class);
 
         $this->assertDatabaseCount('test_attempt', 1);
         $this->assertDatabaseHas('test_attempt', [
             'test_id' => $test->test_id,
-            'user_id' => 4,
+            'user_id' => $this->user->user_id,
         ]);
     }
 
@@ -202,14 +213,13 @@ class TestComponentTest extends TestCase
 
         $existingAttempt = TestAttempt::create([
             'test_id' => $test->test_id,
-            'user_id' => 4,
+            'user_id' => $this->user->user_id,
         ]);
 
         $this->assertDatabaseCount('test_attempt', 1);
 
         session([
             'testId' => $test->test_id,
-            'userId' => 4,
             'testAttemptId' => $existingAttempt->test_attempt_id
         ]);
 
@@ -227,7 +237,8 @@ class TestComponentTest extends TestCase
             ->number(1)
             ->create();
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->call('like');
@@ -248,7 +259,8 @@ class TestComponentTest extends TestCase
             ->number(1)
             ->create();
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->call('dislike');
@@ -274,7 +286,8 @@ class TestComponentTest extends TestCase
             ->number(2)
             ->create();
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->call('next');
@@ -300,7 +313,8 @@ class TestComponentTest extends TestCase
             ->number(2)
             ->create();
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->dispatch(TestComponent::UNCLEAR_CLOSED_EVENT);
@@ -323,7 +337,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->dispatch(TestComponent::UNCLEAR_CLOSED_EVENT)
@@ -346,7 +361,8 @@ class TestComponentTest extends TestCase
             ->number(2)
             ->create();
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         $component = Livewire::test(TestComponent::class);
 
@@ -372,7 +388,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         $component = Livewire::test(TestComponent::class)
             ->call('like')
@@ -397,7 +414,8 @@ class TestComponentTest extends TestCase
             ->number(1)
             ->create();
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->assertSet('previousEnabled', false);
@@ -414,7 +432,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->set('questionNumber', 2)
@@ -433,7 +452,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->set('questionNumber', 2)
@@ -452,7 +472,8 @@ class TestComponentTest extends TestCase
                 ->create();
         }
 
-        session(['testId' => $test->test_id, 'userId' => 4]);
+        session(['testId' => $test->test_id]);
+        $this->actingAs($this->user);
 
         Livewire::test(TestComponent::class)
             ->set('questionNumber', 2)

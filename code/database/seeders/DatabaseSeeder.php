@@ -50,6 +50,11 @@ class DatabaseSeeder extends Seeder
             'receive_emails' => false,
         ]);
 
+        $researcherRole = Role::create([
+            'role' => Role::RESEARCHER,
+            'receive_emails' => false,
+        ]);
+
         // Create test users with different roles
         $superAdmin = User::factory()->create([
             'first_name' => 'Super',
@@ -92,6 +97,20 @@ class DatabaseSeeder extends Seeder
             'profile_picture_url' => 'default.png',
         ]);
         $mentor->roles()->attach($mentorRole);
+
+        $researcher = User::factory()->create([
+            'first_name' => 'Test',
+            'last_name' => 'Researcher',
+            'username' => 'researcher',
+            'email' => 'researcher@example.com',
+            'vision_type' => 'normal',
+            'is_sound_on' => false,
+            'password' => bcrypt('password'),
+            'organisation_id' => $organisation->organisation_id,
+            'language_id' => $language->language_id,
+            'profile_picture_url' => 'default.png',
+        ]);
+        $researcher->roles()->attach($researcherRole);
 
         // Create a specific test user (client)
         $client = User::factory()->create([
