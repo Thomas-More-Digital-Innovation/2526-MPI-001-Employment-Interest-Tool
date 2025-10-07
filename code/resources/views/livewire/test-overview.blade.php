@@ -5,5 +5,4 @@
             <p>Attempted at: {{ $attempt->created_at->format('d M Y, H:i') }}</p>
         </div>
     @endforeach
-
 </div>

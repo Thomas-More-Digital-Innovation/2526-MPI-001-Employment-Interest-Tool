@@ -28,8 +28,8 @@
                 <livewire:user-profile />
             </div>
         </flux:header>
-        <flux:main>
-{{--            <div class="flex max-md:flex-col items-start">--}}
+        <flux:main :class="request()->routeIs('client.dashboard') ? '!p-2 !lg:p-3' : ''">
+            {{--            <div class="flex max-md:flex-col items-start">--}}
 {{--                @if(auth()->user()->isClient())--}}
 {{--                    @else--}}
 {{--                        <div class="hidden md:flex pb-4 me-10">--}}

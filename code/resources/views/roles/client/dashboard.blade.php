@@ -1,5 +1,5 @@
 <x-layouts.client>
-    <section class="h-full flex flex-col gap-3">
+    <section class="h-full flex flex-col">
         <div class="flex-1 border dark:border-zinc-300/20 bg-zinc-600/10 dark:bg-zinc-400/10 m-3 rounded-2xl">
             @livewire('client-test-picker')
         </div>
