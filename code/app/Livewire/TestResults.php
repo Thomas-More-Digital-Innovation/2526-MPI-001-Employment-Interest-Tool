@@ -118,6 +118,8 @@ class TestResults extends Component
             $this->lastInterest['interest_field_id'] ?? null,
             $answers
         );
+
+
     }
 
     private function getRandomImageForInterest($interestFieldId, $answers)
@@ -131,13 +133,26 @@ class TestResults extends Component
             return $a->question && $a->question->interest_field_id === $interestFieldId;
         });
 
-        if ($filteredAnswers->isEmpty()) {
-            return null;
+        if ($filteredAnswers->isNotEmpty()) {
+            $answer = $filteredAnswers->random();
+            return $answer && $answer->question
+                ? $answer->question->getImageUrl($currentLocale)
+                : null;
         }
 
-        $answer = $filteredAnswers->random();
+        // Fallback if there were 0 answers for this interest
+        $testId = optional($answers->first())->question->test_id;
+        if ($testId) {
+            $q = \App\Models\Question::where('test_id', $testId)
+                ->where('interest_field_id', $interestFieldId)
+                ->inRandomOrder()
+                ->first();
 
-        return $answer && $answer->question ? $answer->question->getImageUrl($currentLocale) : null;
+            if ($q) {
+                return $q->getImageUrl($currentLocale);
+            }
+        }
+        return null;
     }
 
     public $finished = true;

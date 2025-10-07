@@ -6,7 +6,7 @@
             $lastUrl = $lastInterestImg ?? null;
         @endphp
 
-    <div class="flex justify-items-start items-center gap-x-12">
+    <div class="flex justify-items-start items-center gap-x-12 mb-12">
         @if($mainInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
                 <p class="text-xl font-medium text-gray-800 mb-2">
@@ -68,10 +68,9 @@
         @endif
     </div>
 
-
-    <div class="mt-8 flex justify-center">
+    <div class="flex justify-center">
         <a href="{{ route('dashboard') }}">
-            <button class="px-6 py-3 bg-teal-600 text-white rounded-md text-lg hover:bg-teal-700">
+            <button class="px-6 py-3 bg-green-400 text-white rounded-md text-lg ">
             Continue
             </button>
         </a>
