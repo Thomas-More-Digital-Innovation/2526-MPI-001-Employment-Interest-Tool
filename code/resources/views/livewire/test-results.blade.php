@@ -10,7 +10,7 @@
 
         @if($noSelections)
             <div class="flex justify-center items-center h-full">
-                <p class="text-xl text-gray-700 font-medium">
+                <p class="text-xl text-gray-700 font-medium dark:text-white">
                     No questions were selected in this test.
                 </p>
             </div>
