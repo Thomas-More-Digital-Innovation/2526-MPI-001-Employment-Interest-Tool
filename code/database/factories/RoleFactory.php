@@ -20,6 +20,7 @@ class RoleFactory extends Factory
                 Role::ADMIN,
                 Role::MENTOR,
                 Role::CLIENT,
+                Role::RESEARCHER,
             ]),
         ];
     }
