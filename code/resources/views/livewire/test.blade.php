@@ -10,7 +10,7 @@
     <!-- Main content -->
     <div class="grid grid-cols-2 md:grid-cols-3 grid-rows-[auto_1fr] md:grid-rows-1 gap-2 h-full mt-2">
         <!-- Image + Title -->
-        <div class="col-span-2 md:col-span-1 row-start-1 md:order-2 flex flex-col content-center relative"
+        <div class="col-span-2 md:col-span-1 row-start-1 md:order-2 flex flex-col content-center relative overflow-hidden"
                 wire:key="image-container-{{ $questionNumber }}">
             <div class="absolute inset-0 flex items-center justify-center z-10 bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 backdrop-blur-sm rounded-md"
                     x-data="{ show: {{ $isImageLoading ? 'true' : 'false' }} }"
@@ -29,23 +29,47 @@
                 src="{{ $image }}"
                 alt="{{ $imageDescription ?? '' }}"
                 class="object-cover rounded-md"/>
-            <h2 class="text-4xl md:text-5xl font-semibold mt-2 text-center">{{ $title }}</h2>
+            <h2 class="text-4xl md:text-5xl font-semibold mt-2 text-center break-words overflow-hidden max-w-full">{{ $title }}</h2>
         </div>
 
         <!-- Buttons -->
-        <div class="h-full row-start-2 md:row-start-1 md:order-1">
+        <div class="h-full row-start-2 md:row-start-1 md:order-1 relative">
             <button class="w-full h-full bg-green-400 rounded-md"
                     wire:click="like"
                     wire:loading.attr="disabled"
                     wire:target="like, dislike, next, previous"
-                    @if($isQuestionLoading) disabled class="w-full h-full bg-green-400 rounded-md opacity-50 cursor-not-allowed" @endif></button>
+                    @if($isQuestionLoading) disabled class="w-full h-full bg-green-400 rounded-md opacity-50 cursor-not-allowed" @endif>
+            </button>
+            <!-- Overlay for disabled state -->
+            @if($isQuestionLoading)
+                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
+                    <div class="text-white text-center">
+                        <div class="animate-pulse">
+                            <flux:icon.clock class="size-12 mx-auto" />
+                            <span class="block text-sm">Please wait</span>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
-        <div class="h-full row-start-2 md:row-start-1 md:order-3">
-            <button class="w-full h-full  bg-red-500 rounded-md"
+        <div class="h-full row-start-2 md:row-start-1 md:order-3 relative">
+            <button class="w-full h-full bg-red-500 rounded-md"
                     wire:click="dislike"
                     wire:loading.attr="disabled"
                     wire:target="like, dislike, next, previous"
-                    @if($isQuestionLoading) disabled class="w-full h-full bg-red-500 rounded-md opacity-50 cursor-not-allowed" @endif></button>
+                    @if($isQuestionLoading) disabled class="w-full h-full bg-red-500 rounded-md opacity-50 cursor-not-allowed" @endif>
+            </button>
+            <!-- Overlay for disabled state -->
+            @if($isQuestionLoading)
+                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
+                    <div class="text-white text-center">
+                        <div class="animate-pulse">
+                            <flux:icon.clock class="size-12 mx-auto" />
+                            <span class="block text-sm">Please wait</span>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 
@@ -99,15 +123,3 @@
         <div class="bg-red-400 py-2" :style="`width: ${progress}%`"></div>
     </div>
 </div>
-@push('scripts')
-<script>
-    document.addEventListener('livewire:initialized', () => {
-        Livewire.on('enable-buttons-after-delay', () => {
-            setTimeout(function() {
-                @this.call('enableButtons');
-            }, 1000); // 1 second delay
-        });
-    });
-</script>
-@endpush
-

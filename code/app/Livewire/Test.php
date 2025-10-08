@@ -198,13 +198,18 @@ class Test extends Component
         $this->isImageLoading = false;
         $this->dispatch('img-loading-state-changed', ['loading' => false]);
 
-        // Trigger the JavaScript timeout to enable buttons after delay
-        $this->dispatch('enable-buttons-after-delay');
+        // We need to separately handle the button enabling with a delay
+        // so dispatch another event that will be handled separately
+        $this->dispatch('enable-buttons-delayed');
     }
 
-    public function enableButtons()
+    #[On('enable-buttons-delayed')]
+    public function enableButtonsWithDelay()
     {
-        // Enable the buttons after the JavaScript timeout
+        // Sleep for 1 second to give users time to read the question
+        sleep(1);
+
+        // Enable the buttons after the delay
         $this->isQuestionLoading = false;
         $this->dispatch('loading-state-changed', ['loading' => false]);
     }
