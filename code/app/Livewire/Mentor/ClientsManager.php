@@ -50,10 +50,6 @@ class ClientsManager extends BaseCrudComponent
      */
     protected ?int $defaultLanguageId = null;
 
-    /**
-     * Cached disability option ids for detach logic.
-     */
-    protected array $disabilityUniverse = [];
 
     /**
      * Languages available for selection.
@@ -315,18 +311,12 @@ class ClientsManager extends BaseCrudComponent
             'vision_type' => $this->form['vision_type'],
         ];
 
-        $disabilityIds = collect($this->form['disability_ids'] ?? [])
-            ->map(fn ($id) => (int) $id)
-            ->filter(fn ($id) => in_array($id, $this->disabilityUniverse, true))
-            ->unique()
-            ->values()
-            ->all();
 
         $isEditing = (bool) $this->editingId;
 
         $client = null;
 
-        DB::transaction(function () use (&$client, $attributes, $disabilityIds, $isEditing) {
+        DB::transaction(function () use (&$client, $attributes, $isEditing) {
             if (!isset($this->clientRole)) {
                 $this->clientRole = Role::where('role', Role::CLIENT)->firstOrFail();
             }
