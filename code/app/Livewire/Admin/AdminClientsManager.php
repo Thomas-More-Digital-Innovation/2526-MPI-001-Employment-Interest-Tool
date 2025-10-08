@@ -101,7 +101,7 @@ class AdminClientsManager extends MentorClientsManager
     protected function rules(): array
     {
         return array_merge(parent::rules(), [
-            'form.mentor_id' => ['nullable', 'integer', 'exists:users,user_id'],
+            'form.mentor_id' => ['required', 'integer', 'exists:users,user_id'],
         ]);
     }
 
@@ -288,7 +288,7 @@ class AdminClientsManager extends MentorClientsManager
             'active' => (bool) $this->form['active'],
             'is_sound_on' => (bool) $this->form['is_sound_on'],
             'vision_type' => $this->form['vision_type'],
-            'mentor_id' => $this->form['mentor_id'] ? (int) $this->form['mentor_id'] : null,
+            'mentor_id' => (int) $this->form['mentor_id'],
             'organisation_id' => $this->organisationId,
         ];
 
@@ -406,6 +406,7 @@ class AdminClientsManager extends MentorClientsManager
         session()->flash('status', __('Client deleted permanently.'));
 
         $this->closeDeleteModal();
+        $this->closeFormModal();
         $this->resetPage();
     }
 

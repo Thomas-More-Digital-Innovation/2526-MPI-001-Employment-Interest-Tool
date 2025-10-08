@@ -176,7 +176,7 @@ class ClientsManager extends BaseCrudComponent
         return User::query()
             ->where('mentor_id', $this->mentorId)
             ->where('organisation_id', $this->mentorOrganisationId)
-            ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::CLIENT))
+            ->whereHas('roles', fn(Builder $query) => $query->where('role', Role::CLIENT))
             ->where('active', true)
             ->with([
                 'language',
@@ -185,13 +185,14 @@ class ClientsManager extends BaseCrudComponent
             ->orderBy('last_name');
     }
 
-    protected function inactivatedClientsQuery(): Builder {
+    protected function inactivatedClientsQuery(): Builder
+    {
         $this->ensureMentorContext();
 
         return User::query()
             ->where('mentor_id', $this->mentorId)
             ->where('organisation_id', $this->mentorOrganisationId)
-            ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::CLIENT))
+            ->whereHas('roles', fn(Builder $query) => $query->where('role', Role::CLIENT))
             ->where('active', false)
             ->with([
                 'language',
@@ -233,7 +234,7 @@ class ClientsManager extends BaseCrudComponent
         return $record;
     }
 
-    
+
 
     protected function transformRecordToForm($record): array
     {
@@ -419,7 +420,7 @@ class ClientsManager extends BaseCrudComponent
         if ($force || empty($this->languages)) {
             $languageCollection = Language::orderBy('language_name')->get();
             $this->languages = $languageCollection
-                ->map(fn (Language $language) => [
+                ->map(fn(Language $language) => [
                     'id' => $language->language_id,
                     'label' => $language->language_name,
                     'code' => $language->language_code,

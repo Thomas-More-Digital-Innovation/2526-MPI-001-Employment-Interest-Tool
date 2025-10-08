@@ -161,12 +161,14 @@
                         <flux:select
                             id="client-mentor"
                             wire:model.defer="form.mentor_id"
-                            :label="__('Mentor')">
-                            @forelse ($mentorOptions as $mentor)
-                            <option value="{{ $mentor['id'] }}">{{ $mentor['label'] }}</option>
-                            @empty
-                            <option value="">{{ __('No mentor assigned') }}</option>
-                            @endforelse
+                            :label="__('Mentor')"
+                            required>
+                            <option value="">{{ __('Select a mentor') }}</option>
+                            @foreach ($mentorOptions as $mentor)
+                            <option value="{{ $mentor['id'] }}" @selected((string) $mentor['id'] === (string) $form['mentor_id'])>
+                                {{ $mentor['label'] }}
+                            </option>
+                            @endforeach
                         </flux:select>
                         @error('form.mentor_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -222,6 +224,16 @@
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+                    @if ($editingId && !$form["active"])
+                    <flux:button
+                        type="button"
+                        variant="danger"
+                        size="sm"
+                        icon="trash"
+                        wire:click="requestDelete({{ $editingId }})">
+                        {{ __('Delete') }}
+                    </flux:button>
+                    @endif
                 </div>
 
                 <div class="flex flex-col gap-3 border-t border-gray-200 pt-4 md:flex-row md:items-center md:justify-end">
@@ -253,7 +265,6 @@
             <flux:heading size="lg">
                 {{ $toggleModalWillActivate ? __('Enable client') : __('Disable client') }}
             </flux:heading>
-
             <flux:text class="text-sm text-gray-700">
                 {{ $toggleModalWillActivate
                             ? __('Are you sure you want to enable :client? They will regain access immediately.', ['client' => $toggleModalName])
@@ -306,7 +317,7 @@
                 <flux:button
                     type="button"
                     variant="danger"
-                    wire:click="deleteClient">
+                    wire:click="confirmDelete">
                     {{ __('Delete client') }}
                 </flux:button>
             </div>

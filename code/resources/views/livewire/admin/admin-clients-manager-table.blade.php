@@ -28,16 +28,7 @@
                 </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end gap-2">
-                        <flux:button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            icon="arrow-path"
-                            wire:click="requestToggle({{ $client->user_id }})">
-                            {{ $client->active ? __('Disable') : __('Enable') }}
-                        </flux:button>
-
-                        <flux:modal.trigger name="admin-client-form">
+                        <flux:modal.trigger name="mentor-client-form">
                             <flux:button
                                 type="button"
                                 variant="outline"
@@ -47,15 +38,6 @@
                                 {{ __('Edit') }}
                             </flux:button>
                         </flux:modal.trigger>
-
-                        <flux:button
-                            type="button"
-                            variant="danger"
-                            size="sm"
-                            icon="trash"
-                            wire:click="requestDelete({{ $client->user_id }})">
-                            {{ __('Delete') }}
-                        </flux:button>
                     </div>
                 </td>
             </tr>
