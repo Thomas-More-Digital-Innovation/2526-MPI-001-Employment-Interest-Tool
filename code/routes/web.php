@@ -86,6 +86,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:Admin'])->group(function () {
         Route::view('admin/dashboard', 'roles.admin.dashboard')->name('admin.dashboard');
         Route::view('admin/example', 'roles.admin.example')->name('admin.example');
+        Route::view(uri: 'admin/admin-clients-manager', view: 'roles.admin.admin-clients-manager')->name('admin.admin-clients-manager');
+
     });
 
     Route::middleware(['role:Mentor'])->group(function () {
