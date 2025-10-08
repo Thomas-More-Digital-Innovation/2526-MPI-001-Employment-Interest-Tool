@@ -14,6 +14,7 @@ class TestOverview extends Component
         $this->attempts = TestAttempt::with('test:test_id,test_name')
             ->where('user_id', Auth::id())
             ->orderByDesc('created_at')
+            ->limit(5)
             ->get();
     }
 
