@@ -2,6 +2,7 @@
     <canvas id="interestChart"></canvas>
 </div>
 
+@push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('livewire:init', function () {
@@ -11,7 +12,7 @@
             data: {
                 labels: @json($labels),
                 datasets: [{
-                    label: 'Intrestfields',
+                    label: '{{__('pagesresearcher.Intrestfields')}}',
                     data: @json($data),
                     backgroundColor: 'rgba(75, 192, 192, 0.5)',
                     borderColor: 'rgba(75, 192, 192, 1)',
@@ -33,3 +34,4 @@
         });
     });
 </script>
+@endpush

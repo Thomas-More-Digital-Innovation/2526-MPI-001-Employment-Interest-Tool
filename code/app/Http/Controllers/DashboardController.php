@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Organisation;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Test;
@@ -21,9 +22,17 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-
+        $totalOrganisations = Organisation::count();
         $totalUsers = User::count();
         $totalTests = Test::count();
+        $countCompleteAttempts = TestAttempt::where('finished', true)->count();
+        $countAttempts = TestAttempt::count();
+        if ($countAttempts!=0){
+            $completionScore = ($countCompleteAttempts/$countAttempts*100) . '%';
+        }
+        else{
+            $completionScore = (__('pagesresearcher.NoAttempts'));
+        }
         $interestFields = InterestField::all();
         $mostChosenIntrestFields = DB::table('answer')
             ->join('test_attempt', 'answer.test_attempt_id', '=', 'test_attempt.test_attempt_id')
@@ -45,7 +54,7 @@ class DashboardController extends Controller
         } elseif ($user->isClient()) {
             return view('roles.client.dashboard');
         } elseif($user->isResearcher()){
-            return view('roles.researcher.dashboard', compact('totalUsers', 'totalTests', 'interestFields', 'mostChosenIntrestFields'));
+            return view('roles.researcher.dashboard', compact('totalUsers', 'totalTests', 'interestFields', 'mostChosenIntrestFields', 'totalOrganisations', 'completionScore'));
         }
 
         // Fallback for users without roles
