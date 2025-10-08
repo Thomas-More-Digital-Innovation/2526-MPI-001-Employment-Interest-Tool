@@ -81,6 +81,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:SuperAdmin'])->group(function () {
         Route::view('superadmin/dashboard', 'roles.superadmin.dashboard')->name('superadmin.dashboard');
         Route::view('superadmin/system', 'roles.superadmin.system')->name('superadmin.system');
+        Route::view('superadmin/test-creation', 'roles.superadmin.test-creation')->name('superadmin.test.create');
     });
 
     Route::middleware(['role:Admin'])->group(function () {
