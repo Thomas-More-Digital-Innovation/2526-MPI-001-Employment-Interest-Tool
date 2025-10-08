@@ -10,7 +10,7 @@
 
         @if($noSelections)
             <div class="flex justify-center items-center h-full">
-                <p class="text-xl text-gray-700 font-medium dark:text-white">
+                <p class="text-large">
                     {{ __('testresults.no_questions_selected') }}
                 </p>
             </div>
@@ -18,10 +18,10 @@
 
         @if($mainInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
-                <p class="text-xl font-medium text-gray-800 mb-2">
+                <p class="text-large">
                     {{ __('testresults.most_interested_in') }}:
                 </p>
-                <p class="text-xl text-gray-800 mb-4">
+                <p class="text-large-bold">
                     {{ $mainInterest['interest_field_name'] }}
                 </p>
 
@@ -38,10 +38,10 @@
 
         @if($secondInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
-                <p class="text-xl font-medium text-gray-800 mb-2">
+                <p class="text-large">
                     {{ __('testresults.second_most_interested_in') }}:
                 </p>
-                <p class="text-xl text-gray-800 mb-4">
+                <p class="text-large-bold">
                     {{ $secondInterest['interest_field_name'] }}
                 </p>
 
@@ -58,10 +58,10 @@
 
         @if($lastInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
-                <p class="text-xl font-medium text-gray-800 mb-2">
+                <p class="text-large">
                     {{ __('testresults.least_interested_in') }}:
                 </p>
-                <p class="text-xl text-gray-800 mb-4">
+                <p class="text-large-bold">
                     {{ $lastInterest['interest_field_name'] }}
                 </p>
 
@@ -76,11 +76,10 @@
             </div>
         @endif
     </div>
-    <!-- WIP Continue button that leads to test results -->
+
     <div class="mt-8 flex justify-center">
         <a href="{{ route('dashboard') }}">
-            <button class="px-6 py-3 bg-teal-600 text-white rounded-md text-lg hover:bg-teal-700">
-
+            <button class="btn-primary">
             {{ __('Continue') }}
             </button>
         </a>
