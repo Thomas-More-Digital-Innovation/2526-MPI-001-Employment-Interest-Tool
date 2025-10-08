@@ -18,6 +18,8 @@ class Test extends Component
     public $userId;
     public $testAttemptId;
     public $previousEnabled = true;
+    public $isQuestionLoading = true;
+    public $isImageLoading = true;
 
     public $startTime;
 
@@ -67,6 +69,8 @@ class Test extends Component
             ])->test_attempt_id;
         }
 
+        $this->isQuestionLoading = true;
+        $this->isImageLoading = true;
         $this->newQuestion();
     }
 
@@ -157,6 +161,13 @@ class Test extends Component
     private function newQuestion()
     {
         $this->startTime = Carbon::now();
+        $this->isQuestionLoading = true;
+        $this->isImageLoading = true;
+        $this->dispatch('loading-state-changed', ['loading' => true]);
+        $this->dispatch('img-loading-state-changed', ['loading' => true]);
+
+        // Reset loading state after 1 second
+        $this->dispatch('delay-loading')->self();
     }
 
     private function answer($answer, $unclear)
@@ -180,4 +191,21 @@ class Test extends Component
         );
     }
 
+    #[On('delay-loading')]
+    public function disableLoading()
+    {
+        // First show the image by removing the image loading overlay
+        $this->isImageLoading = false;
+        $this->dispatch('img-loading-state-changed', ['loading' => false]);
+
+        // Trigger the JavaScript timeout to enable buttons after delay
+        $this->dispatch('enable-buttons-after-delay');
+    }
+
+    public function enableButtons()
+    {
+        // Enable the buttons after the JavaScript timeout
+        $this->isQuestionLoading = false;
+        $this->dispatch('loading-state-changed', ['loading' => false]);
+    }
 }
