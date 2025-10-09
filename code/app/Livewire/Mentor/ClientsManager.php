@@ -234,8 +234,6 @@ class ClientsManager extends BaseCrudComponent
         return $record;
     }
 
-
-
     protected function transformRecordToForm($record): array
     {
         return [

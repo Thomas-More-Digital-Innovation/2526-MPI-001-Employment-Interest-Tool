@@ -25,4 +25,7 @@ return [
     'change_system_settings' => 'Wijzig uw systeeminstellingen',
     'profile_picture' => 'Profielfoto',
     'profile_picture_preview' => 'Profielfoto voorbeeld',
+    'previous_attempts' => 'Vorige pogingen',
+    'attempted_at' => 'Poging op',
+    'return_to_dashboard' => 'Terug naar dashboard'
 ];

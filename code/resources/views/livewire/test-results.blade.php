@@ -11,7 +11,7 @@
         @if($noSelections)
             <div class="flex justify-center items-center h-full">
                 <p class="text-xl text-gray-700 font-medium dark:text-white">
-                    No questions were selected in this test.
+                    {{ __('testresults.no_questions_selected') }}
                 </p>
             </div>
         @endif
@@ -19,7 +19,7 @@
         @if($mainInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
                 <p class="text-xl font-medium text-gray-800 mb-2">
-                    You are most interested in:
+                    {{ __('testresults.most_interested_in') }}:
                 </p>
                 <p class="text-xl text-gray-800 mb-4">
                     {{ $mainInterest['interest_field_name'] }}
@@ -39,7 +39,7 @@
         @if($secondInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
                 <p class="text-xl font-medium text-gray-800 mb-2">
-                    Your second interest is:
+                    {{ __('testresults.second_most_interested_in') }}:
                 </p>
                 <p class="text-xl text-gray-800 mb-4">
                     {{ $secondInterest['interest_field_name'] }}
@@ -59,7 +59,7 @@
         @if($lastInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
                 <p class="text-xl font-medium text-gray-800 mb-2">
-                    You are least interested in:
+                    {{ __('testresults.least_interested_in') }}:
                 </p>
                 <p class="text-xl text-gray-800 mb-4">
                     {{ $lastInterest['interest_field_name'] }}
@@ -81,7 +81,7 @@
         <a href="{{ route('dashboard') }}">
             <button class="px-6 py-3 bg-teal-600 text-white rounded-md text-lg hover:bg-teal-700">
 
-            Continue
+            {{ __('Continue') }}
             </button>
         </a>
     </div>
