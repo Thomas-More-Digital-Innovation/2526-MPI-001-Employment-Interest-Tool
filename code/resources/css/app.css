@@ -50,6 +50,16 @@
     }
 }
 
+@layer utilities {
+    .bg-color-mpi-500 {
+        background-color: var(--color-mpi-500);
+    }
+
+    .bg-color-mpi {
+        background-color: var(--color-mpi);
+    }
+}
+
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }

@@ -1,28 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Livewire;
 
+use App\Models\InterestField;
 use App\Models\Organisation;
-use App\Models\Role;
+use App\Models\TestAttempt;
 use App\Models\User;
 use App\Models\Test;
-use App\Models\Answer;
-use App\Models\TestAttempt;
-use App\Models\InterestField;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use PHPUnit\TextUI\XmlConfiguration\IntroduceCacheDirectoryAttribute;
+use Livewire\Component;
 
-class DashboardController extends Controller
+class DashboardGlobalOverview extends Component
 {
-    /**
-     * Show the appropriate dashboard based on user role.
-     */
-    public function index()
+    public function render()
     {
         //Get data for dashboard researcher
-        $user = Auth::user();
         $totalOrganisations = Organisation::count();
         $totalUsers = User::count();
         $totalTests = Test::count();
@@ -46,19 +38,6 @@ class DashboardController extends Controller
             ->orderByDesc('total_chosen')
             ->get();
 
-        if ($user->isSuperAdmin()) {
-            return view('roles.superadmin.dashboard');
-        } elseif ($user->isAdmin()) {
-            return view('roles.admin.dashboard');
-        } elseif ($user->isMentor()) {
-            return view('roles.mentor.dashboard');
-        } elseif ($user->isClient()) {
-            return view('roles.client.dashboard');
-        } elseif($user->isResearcher()){
-            return view('roles.researcher.dashboard', compact('totalUsers', 'totalTests', 'interestFields', 'mostChosenIntrestFields', 'totalOrganisations', 'completionScore'));
-        }
-
-        // Fallback for users without roles
-        // NONE
+        return view('livewire.dashboard-global-overview', compact('totalUsers', 'totalTests', 'interestFields', 'mostChosenIntrestFields', 'totalOrganisations', 'completionScore'));
     }
 }
