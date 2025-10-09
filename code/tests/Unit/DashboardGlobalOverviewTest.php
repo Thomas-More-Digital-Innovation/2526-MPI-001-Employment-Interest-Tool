@@ -13,10 +13,10 @@ class DashboardGlobalOverviewTest extends TestCase
         $component = new DashboardGlobalOverview();
         $view = $component->render();
 
-        //check if render give a view back
         $this->assertInstanceOf(View::class, $view);
 
-        //check if view-variabelen exist
+        $this->assertEquals('livewire.dashboard-global-overview', $view->getName());
+
         $data = $view->getData();
         $this->assertArrayHasKey('totalOrganisations', $data);
         $this->assertArrayHasKey('totalUsers', $data);
@@ -24,8 +24,5 @@ class DashboardGlobalOverviewTest extends TestCase
         $this->assertArrayHasKey('completionScore', $data);
         $this->assertArrayHasKey('interestFields', $data);
         $this->assertArrayHasKey('mostChosenIntrestFields', $data);
-
-        //check if view has correct name
-        $this->assertEquals('livewire.dashboard-global-overview', $view->getName());
     }
 }
