@@ -34,42 +34,20 @@
 
         <!-- Buttons -->
         <div class="h-full row-start-2 md:row-start-1 md:order-1 relative">
-            @if(!$isQuestionLoading)
-                <button class="w-full h-full bg-green-400 rounded-md"
-                        wire:click="like"
-                        wire:loading.attr="disabled"
-                        wire:target="like, dislike, next, previous">
-                </button>
-            @else
-                <!-- For the disabled state, completely replace the button instead of overlaying -->
-                <div class="w-full h-full flex items-center justify-center bg-white dark:bg-gray-800 rounded-md">
-                    <div class="text-mpi dark:text-mpi text-center">
-                        <div class="animate-pulse">
-                            <flux:icon.clock class="size-12 mx-auto" />
-                            <span class="block text-sm">{{ __('Please wait') }}</span>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            <button class="w-full h-full bg-green-400 rounded-md"
+                wire:click="like"
+                wire:loading.attr="disabled"
+                wire:target="like, dislike, next, previous"
+                @if($isQuestionLoading) disabled @endif>
+            </button>
         </div>
         <div class="h-full row-start-2 md:row-start-1 md:order-3 relative">
-            @if(!$isQuestionLoading)
-                <button class="w-full h-full bg-red-500 rounded-md"
-                        wire:click="dislike"
-                        wire:loading.attr="disabled"
-                        wire:target="like, dislike, next, previous">
-                </button>
-            @else
-                <!-- For the disabled state, completely replace the button instead of overlaying -->
-                <div class="w-full h-full flex items-center justify-center bg-white dark:bg-gray-800 rounded-md">
-                    <div class="text-mpi dark:text-mpi text-center">
-                        <div class="animate-pulse">
-                            <flux:icon.clock class="size-12 mx-auto" />
-                            <span class="block text-sm">{{ __('Please wait') }}</span>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            <button class="w-full h-full bg-red-500 rounded-md"
+                wire:click="dislike"
+                wire:loading.attr="disabled"
+                wire:target="like, dislike, next, previous"
+                @if($isQuestionLoading) disabled @endif>
+            </button>
         </div>
     </div>
 
