@@ -96,7 +96,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Researcher'])->group(function () {
         Route::view('researcher/dashboard', 'roles.researcher.dashboard')->name('researcher.dashboard');
-        Route::view('researcher/example', 'roles.researcher.example')->name('researcher.example');
     });
 
     Route::middleware(['role:Client'])->group(function () {
