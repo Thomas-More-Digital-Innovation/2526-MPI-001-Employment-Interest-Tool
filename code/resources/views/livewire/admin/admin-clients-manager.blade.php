@@ -19,8 +19,8 @@
                 type="search"
                 icon="magnifying-glass"
                 wire:model.live.debounce.300ms="search"
-                wire:change="updatingSearch"
-                placeholder="{{ $showInactivated ? __('Search all clients by name or username') : __('Search active clients by name or username') }}" />
+                placeholder="{{ $showInactivated ? __('Search all clients by name or username') : __('Search active clients by name or username') }}">
+            </flux:input>
         </div>
         <div class="flex-shrink-0 content-end">
             <flux:modal.trigger name="admin-client-form">
@@ -165,7 +165,7 @@
                             required>
                             <option value="">{{ __('Select a mentor') }}</option>
                             @foreach ($mentorOptions as $mentor)
-                            <option value="{{ $mentor['id'] }}" @selected((string) $mentor['id'] === (string) $form['mentor_id'])>
+                            <option value="{{ $mentor['id'] }}" @selected((string) $mentor['id']===(string) $form['mentor_id'])>
                                 {{ $mentor['label'] }}
                             </option>
                             @endforeach
