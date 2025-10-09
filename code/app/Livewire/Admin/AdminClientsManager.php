@@ -47,7 +47,7 @@ class AdminClientsManager extends MentorClientsManager
         if ($force || empty($this->languages)) {
             $languageCollection = Language::orderBy('language_name')->get();
             $this->languages = $languageCollection
-                ->map(fn (Language $language) => [
+                ->map(fn(Language $language) => [
                     'id' => $language->language_id,
                     'label' => $language->language_name,
                     'code' => $language->language_code,
@@ -64,11 +64,11 @@ class AdminClientsManager extends MentorClientsManager
             $this->mentorOptions = User::query()
                 ->select('user_id', 'first_name', 'last_name', 'username')
                 ->where('organisation_id', $this->organisationId)
-                ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::MENTOR))
+                ->whereHas('roles', fn(Builder $query) => $query->where('role', Role::MENTOR))
                 ->orderBy('first_name')
                 ->orderBy('last_name')
                 ->get()
-                ->map(fn (User $mentor) => [
+                ->map(fn(User $mentor) => [
                     'id' => $mentor->user_id,
                     'label' => $this->displayNameForUser($mentor),
                 ])->all();
@@ -152,11 +152,11 @@ class AdminClientsManager extends MentorClientsManager
 
         return User::query()
             ->where('organisation_id', $this->organisationId)
-            ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::CLIENT))
+            ->whereHas('roles', fn(Builder $query) => $query->where('role', Role::CLIENT))
             ->where('active', true)
             ->with([
                 'language',
-                'mentor' => fn ($query) => $query
+                'mentor' => fn($query) => $query
                     ->select('user_id', 'first_name', 'last_name', 'username'),
             ])
             ->orderBy('mentor_id')
@@ -170,11 +170,11 @@ class AdminClientsManager extends MentorClientsManager
 
         return User::query()
             ->where('organisation_id', $this->organisationId)
-            ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::CLIENT))
+            ->whereHas('roles', fn(Builder $query) => $query->where('role', Role::CLIENT))
             ->where('active', false)
             ->with([
                 'language',
-                'mentor' => fn ($query) => $query
+                'mentor' => fn($query) => $query
                     ->select('user_id', 'first_name', 'last_name', 'username'),
             ])
             ->orderBy('mentor_id')
@@ -199,7 +199,7 @@ class AdminClientsManager extends MentorClientsManager
     protected function groupClients(Collection $clients): Collection
     {
         return $clients
-            ->groupBy(fn (User $client) => $client->mentor_id ?? 0)
+            ->groupBy(fn(User $client) => $client->mentor_id ?? 0)
             ->map(function (Collection $group): array {
                 /** @var User|null $mentor */
                 $mentor = $group->first()->mentor;
@@ -210,7 +210,7 @@ class AdminClientsManager extends MentorClientsManager
                         ? $this->displayNameForUser($mentor)
                         : __('Unassigned mentor'),
                     'clients' => $group
-                        ->sortBy(fn (User $client) => sprintf(
+                        ->sortBy(fn(User $client) => sprintf(
                             '%s|%s|%s',
                             Str::lower($client->first_name ?? ''),
                             Str::lower($client->last_name ?? ''),
@@ -219,29 +219,8 @@ class AdminClientsManager extends MentorClientsManager
                         ->values(),
                 ];
             })
-            ->sortBy(fn (array $group) => Str::lower($group['mentor_name']), SORT_NATURAL)
+            ->sortBy(fn(array $group) => Str::lower($group['mentor_name']), SORT_NATURAL)
             ->values();
-    }
-
-    protected function applySearch(Builder $query): Builder
-    {
-        $term = trim($this->search);
-        if ($term === '') {
-            return $query;
-        }
-
-        return $query->where(function (Builder $builder) use ($term) {
-            $builder
-                ->where('first_name', 'like', "%{$term}%")
-                ->orWhere('last_name', 'like', "%{$term}%")
-                ->orWhere('username', 'like', "%{$term}%")
-                ->orWhereHas('mentor', function (Builder $mentorQuery) use ($term) {
-                    $mentorQuery
-                        ->where('first_name', 'like', "%{$term}%")
-                        ->orWhere('last_name', 'like', "%{$term}%")
-                        ->orWhere('username', 'like', "%{$term}%");
-                });
-        });
     }
 
     protected function findRecord(int $id)
