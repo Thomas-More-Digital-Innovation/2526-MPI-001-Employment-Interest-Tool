@@ -19,7 +19,6 @@ class Test extends Component
     public $testAttemptId;
     public $previousEnabled = true;
     public $isQuestionLoading = true;
-    public $isImageLoading = true;
 
     public $startTime;
 
@@ -70,7 +69,6 @@ class Test extends Component
         }
 
         $this->isQuestionLoading = true;
-        $this->isImageLoading = true;
         $this->newQuestion();
     }
 
@@ -162,11 +160,8 @@ class Test extends Component
     {
         $this->startTime = Carbon::now();
         $this->isQuestionLoading = true;
-        $this->isImageLoading = true;
         $this->dispatch('loading-state-changed', ['loading' => true]);
-        $this->dispatch('img-loading-state-changed', ['loading' => true]);
 
-        // Reset loading state after 1 second
         $this->dispatch('delay-loading')->self();
     }
 
@@ -194,22 +189,13 @@ class Test extends Component
     #[On('delay-loading')]
     public function disableLoading()
     {
-        // First show the image by removing the image loading overlay
-        $this->isImageLoading = false;
-        $this->dispatch('img-loading-state-changed', ['loading' => false]);
-
-        // We need to separately handle the button enabling with a delay
-        // so dispatch another event that will be handled separately
         $this->dispatch('enable-buttons-delayed');
     }
 
     #[On('enable-buttons-delayed')]
     public function enableButtonsWithDelay()
     {
-        // Sleep for 1 second to give users time to read the question
         sleep(1);
-
-        // Enable the buttons after the delay
         $this->isQuestionLoading = false;
         $this->dispatch('loading-state-changed', ['loading' => false]);
     }
