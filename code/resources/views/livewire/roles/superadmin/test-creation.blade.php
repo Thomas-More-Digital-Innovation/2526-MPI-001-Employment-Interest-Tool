@@ -50,7 +50,7 @@
                         >
                             <flux:select.option value="-1">Choose interest field...</flux:select.option>
                             @foreach ($interestFields as $interestField)
-                                <flux:select.option value="{{ $interestField->interest_field_id }}">{{ $interestField->name }}</flux:select.option>
+                                <flux:select.option value="{{ $interestField->interest_field_id }}">{{ $interestField->getName(app()->getLocale()) }}</flux:select.option>
                             @endforeach
                         </flux:select>
                     </div>
