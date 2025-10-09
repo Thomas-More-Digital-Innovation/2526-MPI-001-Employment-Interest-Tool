@@ -6,9 +6,13 @@ use App\Models\Test;
 use Livewire\Component;
 use App\Models\Question;
 use App\Models\InterestField;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class TestCreation extends Component
 {
+    use WithFileUploads; // Added the WithFileUploads trait to handle file uploads
+
     // Creating a placeholder variable to pass interest fields to the test-creation page
     public $interestFields;
     // For restoring the test on the edit part
@@ -35,7 +39,7 @@ class TestCreation extends Component
             $this->questions[] = $this->blankQuestion();
         }
     }
-    
+
     public function clearSession(): void
     {
         session()->forget(['edit_test_id', 'edit_test_name', 'edit_questions']);
@@ -101,16 +105,30 @@ class TestCreation extends Component
                 'question_number' => $question['question_number'],
                 'question' => $question['title'],
                 'image_description' => $question['description'],
+                'media_link' => $question['media_link'] ?? null, // Added media_link to the database insertion
             ]);
         }
         $this->clearSession();
     }
 
     // Runs on every update made, used to recalculate the status
-    public function updated(string $name, $value) 
+    public function updated(string $name, $value)
     {
         // do not run if inputting test_name as that is test global, not question specific
         if ($name === "test_name") {
+            return;
+        }
+
+        // Check if an uploaded_image was updated
+        if (str_contains($name, '.uploaded_image')) {
+            // Extract the question index from the property name
+            $exploded_string = explode(".", $name);
+            $index = (int) $exploded_string[1];
+
+            // Automatically upload the image
+            if (isset($this->questions[$index]['uploaded_image'])) {
+                $this->uploadImage($index);
+            }
             return;
         }
 
@@ -149,17 +167,17 @@ class TestCreation extends Component
         }
     }
 
-    // Removing a question, 
+    // Removing a question,
     public function removeQuestion(int $index): void
     {
         // Validation if question exists, if it doesnt then return, better be safe than sorry :)
         if (!isset($this->questions[$index])) return;
-        
+
         // Removing the question from the array
         unset($this->questions[$index]);
         // resolve index issue (removing does not change indexes for the questions)
         $this->questions = array_values($this->questions);
-        
+
         // If the last question is selected and then deleted, select the newest last qeuestion
         if ($this->selectedQuestion >= count($this->questions)) {
             $this->selectedQuestion = max(0, count($this->questions) - 1);
@@ -187,6 +205,52 @@ class TestCreation extends Component
 
         // return the sorted array to the page :)
         $this->questions = array_values($items);
+    }
+
+    public function uploadImage(int $index)
+    {
+        if (!isset($this->questions[$index]['uploaded_image'])) {
+            $this->addError('questions.'.$index.'.uploaded_image', 'No file uploaded.');
+            return;
+        }
+
+        $uploadedFile = $this->questions[$index]['uploaded_image'];
+
+        try {
+            // Validate the uploaded file
+            $this->validate([
+                // TODO: PUT IN .ENV
+                'questions.'.$index.'.uploaded_image' => 'image|max:150', // Max 150KB
+            ]);
+
+            // Check if file is valid
+            if ($uploadedFile->isValid()) {
+                $extension = strtolower($uploadedFile->getClientOriginalExtension());
+                do {
+                    $filename = uniqid().'.'.$extension;
+                    $exists = Storage::disk('public')->exists($filename);
+                } while ($exists);
+
+                // Store the file in the public disk root
+                $path = $uploadedFile->storeAs('', $filename, 'public');
+
+                if ($path) {
+                    // Update the media_link for the question with only the filename
+                    $this->questions[$index]['media_link'] = $filename;
+                }
+            }
+
+            // Clear the uploaded image after processing
+            unset($this->questions[$index]['uploaded_image']);
+        } catch (\Exception $e) {
+            // Clear the file input first
+            unset($this->questions[$index]['uploaded_image']);
+
+            // Then throw the exception with custom message
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'questions.'.$index.'.uploaded_image' => 'Failed to upload the image.',
+            ]);
+        }
     }
 
     public function render()

@@ -5,9 +5,23 @@
             {{-- Name of the whole test --}}
             <flux:input wire:model.defer="test_name" placeholder="Test Name" label="Test Name" type="text" />
             <div class="flex flex-col md:flex-row bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 rounded-2xl">
-                {{-- Button to add media (WIP) --}}
+                {{-- Image display area --}}
                 <div class="bg-zinc-300 min-h-[25vh] dark:bg-zinc-600 rounded-2xl flex-1 flex items-center justify-center m-4">
-                    <flux:button type="button" variant="primary" class="!rounded-full text-xl px-4 py-3" color="zinc">+</flux:button>
+                    @if (isset($questions[$selectedQuestion]['uploaded_image']))
+                        @if (is_object($questions[$selectedQuestion]['uploaded_image']) && method_exists($questions[$selectedQuestion]['uploaded_image'], 'temporaryUrl'))
+                            <img src="{{ $questions[$selectedQuestion]['uploaded_image']->temporaryUrl() }}"
+                                 alt="Image Preview"
+                                 class="rounded-2xl max-h-full max-w-full object-contain">
+                        @else
+                            <span class="text-blue-500">Preview loading...</span>
+                        @endif
+                    @elseif (isset($questions[$selectedQuestion]['media_link']) && !empty($questions[$selectedQuestion]['media_link']))
+                        <img src="{{ route('question.image', ['filename' => $questions[$selectedQuestion]['media_link']]) }}"
+                             alt="Question Image"
+                             class="rounded-2xl max-h-full max-w-full object-contain">
+                    @else
+                        <span class="text-zinc-500 dark:text-zinc-400">No image uploaded</span>
+                    @endif
                 </div>
                 {{-- Where the selected question is shown --}}
                 <div class="flex-1 flex-col m-4 p-2">
@@ -30,7 +44,7 @@
                         />
                         {{-- Selection of interest field --}}
                         <flux:select
-                            
+
                             label="Interest Field"
                             wire:model.live="questions.{{ $selectedQuestion }}.interest"
                         >
@@ -43,8 +57,19 @@
                 </div>
             </div>
         </form>
-        <div class="my-3 flex justify-end">
-            <flux:button wire:click="uploadTest" variant="primary" color="rose" class="" >Submit</flux:button>
+        <div class="my-3 flex mt-4 items-center justify-between w-full gap-4" wire:key="upload-{{ $selectedQuestion }}">
+            <div class="flex-1">
+                <input type="file"
+                   wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
+                   accept="image/*"
+                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                @error('questions.'.$selectedQuestion.'.uploaded_image')
+                    <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                @enderror
+            </div>
+            <div>
+                <flux:button wire:click="uploadTest" variant="primary" color="rose">Submit</flux:button>
+            </div>
         </div>
     </main>
     {{-- Sidebar --}}
@@ -72,7 +97,7 @@
                         <flux:button variant="ghost" class="w-full justify-start text-left truncate whitespace-nowrap overflow-hidden" wire:click="selectQuestion({{ $index }})" title="{{ $question['title'] ?? 'Untitled' }}">{{ $question['title'] ? 'Question ' . ($index + 1) . ' - ' . $question['title'] : 'Question ' . ($index + 1) . ' - Undefined' }}</flux:button>
                         {{-- Button + svg of a trashcan that removes the question from the array :) --}}
                         <flux:button variant="ghost" wire:click="removeQuestion({{ $index }})">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>    
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                         </flux:button>
                     </li>
                 @endforeach

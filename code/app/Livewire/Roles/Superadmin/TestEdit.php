@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class TestEdit extends Component
 {
-    
+
     public $tests;
 
     public function mount() {
@@ -26,6 +26,7 @@ class TestEdit extends Component
                 'description' => $q->image_description ?? '',
                 'interest' => $q->interest_field_id ?? -1,
                 'circleFill' => 'green',
+                'media_link' => $q->media_link ?? null, // Added media_link to the array
             ];
         })->toArray();
 
