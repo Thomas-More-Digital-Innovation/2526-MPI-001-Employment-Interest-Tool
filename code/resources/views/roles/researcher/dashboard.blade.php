@@ -1,12 +1,12 @@
 <x-layouts.app.sidebar>
     <flux:main>
         <div class="space-y-6">
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="dark:bg-white bg-gray-500 overflow-hidden shadow rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
-                    <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ __('pagesresearcher.dashboard_researcher') }}</h2>
+                    <h2 class="text-2xl font-bold tracking-tight dark:text-black text-white">{{ __('pagesresearcher.dashboard_researcher') }}</h2>
                 </div>
             </div>
-            <div class="flex flex-wrap bg-white text-black rounded-lg px-4 py-5">
+            <div class="flex flex-wrap dark:bg-white bg-gray-500 dark:text-black text-white rounded-lg px-4 py-5">
                 <div class="w-1/2 px-2">
                     <h2 class="text-xl font-bold">{{__('pagesresearcher.totalOfUsers')}}</h2>
                     <p>{{$totalUsers}}</p>
@@ -16,7 +16,7 @@
                     <p>{{$totalTests}}</p>
                 </div>
             </div>
-            <div class="flex flex-wrap bg-white text-black rounded-lg px-4 py-5">
+            <div class="flex flex-wrap dark:bg-white bg-gray-500 dark:text-black text-white rounded-lg px-4 py-5">
                 <div class="w-1/2 px-2">
                     <h2 class="text-xl font-bold">{{__('pagesresearcher.Organisations')}}</h2>
                     <p>{{$totalOrganisations}}</p>
@@ -26,9 +26,9 @@
                     <p>{{$completionScore}}</p>
                 </div>
             </div>
-            <div class="flex flex-wrap bg-white text-black rounded-lg px-4 py-5">
+            <div class="flex flex-wrap dark:bg-white bg-gray-500 dark:text-black text-white rounded-lg px-4 py-5">
                 <h2 class="text-center w-full text-xl font-bold">{{__('pagesresearcher.timesIntrestfieldChosen')}}</h2>
-                <div class="sm:w-full h-auto xl:w-3/4 xl:px-2">
+                <div class="sm:w-full h-auto xl:w-3/4 xl:px-2 bg-white rounded-md">
                     <livewire:chart
                         :labels="$mostChosenIntrestFields->pluck('interest_field_name')"
                         :data="$mostChosenIntrestFields->pluck('total_chosen')"
@@ -47,6 +47,7 @@
                     @endif
                 </div>
             </div>
+            <livewire:download-csv-button></livewire:download-csv-button>
         </div>
     </flux:main>
 </x-layouts.app.sidebar>

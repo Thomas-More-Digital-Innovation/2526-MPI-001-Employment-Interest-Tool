@@ -11,5 +11,6 @@ return [
     'Organisations' => 'Total of organisations',
     'CompletionScore' => 'Completion score',
     'NoData' => 'There is no data at the moment!',
-    'NoAttempts' => 'No attempts at the moment!'
+    'NoAttempts' => 'No attempts at the moment!',
+    'downloadCSV' => 'Download all answers in CSV'
 ];

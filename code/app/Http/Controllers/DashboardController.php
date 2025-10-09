@@ -21,6 +21,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        //Get data for dashboard researcher
         $user = Auth::user();
         $totalOrganisations = Organisation::count();
         $totalUsers = User::count();
@@ -28,7 +29,7 @@ class DashboardController extends Controller
         $countCompleteAttempts = TestAttempt::where('finished', true)->count();
         $countAttempts = TestAttempt::count();
         if ($countAttempts!=0){
-            $completionScore = ($countCompleteAttempts/$countAttempts*100) . '%';
+            $completionScore = round($countCompleteAttempts/$countAttempts*100) . '%';
         }
         else{
             $completionScore = (__('pagesresearcher.NoAttempts'));

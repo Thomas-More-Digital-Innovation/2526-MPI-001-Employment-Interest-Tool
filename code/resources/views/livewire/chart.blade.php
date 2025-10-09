@@ -5,7 +5,8 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('livewire:init', function () {
+    document.addEventListener('livewire:navigated', function () {
+        {{-- CTX draw the graph bars --}}
         const ctx = document.getElementById('interestChart').getContext('2d');
         const chart = new Chart(ctx, {
             type: 'bar',

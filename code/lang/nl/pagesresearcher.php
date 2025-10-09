@@ -11,5 +11,6 @@ return [
     'Organisations' => 'Totaal aantal organisaties',
     'CompletionScore' => 'Voltooiingsscore',
     'NoData' => 'Er is geen data op het moment!',
-    'NoAttempts' => 'Nog geen attempts!'
+    'NoAttempts' => 'Nog geen attempts!',
+    'downloadCSV' => 'Download alle antwoorden in CSV'
 ];
