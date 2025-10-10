@@ -3,10 +3,10 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Test;
+use App\Livewire\Test\Test;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Livewire\TestResults;
+use App\Livewire\Test\TestResults;
 
 Route::get('/', function () {
     if (Auth::check()) {

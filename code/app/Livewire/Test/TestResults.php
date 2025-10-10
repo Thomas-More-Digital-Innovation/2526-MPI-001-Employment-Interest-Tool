@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Test;
 
 use App\Models\Answer;
 use App\Models\InterestField;
@@ -171,6 +171,6 @@ class TestResults extends Component
     public $finished = true;
     public function render()
     {
-        return view('livewire.test-results');
+        return view('livewire.test.test-results');
     }
 }
