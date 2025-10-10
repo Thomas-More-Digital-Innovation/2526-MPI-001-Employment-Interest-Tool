@@ -51,6 +51,21 @@ class TestSeeder extends Seeder
             'description' => 'Interesse in klantenservice en winkelactiviteiten',
         ]);
 
+        $cleaningField = InterestField::create([
+            'name' => 'Schoonmaak',
+            'description' => 'Interesse in schoonmaakwerk en onderhoud',
+        ]);
+
+        $warehouseField = InterestField::create([
+            'name' => 'Magazijn/Logistiek',
+            'description' => 'Interesse in magazijnbeheer en logistieke activiteiten',
+        ]);
+
+        $outdoorMaintenanceField = InterestField::create([
+            'name' => 'Buitenonderhoud',
+            'description' => 'Interesse in groen- en terreinonderhoud',
+        ]);
+
         // Get the interest field IDs from the created models
         $techFieldId = $techField->interest_field_id;
         $healthFieldId = $healthField->interest_field_id;
@@ -58,6 +73,9 @@ class TestSeeder extends Seeder
         $computerFieldId = $computerField->interest_field_id;
         $accountingFieldId = $accountingField->interest_field_id;
         $retailFieldId = $retailField->interest_field_id;
+        $cleaningFieldId = $cleaningField->interest_field_id;
+        $warehouseFieldId = $warehouseField->interest_field_id;
+        $outdoorMaintenanceFieldId = $outdoorMaintenanceField->interest_field_id;
 
         // Interest field translations (English)
         InterestFieldTranslation::create([
@@ -100,6 +118,27 @@ class TestSeeder extends Seeder
             'language_id' => $englishLanguageId,
             'name' => 'Retail/Sales',
             'description' => 'Interest in customer service and retail activities',
+        ]);
+
+        InterestFieldTranslation::create([
+            'interest_field_id' => $cleaningFieldId,
+            'language_id' => $englishLanguageId,
+            'name' => 'Cleaning',
+            'description' => 'Interest in cleaning work and maintenance',
+        ]);
+
+        InterestFieldTranslation::create([
+            'interest_field_id' => $warehouseFieldId,
+            'language_id' => $englishLanguageId,
+            'name' => 'Warehouse/Logistics',
+            'description' => 'Interest in warehouse management and logistics activities',
+        ]);
+
+        InterestFieldTranslation::create([
+            'interest_field_id' => $outdoorMaintenanceFieldId,
+            'language_id' => $englishLanguageId,
+            'name' => 'Outdoor Maintenance',
+            'description' => 'Interest in landscaping and grounds maintenance',
         ]);
 
         // Create test 1
@@ -202,67 +241,89 @@ class TestSeeder extends Seeder
         ]);
 
         // Create questions for test 2
-// Computer/IT questions
+        // Accounting questions
         $testTwoQuestion1 = Question::create([
-            'question' => 'Netwerkapparatuur configureren',
-            'test_id' => $testTwo,
-            'interest_field_id' => $computerFieldId,
-            'question_number' => 1,
-            'media_link' => 'network-tech.png',
-            'image_description' => 'Netwerktechnicus die routers configureert',
-            'sound_link' => 'netwerken.wav',
-        ]);
-
-        $testTwoQuestion2 = Question::create([
-            'question' => 'Computerprogramma\'s schrijven',
-            'test_id' => $testTwo,
-            'interest_field_id' => $computerFieldId,
-            'question_number' => 2,
-            'media_link' => 'programming.png',
-            'image_description' => 'Programmeur die code schrijft op computer',
-            'sound_link' => 'programmeren.wav',
-        ]);
-
-// Accounting questions
-        $testTwoQuestion3 = Question::create([
-            'question' => 'Administratieve taken op papier',
+            'question' => 'Financiële administratie bijhouden',
             'test_id' => $testTwo,
             'interest_field_id' => $accountingFieldId,
-            'question_number' => 3,
-            'media_link' => 'accounting.png',
-            'image_description' => 'Boekhouder die documenten op papier verwerkt',
+            'question_number' => 1,
+            'media_link' => 'accounting.jpg',
+            'image_description' => 'Boekhouder die administratieve taken uitvoert',
             'sound_link' => 'boekhouden.wav',
         ]);
 
-        $testTwoQuestion4 = Question::create([
-            'question' => 'Geld tellen en beheren',
-            'test_id' => $testTwo,
-            'interest_field_id' => $accountingFieldId,
-            'question_number' => 4,
-            'media_link' => 'money-counting.png',
-            'image_description' => 'Persoon die geld telt en financiën beheert',
-            'sound_link' => 'financien.wav',
-        ]);
-
-// Retail questions
-        $testTwoQuestion5 = Question::create([
+        // Retail questions
+        $testTwoQuestion2 = Question::create([
             'question' => 'Klanten helpen bij afrekenen',
             'test_id' => $testTwo,
             'interest_field_id' => $retailFieldId,
-            'question_number' => 5,
-            'media_link' => 'cashier.png',
+            'question_number' => 2,
+            'media_link' => 'cashier.jpg',
             'image_description' => 'Kassamedewerker die klant helpt bij kassa',
             'sound_link' => 'kassa.wav',
         ]);
 
-        $testTwoQuestion6 = Question::create([
+        $testTwoQuestion3 = Question::create([
             'question' => 'Voorraad beheren en organiseren',
             'test_id' => $testTwo,
             'interest_field_id' => $retailFieldId,
+            'question_number' => 3,
+            'media_link' => 'inventory-management.jpg',
+            'image_description' => 'Medewerker die voorraad organiseert in magazijn',
+            'sound_link' => 'voorraad.wav',
+        ]);
+
+        // Cleaning questions
+        $testTwoQuestion4 = Question::create([
+            'question' => 'Sanitaire ruimtes schoonmaken',
+            'test_id' => $testTwo,
+            'interest_field_id' => $cleaningFieldId,
+            'question_number' => 4,
+            'media_link' => 'cleaning.jpg',
+            'image_description' => 'Schoonmaker die sanitaire ruimtes reinigt',
+            'sound_link' => 'schoonmaken.wav',
+        ]);
+
+        $testTwoQuestion5 = Question::create([
+            'question' => 'Kantoorruimtes onderhouden',
+            'test_id' => $testTwo,
+            'interest_field_id' => $cleaningFieldId,
+            'question_number' => 5,
+            'media_link' => 'cleaning2.jpg',
+            'image_description' => 'Schoonmaker die kantoorruimtes onderhoudt',
+            'sound_link' => 'kantoor-schoonmaken.wav',
+        ]);
+
+        // Warehouse questions
+        $testTwoQuestion6 = Question::create([
+            'question' => 'Heftrucktaken uitvoeren',
+            'test_id' => $testTwo,
+            'interest_field_id' => $warehouseFieldId,
             'question_number' => 6,
-            'media_link' => 'inventory-management.png',
-            'image_description' => 'Medewerker die voorraad organiseert in winkel',
-            'sound_link' => 'vakken vuller.wav',
+            'media_link' => 'forklift.jpg',
+            'image_description' => 'Heftruckchauffeur die goederen verplaatst',
+            'sound_link' => 'heftruck.wav',
+        ]);
+
+        // Outdoor maintenance questions
+        $testTwoQuestion7 = Question::create([
+            'question' => 'Gazon maaien en onderhouden',
+            'test_id' => $testTwo,
+            'interest_field_id' => $outdoorMaintenanceFieldId,
+            'question_number' => 7,
+            'media_link' => 'grass-cutting.jpg',
+            'image_description' => 'Tuinman die gras maait',
+            'sound_link' => 'grasmaaien.wav',
+        ]);
+
+        $testTwoQuestion8 = Question::create([
+            'question' => 'Bladeren verwijderen met bladblazer',
+            'test_id' => $testTwo,
+            'interest_field_id' => $outdoorMaintenanceFieldId,
+            'question_number' => 8,
+            'media_link' => 'leaf-blower.jpg',
+            'image_description' => 'Tuinman die bladeren verwijdert met bladblazer',
+            'sound_link' => 'bladblazer.wav',
         ]);
 
         $testTwoQuestion1Id = $testTwoQuestion1->question_id;
@@ -271,59 +332,72 @@ class TestSeeder extends Seeder
         $testTwoQuestion4Id = $testTwoQuestion4->question_id;
         $testTwoQuestion5Id = $testTwoQuestion5->question_id;
         $testTwoQuestion6Id = $testTwoQuestion6->question_id;
+        $testTwoQuestion7Id = $testTwoQuestion7->question_id;
+        $testTwoQuestion8Id = $testTwoQuestion8->question_id;
 
         // Create translations for test 2 questions (English)
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion1Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Configuring network equipment',
-            'image_description' => 'Network technician configuring routers',
-            'sound_link' => 'networking.wav'
+            'question' => 'Maintain financial administration',
+            'image_description' => 'Accountant performing administrative tasks',
+            'sound_link' => 'accounting.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion2Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Writing computer programs',
-            'media_link' => 'programming.png',
-            'image_description' => 'Programmer writing code on computer',
-            'sound_link' => 'programming.wav'
+            'question' => 'Help customers at checkout',
+            'image_description' => 'Cashier helping customer at register',
+            'sound_link' => 'cashier.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion3Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Administrative tasks on paper',
-            'media_link' => 'accounting.png',
-            'image_description' => 'Accountant processing paper documents',
-            'sound_link' => 'accounting.wav'
+            'question' => 'Manage and organize inventory',
+            'image_description' => 'Employee organizing inventory in warehouse',
+            'sound_link' => 'inventory.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion4Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Counting and managing money',
-            'media_link' => 'money-counting.png',
-            'image_description' => 'Person counting money and managing finances',
-            'sound_link' => 'finance.wav'
+            'question' => 'Clean sanitary facilities',
+            'image_description' => 'Cleaner cleaning sanitary facilities',
+            'sound_link' => 'cleaning.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion5Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Helping customers at checkout',
-            'media_link' => 'cashier.png',
-            'image_description' => 'Cashier helping customer at checkout',
-            'sound_link' => 'cashier.wav'
+            'question' => 'Maintain office spaces',
+            'image_description' => 'Cleaner maintaining office spaces',
+            'sound_link' => 'office-cleaning.wav'
         ]);
 
         QuestionTranslation::create([
             'question_id' => $testTwoQuestion6Id,
             'language_id' => $englishLanguageId,
-            'question' => 'Managing inventory and organizing products',
-            'media_link' => 'inventory-management.png',
-            'image_description' => 'Employee organizing inventory in store',
-            'sound_link' => 'stocking.wav'
+            'question' => 'Operate forklift',
+            'image_description' => 'Forklift operator moving goods',
+            'sound_link' => 'forklift.wav'
+        ]);
+
+        QuestionTranslation::create([
+            'question_id' => $testTwoQuestion7Id,
+            'language_id' => $englishLanguageId,
+            'question' => 'Mow and maintain lawn',
+            'image_description' => 'Gardener mowing grass',
+            'sound_link' => 'lawn-mowing.wav'
+        ]);
+
+        QuestionTranslation::create([
+            'question_id' => $testTwoQuestion8Id,
+            'language_id' => $englishLanguageId,
+            'question' => 'Remove leaves with leaf blower',
+            'image_description' => 'Gardener removing leaves with leaf blower',
+            'sound_link' => 'leaf-blower.wav'
         ]);
 
         // Attach the test 2 to the client user

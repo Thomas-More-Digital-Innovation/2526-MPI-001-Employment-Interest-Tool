@@ -1,19 +1,23 @@
+
     <div class="flex flex-col h-full">
-        
 
         <!-- Main content -->
         <div class="grid grid-cols-2 md:grid-cols-4 grid-rows-[auto_1fr] md:grid-rows-1 gap-2 h-full mt-2">
             <!-- Image + Title -->
             <div class="col-span-2 md:col-span-2 row-start-1 md:order-2 flex flex-col content-center h-full">
                 <img src="{{ $image }}" alt="{{ $imageDescription }}" class="object-contain rounded-md h-full">
-                <h2 class="text-4xl md:text-5xl font-semibold mt-2 text-center h-full">{{ $title }}</h2>
+            <h2 class="text-4xl md:text-5xl font-semibold mt-2 text-center h-full break-words overflow-hidden max-w-full">{{ $title }}</h2>
             </div>
 
             <!-- Buttons -->
             <div class="h-full row-start-2 md:row-start-1 md:order-1">
                 <div class="hidden md:flex justify-start h-1/5"></div>
                 <button class="w-full h-4/5 bg-green-400 rounded-full shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.3),inset_4px_4px_8px_rgba(255,255,255,0.3),0_8px_16px_rgba(0,0,0,0.4)] hover:-translate-y-2 hover:shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.3),inset_4px_4px_8px_rgba(255,255,255,0.3),0_12px_20px_rgba(0,0,0,0.5)] active:translate-y-1 active:shadow-[inset_4px_4px_12px_rgba(0,0,0,0.4),inset_-4px_-4px_8px_rgba(255,255,255,0.2)] transition-all duration-150 cursor-pointer"
-                        wire:click="like"></button>
+                    wire:click="like"
+                    wire:loading.attr="disabled"
+                    wire:target="like, dislike, next, previous"
+                    @if($isQuestionLoading) disabled @endif>
+                </button>
             </div>
             <div class="h-full row-start-2 md:row-start-1 md:order-3">
                 <!-- Close button -->
@@ -25,7 +29,11 @@
                     </flux:modal.trigger>
                 </div>
                 <button class="w-full h-4/5 bg-red-500 rounded-full shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.3),inset_4px_4px_8px_rgba(255,255,255,0.3),0_8px_16px_rgba(0,0,0,0.4)] hover:-translate-y-2 hover:shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.3),inset_4px_4px_8px_rgba(255,255,255,0.3),0_12px_20px_rgba(0,0,0,0.5)] active:translate-y-1 active:shadow-[inset_4px_4px_12px_rgba(0,0,0,0.4),inset_-4px_-4px_8px_rgba(255,255,255,0.2)] transition-all duration-150 cursor-pointer"
-                        wire:click="dislike"></button>
+                    wire:click="dislike"
+                    wire:loading.attr="disabled"
+                    wire:target="like, dislike, next, previous"
+                    @if($isQuestionLoading) disabled @endif>
+                </button>
             </div>
         </div>
 
@@ -66,7 +74,6 @@
         <div  wire:key="progress-{{ $questionNumber }}"  x-data="{ progress: {{($questionNumber - 1) / $totalQuestions}} * 100 }" class="w-full bg-gray-400">
             <div class="bg-red-400 py-2" :style="`width: ${progress}%`"></div>
         </div>
-
         <!-- Stop Test Confirmation Modal -->
         <flux:modal name="stop-test-confirmation" class="min-w-[22rem] space-y-6">
             <div>
