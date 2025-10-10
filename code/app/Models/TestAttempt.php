@@ -15,6 +15,7 @@ class TestAttempt extends Model
     protected $fillable = [
         'test_id',
         'user_id',
+        'finished',
     ];
 
     /**

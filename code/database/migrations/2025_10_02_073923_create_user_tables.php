@@ -136,6 +136,7 @@ return new class extends Migration
                 ->constrained('users', 'user_id')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->boolean('finished')->default(false);
             $table->timestamps();
         });
 

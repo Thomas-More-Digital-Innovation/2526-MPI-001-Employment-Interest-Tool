@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
+        @livewireStyles
     </head>
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
@@ -18,8 +19,6 @@
                     @include('components.layouts.app.sidebar-admin')
                 @elseif(auth()->user()->isMentor())
                     @include('components.layouts.app.sidebar-mentor')
-                @elseif(auth()->user()->isClient())
-                    @include('components.layouts.app.sidebar-client')
                 @elseif(auth()->user()->isResearcher())
                     @include('components.layouts.app.sidebar-researcher')
                 @endif

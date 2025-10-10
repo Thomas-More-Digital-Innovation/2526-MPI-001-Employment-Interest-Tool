@@ -3,10 +3,10 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Test;
+use App\Livewire\Test\Test;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Livewire\TestResults;
+use App\Livewire\Test\TestResults;
 use App\Models\User;
 
 Route::get('/', function () {
@@ -131,23 +131,25 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Admin'])->group(function () {
         Route::view('admin/dashboard', 'roles.admin.dashboard')->name('admin.dashboard');
-        Route::view('admin/example', 'roles.admin.example')->name('admin.example');
+        Route::view('admin/feedback', 'roles.admin.feedback')->name('admin.feedback');
+        Route::view(uri: 'admin/admin-clients-manager', view: 'roles.admin.admin-clients-manager')->name('admin.admin-clients-manager');
     });
 
     Route::middleware(['role:Mentor'])->group(function () {
         Route::view('mentor/dashboard', 'roles.mentor.dashboard')->name('mentor.dashboard');
         Route::view('mentor/example', 'roles.mentor.example')->name('mentor.example');
+        Route::view('mentor/clients-manager', 'roles.mentor.clients-manager')->name('mentor.clients-manager');
     });
 
     Route::middleware(['role:Researcher'])->group(function () {
         Route::view('researcher/dashboard', 'roles.researcher.dashboard')->name('researcher.dashboard');
-        Route::view('researcher/example', 'roles.researcher.example')->name('researcher.example');
     });
 
     Route::middleware(['role:Client'])->group(function () {
         Route::view('client/dashboard', 'roles.client.dashboard')->name('client.dashboard');
-        Route::view('client/example', 'roles.client.example')->name('client.example');
-        Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
+        //This is kept as reference
+//        Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
+
     });
 
     // Example of multiple roles

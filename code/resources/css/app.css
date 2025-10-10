@@ -25,7 +25,7 @@
 
     --color-mpi: #008C99;
     --color-mpi-500: #56A8B0;
-    
+
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);
     --color-accent-foreground: var(--color-white);
@@ -47,6 +47,16 @@
     ::backdrop,
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+@layer utilities {
+    .bg-color-mpi-500 {
+        background-color: var(--color-mpi-500);
+    }
+
+    .bg-color-mpi {
+        background-color: var(--color-mpi);
     }
 }
 
