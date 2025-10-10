@@ -84,27 +84,3 @@ select:focus[data-flux-control] {
     cursor: pointer;
   }
 }
-
-@layer components {
-
-    /* Buttons */
-
-    .btn-primary {
-        @apply px-6 py-4 rounded-lg text-xl font-medium shadow-lg text-white bg-mpi hover:bg-mpi-500;
-    }
-
-    .btn-secondary {
-        @apply px-4 py-2 rounded font-medium text-zinc-800 bg-zinc-200 hover:bg-zinc-300;
-    }
-
-    /* Typography */
-
-    .text-large {
-        @apply text-2xl font-medium text-zinc-700;
-    }
-
-    .text-large-bold {
-        @apply text-2xl font-bold text-zinc-700;
-    }
-
-}

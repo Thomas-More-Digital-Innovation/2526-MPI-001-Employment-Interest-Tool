@@ -10,20 +10,20 @@
 
         @if($noSelections)
             <div class="flex justify-center items-center h-full">
-                <p class="text-large">
+                <x-text variant="large">
                     {{ __('testresults.no_questions_selected') }}
-                </p>
+                </x-text>
             </div>
         @endif
 
         @if($mainInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
-                <p class="text-large">
+                <x-text variant="large">
                     {{ __('testresults.most_interested_in') }}:
-                </p>
-                <p class="text-large-bold">
+                </x-text>
+                <x-text variant="large">
                     {{ $mainInterest['interest_field_name'] }}
-                </p>
+                </x-text>
 
                 @if($firstUrl)
                     <img
@@ -38,12 +38,12 @@
 
         @if($secondInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
-                <p class="text-large">
+                <x-text variant="large">
                     {{ __('testresults.second_most_interested_in') }}:
-                </p>
-                <p class="text-large-bold">
+                </x-text>
+                <x-text variant="large">
                     {{ $secondInterest['interest_field_name'] }}
-                </p>
+                </x-text>
 
                 @if($secondUrl)
                     <img
@@ -58,12 +58,12 @@
 
         @if($lastInterest)
             <div class="flex flex-col items-start max-w-md p-4 bg-white rounded-lg">
-                <p class="text-large">
+                <x-text variant="large">
                     {{ __('testresults.least_interested_in') }}:
-                </p>
-                <p class="text-large-bold">
+                </x-text>
+                <x-text variant="large">
                     {{ $lastInterest['interest_field_name'] }}
-                </p>
+                </x-text>
 
                 @if($lastUrl)
                     <img
@@ -78,11 +78,9 @@
     </div>
 
     <div class="mt-8 flex justify-center">
-        <a href="{{ route('dashboard') }}">
-            <button class="btn-primary">
-            {{ __('Continue') }}
-            </button>
-        </a>
+        <x-btn variant="primary" href="{{ route('dashboard') }}">
+            {{ __('Doorgaan') }}
+        </x-btn>
     </div>
 
 </div>
