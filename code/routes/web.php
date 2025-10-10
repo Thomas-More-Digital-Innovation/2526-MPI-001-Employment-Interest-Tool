@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\Test\TestResults;
 use App\Models\User;
+use App\Models\Role;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -81,8 +82,10 @@ Route::middleware(['auth'])->group(function () {
                 break;
             }
             $mentor = User::where('organisation_id', $user->organisation_id)
-                ->where('role', 'Mentor')
                 ->where('profile_picture_url', $filename)
+                ->whereHas('roles', function ($q) {
+                    $q->where('role', Role::MENTOR);
+                })
                 ->first();
             if (!$mentor || $filename !== $mentor->getRawProfilePictureName()) {
                 abort(403);
@@ -93,8 +96,10 @@ Route::middleware(['auth'])->group(function () {
                 break;
             }
             $admin = User::where('organisation_id', $user->organisation_id)
-                ->where('role', 'Admin')
                 ->where('profile_picture_url', $filename)
+                ->whereHas('roles', function ($q) {
+                    $q->where('role', Role::ADMIN);
+                })
                 ->first();
             if (!$admin || $filename !== $admin->getRawProfilePictureName()) {
                 abort(403);
