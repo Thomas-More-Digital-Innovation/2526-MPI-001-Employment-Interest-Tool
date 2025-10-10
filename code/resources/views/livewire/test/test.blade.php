@@ -48,14 +48,14 @@
                 </audio>
             @endif
 
-            <livewire:send-feedback-test
+            <livewire:test.send-feedback-test
                     :class="'size-6 md:size-16'"
                     :clientName="$clientName"
                     :questionNumber="$questionNumber"
                     :test="$testName"
                     :mail-mentor="$mailMentor"
                     :website="route('dashboard')"
-                    :onCloseEvent=" App\Livewire\Test::UNCLEAR_CLOSED_EVENT "
+                    :onCloseEvent=" App\Livewire\Test\Test::UNCLEAR_CLOSED_EVENT "
             />
 
             <button wire:click="next" class="text-6xl"><flux:icon.arrow-right class="size-12 md:size-32" /></button>

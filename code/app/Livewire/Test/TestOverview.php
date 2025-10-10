@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Test;
 
 use Livewire\Component;
 use App\Models\TestAttempt;
@@ -14,11 +14,12 @@ class TestOverview extends Component
         $this->attempts = TestAttempt::with('test:test_id,test_name')
             ->where('user_id', Auth::id())
             ->orderByDesc('created_at')
+            ->limit(5)
             ->get();
     }
 
     public function render()
     {
-        return view('livewire.test-overview');
+        return view('livewire.test.test-overview');
     }
 }

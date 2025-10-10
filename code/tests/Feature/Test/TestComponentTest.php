@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Test;
 
-use App\Livewire\Test as TestComponent;
+use App\Livewire\Test\Test as TestComponent;
 use App\Models\User;
 use App\Models\Answer;
 use App\Models\TestAttempt;
