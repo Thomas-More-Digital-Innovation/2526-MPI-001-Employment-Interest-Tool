@@ -87,12 +87,12 @@
 
         <button class="text-2xl @if(!$audio) invisible @endif"
                 @click="
-    let audio = $refs.questionaudio{{$questionNumber}};
-    audio.pause();
-    audio.currentTime = 0;
-    audio.load();
-    audio.play();
-">
+                    let audio = $refs.questionaudio{{$questionNumber}};
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.load();
+                    audio.play();
+                ">
             <flux:icon.speaker-wave class="size-8 md:size-24" />
         </button>
         @if ($audio)
