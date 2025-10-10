@@ -22,6 +22,21 @@ $classes = Flux::classes()
     ->add('relative')
     ;
 
+$normalizedSize = match ($size) {
+    null, '', 'base', 'default' => 'md',
+    default => $size,
+};
+
+$buttonSizeMap = [
+    'xs' => 'xs',
+    'sm' => 'sm',
+    'md' => 'base',
+    'lg' => 'base',
+    'xl' => 'base',
+];
+
+$buttonSize = $buttonSizeMap[$normalizedSize] ?? 'base';
+
 [ $styleAttributes, $attributes ] = Flux::splitAttributes($attributes);
 @endphp
 
@@ -56,7 +71,7 @@ $classes = Flux::classes()
         {{ $attributes }} {{ $multiple ? 'multiple' : '' }} @if($name)name="{{ $name }}"@endif
     >
 
-    <flux:button as="div" class="cursor-pointer" :$size aria-hidden="true">
+    <flux:button as="div" class="cursor-pointer" :size="$buttonSize" aria-hidden="true">
         <?php if ($multiple) : ?>
             {!! __('Choose files') !!}
         <?php else : ?>

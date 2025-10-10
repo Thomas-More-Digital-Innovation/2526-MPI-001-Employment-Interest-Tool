@@ -26,6 +26,66 @@
 
 @php
 
+// Normalize the requested size and provide a single place to manage input sizing tokens.
+$inputSizeAttribute = is_numeric($size) ? $size : null;
+
+$sizeMap = [
+    'xs' => [
+        'input' => 'text-xs leading-[1.125rem] h-6 py-1.5',
+        'leadingPadding' => 'ps-3',
+    ],
+    'sm' => [
+        'input' => 'text-sm leading-[1.25rem] h-8 py-1.5',
+        'leadingPadding' => 'ps-3',
+    ],
+    'md' => [
+        'input' => 'text-base leading-[1.375rem] h-10 py-2',
+        'leadingPadding' => 'ps-3',
+    ],
+    'lg' => [
+        'input' => 'text-lg leading-[1.5rem] h-12 py-2.5',
+        'leadingPadding' => 'ps-4',
+    ],
+    'xl' => [
+        'input' => 'text-xl leading-[1.75rem] h-14 py-3',
+        'leadingPadding' => 'ps-4',
+    ],
+    '2xl' => [
+        'input' => 'text-2xl leading-[2rem] h-16 py-3.5',
+        'leadingPadding' => 'ps-5',
+    ],
+    '3xl' => [
+        'input' => 'text-3xl leading-[2.25rem] h-20 py-4',
+        'leadingPadding' => 'ps-6',
+    ],
+    '4xl' => [
+        'input' => 'text-4xl leading-[2.5rem] h-24 py-5',
+        'leadingPadding' => 'ps-7',
+    ],
+    '5xl' => [
+        'input' => 'text-5xl leading-[2.75rem] h-28 py-6',
+        'leadingPadding' => 'ps-8',
+    ],
+    '6xl' => [
+        'input' => 'text-6xl leading-[3rem] h-32 py-7',
+        'leadingPadding' => 'ps-9',
+    ],
+];
+
+
+$normalizedSize = is_numeric($size) || blank($size) ? 'md' : strtolower((string) $size);
+$normalizedSize = match ($normalizedSize) {
+    'base', 'default' => 'md',
+    default => $normalizedSize,
+};
+
+if (! array_key_exists($normalizedSize, $sizeMap)) {
+    $normalizedSize = 'md';
+}
+
+$size = $normalizedSize;
+$sizeTokens = $sizeMap[$size];
+
 // There are a few loading scenarios that this covers:
 // If `:loading="false"` then never show loading.
 // If `:loading="true"` then always show loading.
@@ -82,14 +142,10 @@ $inputLoadingClasses = Flux::classes()
 $classes = Flux::classes()
     ->add('w-full border rounded-lg block disabled:shadow-none dark:shadow-none')
     ->add('appearance-none') // Without this, input[type="date"] on mobile doesn't respect w-full...
-    ->add(match ($size) {
-        default => 'text-base sm:text-sm py-2 h-10 leading-[1.375rem]', // This makes the height of the input 40px (same as buttons and such...)
-        'sm' => 'text-sm py-1.5 h-8 leading-[1.125rem]',
-        'xs' => 'text-xs py-1.5 h-6 leading-[1.125rem]',
-    })
+    ->add($sizeTokens['input'])
     ->add(match ($hasLeadingIcon) {
         true => 'ps-10',
-        false => 'ps-3',
+        false => $sizeTokens['leadingPadding'],
     })
     ->add(match ($countOfTrailingIcons) {
         // Make sure there's enough padding on the right side of the input to account for all the icons...
@@ -141,7 +197,7 @@ $classes = Flux::classes()
                 @isset ($name) name="{{ $name }}" @endisset
                 @if ($maskDynamic) x-mask:dynamic="{{ $maskDynamic }}" @elseif ($mask) x-mask="{{ $mask }}" @endif
                 @if ($invalid) aria-invalid="true" data-invalid @endif
-                @if (is_numeric($size)) size="{{ $size }}" @endif
+                @if (! is_null($inputSizeAttribute)) size="{{ $inputSizeAttribute }}" @endif
                 data-flux-control
                 data-flux-group-target
                 @if ($loading) wire:loading.class="{{ $inputLoadingClasses }}" @endif

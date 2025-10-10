@@ -1,27 +1,29 @@
     <div class="flex flex-col h-full">
-        <!-- Close button -->
-        <div class="hidden md:flex justify-end ">
-            <button class="p-2 rounded text-xl bg-red-600"
-                    wire:click="close">
-                <flux:icon.x-mark />
-            </button>
-        </div>
+        
 
         <!-- Main content -->
-        <div class="grid grid-cols-2 md:grid-cols-3 grid-rows-[auto_1fr] md:grid-rows-1 gap-2 h-full mt-2">
+        <div class="grid grid-cols-2 md:grid-cols-4 grid-rows-[auto_1fr] md:grid-rows-1 gap-2 h-full mt-2">
             <!-- Image + Title -->
-            <div class="col-span-2 md:col-span-1 row-start-1 md:order-2 flex flex-col content-center ">
+            <div class="col-span-2 md:col-span-2 row-start-1 md:order-2 flex flex-col content-center ">
                 <img src="{{ $image }}" alt="{{ $imageDescription }}" class="object-cover rounded-md">
                 <h2 class="text-4xl md:text-5xl font-semibold mt-2 text-center">{{ $title }}</h2>
             </div>
 
             <!-- Buttons -->
             <div class="h-full row-start-2 md:row-start-1 md:order-1">
-                <button class="w-full h-full bg-green-400 rounded-md"
+                <div class="hidden md:flex justify-start h-1/5"></div>
+                <button class="w-full h-4/5 bg-green-400 rounded-full shadow-lg hover:-translate-y-2 active:translate-y-1 active:shadow-inner transition-all duration-150 cursor-pointer"
                         wire:click="like"></button>
             </div>
             <div class="h-full row-start-2 md:row-start-1 md:order-3">
-                <button class="w-full h-full bg-red-500 rounded-md"
+                <!-- Close button -->
+                <div class="hidden md:flex justify-end h-1/5">
+                    <button class="p-2 rounded text-xl"
+                            wire:click="close">
+                        <img src="/assets/stop.svg" alt="Close" class="h-full">
+                    </button>
+                </div>
+                <button class="w-full h-4/5 bg-red-500 rounded-full shadow-lg hover:-translate-y-2 active:translate-y-1 active:shadow-inner transition-all duration-150 cursor-pointer"
                         wire:click="dislike"></button>
             </div>
         </div>
