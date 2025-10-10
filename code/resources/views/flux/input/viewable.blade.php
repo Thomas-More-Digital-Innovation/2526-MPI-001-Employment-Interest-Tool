@@ -1,6 +1,23 @@
 @pure
 
 @php
+$inputSize = $size ?? 'md';
+
+$normalizedSize = match ($inputSize) {
+    null, '', 'base', 'default' => 'md',
+    default => $inputSize,
+};
+
+$buttonSizeMap = [
+    'xs' => 'xs',
+    'sm' => 'xs',
+    'md' => 'sm',
+    'lg' => 'base',
+    'xl' => 'base',
+];
+
+$buttonSize = $buttonSizeMap[$normalizedSize] ?? 'sm';
+
 $attributes = $attributes->merge([
     'variant' => 'subtle',
     'class' => '-me-1',
@@ -11,7 +28,7 @@ $attributes = $attributes->merge([
 
 <flux:button
     :$attributes
-    :size="$size === 'sm' || $size === 'xs' ? 'xs' : 'sm'"
+    :size="$buttonSize"
     x-data="{ open: false }"
     x-on:click="open = ! open; $el.closest('[data-flux-input]').querySelector('input').setAttribute('type', open ? 'text' : 'password')"
     x-bind:data-viewable-open="open"

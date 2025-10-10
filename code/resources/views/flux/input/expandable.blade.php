@@ -1,6 +1,23 @@
 @pure
 
 @php
+$inputSize = $size ?? 'md';
+
+$normalizedSize = match ($inputSize) {
+    null, '', 'base', 'default' => 'md',
+    default => $inputSize,
+};
+
+$buttonSizeMap = [
+    'xs' => 'xs',
+    'sm' => 'xs',
+    'md' => 'sm',
+    'lg' => 'base',
+    'xl' => 'base',
+];
+
+$buttonSize = $buttonSizeMap[$normalizedSize] ?? 'sm';
+
 $attributes = $attributes->merge([
     'variant' => 'subtle',
     'class' => '-me-1',
@@ -11,7 +28,7 @@ $attributes = $attributes->merge([
 
 <flux:button
     :$attributes
-    :size="$size === 'sm' || $size === 'xs' ? 'xs' : 'sm'"
+    :size="$buttonSize"
     x-on:click="$el.closest('[data-flux-input]').querySelector('input').value = ''"
 >
     <flux:icon.chevron-down variant="micro" />

@@ -22,26 +22,290 @@
 @php
 $iconLeading = $icon ??= $iconLeading;
 
+$sizeMap = [
+    'xs' => [
+        'baseClass' => 'h-6 text-xs rounded-md',
+        'squareClass' => 'w-6',
+        'padding' => [
+            'defaultLeft' => 'ps-2',
+            'withLeading' => 'ps-2',
+            'defaultRight' => 'pe-2',
+            'withTrailing' => 'pe-2',
+        ],
+        'iconVariants' => [
+            'default' => 'micro',
+            'square' => 'micro',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-4',
+            'square' => 'size-4',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-1', 'right' => '-me-2', 'bottom' => '-mb-1', 'left' => '-ms-2'],
+            'square' => ['top' => '-mt-1', 'right' => '-me-1', 'bottom' => '-mb-1', 'left' => '-ms-1'],
+        ],
+        'outlineShadow' => 'shadow-none',
+    ],
+    'sm' => [
+        'baseClass' => 'h-8 text-sm rounded-md',
+        'squareClass' => 'w-8',
+        'padding' => [
+            'defaultLeft' => 'ps-3',
+            'withLeading' => 'ps-3',
+            'defaultRight' => 'pe-3',
+            'withTrailing' => 'pe-3',
+        ],
+        'iconVariants' => [
+            'default' => 'micro',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-4',
+            'square' => 'size-4',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-1.5', 'right' => '-me-3', 'bottom' => '-mb-1.5', 'left' => '-ms-3'],
+            'square' => ['top' => '-mt-1.5', 'right' => '-me-1.5', 'bottom' => '-mb-1.5', 'left' => '-ms-1.5'],
+        ],
+        'outlineShadow' => 'shadow-xs',
+    ],
+    'md' => [
+        'baseClass' => 'h-10 text-sm rounded-lg',
+        'squareClass' => 'w-10',
+        'padding' => [
+            'defaultLeft' => 'ps-4',
+            'withLeading' => 'ps-3',
+            'defaultRight' => 'pe-4',
+            'withTrailing' => 'pe-3',
+        ],
+        'iconVariants' => [
+            'default' => 'micro',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-4',
+            'square' => 'size-5',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-2.5', 'right' => '-me-4', 'bottom' => '-mb-3', 'left' => '-ms-4'],
+            'square' => ['top' => '-mt-2.5', 'right' => '-me-2.5', 'bottom' => '-mb-2.5', 'left' => '-ms-2.5'],
+        ],
+        'outlineShadow' => 'shadow-xs',
+    ],
+    'lg' => [
+        'baseClass' => 'h-12 text-base rounded-xl',
+        'squareClass' => 'w-12',
+        'padding' => [
+            'defaultLeft' => 'ps-5',
+            'withLeading' => 'ps-4',
+            'defaultRight' => 'pe-5',
+            'withTrailing' => 'pe-4',
+        ],
+        'iconVariants' => [
+            'default' => 'mini',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-5',
+            'square' => 'size-6',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-3', 'right' => '-me-5', 'bottom' => '-mb-3', 'left' => '-ms-5'],
+            'square' => ['top' => '-mt-3', 'right' => '-me-3', 'bottom' => '-mb-3', 'left' => '-ms-3'],
+        ],
+        'outlineShadow' => 'shadow-sm',
+    ],
+    'xl' => [
+        'baseClass' => 'h-14 text-lg rounded-2xl',
+        'squareClass' => 'w-14',
+        'padding' => [
+            'defaultLeft' => 'ps-6',
+            'withLeading' => 'ps-5',
+            'defaultRight' => 'pe-6',
+            'withTrailing' => 'pe-5',
+        ],
+        'iconVariants' => [
+            'default' => 'mini',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-6',
+            'square' => 'size-6',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-3.5', 'right' => '-me-6', 'bottom' => '-mb-3.5', 'left' => '-ms-6'],
+            'square' => ['top' => '-mt-3.5', 'right' => '-me-3.5', 'bottom' => '-mb-3.5', 'left' => '-ms-3.5'],
+        ],
+        'outlineShadow' => 'shadow-md',
+    ],
+    '2xl' => [
+        'baseClass' => 'h-16 text-xl rounded-3xl',
+        'squareClass' => 'w-16',
+        'padding' => [
+            'defaultLeft' => 'ps-7',
+            'withLeading' => 'ps-6',
+            'defaultRight' => 'pe-7',
+            'withTrailing' => 'pe-6',
+        ],
+        'iconVariants' => [
+            'default' => 'mini',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-6',
+            'square' => 'size-7',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-4', 'right' => '-me-7', 'bottom' => '-mb-4', 'left' => '-ms-7'],
+            'square' => ['top' => '-mt-4', 'right' => '-me-4', 'bottom' => '-mb-4', 'left' => '-ms-4'],
+        ],
+        'outlineShadow' => 'shadow-md',
+    ],
+    '3xl' => [
+        'baseClass' => 'h-20 text-2xl rounded-full',
+        'squareClass' => 'w-20',
+        'padding' => [
+            'defaultLeft' => 'ps-8',
+            'withLeading' => 'ps-7',
+            'defaultRight' => 'pe-8',
+            'withTrailing' => 'pe-7',
+        ],
+        'iconVariants' => [
+            'default' => 'mini',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-7',
+            'square' => 'size-8',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-5', 'right' => '-me-8', 'bottom' => '-mb-5', 'left' => '-ms-8'],
+            'square' => ['top' => '-mt-5', 'right' => '-me-5', 'bottom' => '-mb-5', 'left' => '-ms-5'],
+        ],
+        'outlineShadow' => 'shadow-lg',
+    ],
+    '4xl' => [
+        'baseClass' => 'h-24 text-3xl rounded-full',
+        'squareClass' => 'w-24',
+        'padding' => [
+            'defaultLeft' => 'ps-9',
+            'withLeading' => 'ps-8',
+            'defaultRight' => 'pe-9',
+            'withTrailing' => 'pe-8',
+        ],
+        'iconVariants' => [
+            'default' => 'mini',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-8',
+            'square' => 'size-9',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-6', 'right' => '-me-9', 'bottom' => '-mb-6', 'left' => '-ms-9'],
+            'square' => ['top' => '-mt-6', 'right' => '-me-6', 'bottom' => '-mb-6', 'left' => '-ms-6'],
+        ],
+        'outlineShadow' => 'shadow-lg',
+    ],
+    '5xl' => [
+        'baseClass' => 'h-28 text-4xl rounded-full',
+        'squareClass' => 'w-28',
+        'padding' => [
+            'defaultLeft' => 'ps-10',
+            'withLeading' => 'ps-9',
+            'defaultRight' => 'pe-10',
+            'withTrailing' => 'pe-9',
+        ],
+        'iconVariants' => [
+            'default' => 'mini',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-9',
+            'square' => 'size-10',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-7', 'right' => '-me-10', 'bottom' => '-mb-7', 'left' => '-ms-10'],
+            'square' => ['top' => '-mt-7', 'right' => '-me-7', 'bottom' => '-mb-7', 'left' => '-ms-7'],
+        ],
+        'outlineShadow' => 'shadow-xl',
+    ],
+    '6xl' => [
+        'baseClass' => 'h-32 text-5xl rounded-full',
+        'squareClass' => 'w-32',
+        'padding' => [
+            'defaultLeft' => 'ps-12',
+            'withLeading' => 'ps-10',
+            'defaultRight' => 'pe-12',
+            'withTrailing' => 'pe-10',
+        ],
+        'iconVariants' => [
+            'default' => 'mini',
+            'square' => 'mini',
+        ],
+        'outlineIconSizes' => [
+            'default' => 'size-10',
+            'square' => 'size-12',
+        ],
+        'inset' => [
+            'default' => ['top' => '-mt-8', 'right' => '-me-12', 'bottom' => '-mb-8', 'left' => '-ms-12'],
+            'square' => ['top' => '-mt-8', 'right' => '-me-8', 'bottom' => '-mb-8', 'left' => '-ms-8'],
+        ],
+        'outlineShadow' => 'shadow-2xl',
+    ],
+];
+
+$normalizedSize = blank($size) ? 'md' : strtolower((string) $size);
+
+$normalizedSize = match ($normalizedSize) {
+    'x-small', 'extra-small', 'extra small', 'xx-small', 'xxs' => 'xs',
+    'small', 's' => 'sm',
+    'base', 'default', 'medium', 'm' => 'md',
+    'large', 'l' => 'lg',
+    'extra-large', 'extra large' => 'xl',
+    'xx-large', 'xx large', 'xxl' => '2xl',
+    'xxx-large', 'xxx large', 'xxxl' => '3xl',
+    default => $normalizedSize,
+};
+
+if (! array_key_exists($normalizedSize, $sizeMap)) {
+    $normalizedSize = 'md';
+}
+
+$size = $normalizedSize;
+$sizeTokens = $sizeMap[$size];
+
 // Button should be a square if it has no text contents...
 $square ??= $slot->isEmpty();
 
-// Size-up icons in square/icon-only buttons... (xs buttons just get micro size/style...)
-$iconVariant ??= ($size === 'xs')
-    ? ($square ? 'micro' : 'micro')
-    : ($square ? 'mini' : 'micro');
+// Size-up icons based on the normalized size tokens...
+$iconVariant ??= $sizeTokens['iconVariants'][$square ? 'square' : 'default'];
 
 $iconTrailingVariant ??= $attributes->pluck('icon-trailing:variant', $iconVariant);
 
-// When using the outline icon variant, we need to size it down to match the default icon sizes...
+$outlineIconSize = $sizeTokens['outlineIconSizes'][$square ? 'square' : 'default'] ?? null;
+
+// When using the outline icon variant, we need to size it to match the configured icon sizes...
 $iconClasses = Flux::classes()
-    ->add($iconVariant === 'outline' ? ($square && $size !== 'xs' ? 'size-5' : 'size-4') : '')
+    ->add($iconVariant === 'outline' && $outlineIconSize ? $outlineIconSize : '')
     ->add($attributes->pluck('icon:class'))
     ;
 
 $iconTrailingClasses = Flux::classes()
-    ->add($iconTrailingVariant === 'outline' ? ($square && $size !== 'xs' ? 'size-5' : 'size-4') : '')
+    ->add($iconTrailingVariant === 'outline' && $outlineIconSize ? $outlineIconSize : '')
     ->add($attributes->pluck('icon-trailing:class'))
     ;
+
+$paddingTokens = $sizeTokens['padding'];
+
+$paddingClasses = $square
+    ? $sizeTokens['squareClass']
+    : trim(
+        ($iconLeading && $iconLeading !== '' ? $paddingTokens['withLeading'] : $paddingTokens['defaultLeft']) . ' ' .
+        ($iconTrailing && $iconTrailing !== '' ? $paddingTokens['withTrailing'] : $paddingTokens['defaultRight'])
+    );
+
+$insetOffsets = $sizeTokens['inset'][$square ? 'square' : 'default'];
 
 $isTypeSubmitAndNotDisabledOnRender = $type === 'submit' && ! $attributes->has('disabled');
 
@@ -63,28 +327,16 @@ if ($loading && $type !== 'submit' && ! $isJsMethod) {
 $classes = Flux::classes()
     ->add('relative items-center font-medium justify-center gap-2 whitespace-nowrap')
     ->add('disabled:opacity-75 dark:disabled:opacity-75 disabled:cursor-default disabled:pointer-events-none')
-    ->add(match ($size) { // Size...
-        'base' => 'h-10 text-sm rounded-lg' . ' ' . (
-            $square
-                ? 'w-10'
-                // If we have an icon, we want to reduce the padding on the side that has the icon...
-                : ($iconLeading && $iconLeading !== '' ? 'ps-3' : 'ps-4') . ' ' . ($iconTrailing && $iconTrailing !== '' ? 'pe-3' : 'pe-4')
-        ),
-        'sm' => 'h-8 text-sm rounded-md' . ' ' . ($square ? 'w-8' : 'px-3'),
-        'xs' => 'h-6 text-xs rounded-md' . ' ' . ($square ? 'w-6' : 'px-2'),
-    })
+    ->add($sizeTokens['baseClass'])
+    ->add($paddingClasses)
     ->add('inline-flex') // Buttons are inline by default but links are blocks, so inline-flex is needed here to ensure link-buttons are displayed the same as buttons...
-    ->add($inset ? match ($size) { // Inset...
-        'base' => $square
-            ? Flux::applyInset($inset, top: '-mt-2.5', right: '-me-2.5', bottom: '-mb-2.5', left: '-ms-2.5')
-            : Flux::applyInset($inset, top: '-mt-2.5', right: '-me-4', bottom: '-mb-3', left: '-ms-4'),
-        'sm' => $square
-            ? Flux::applyInset($inset, top: '-mt-1.5', right: '-me-1.5', bottom: '-mb-1.5', left: '-ms-1.5')
-            : Flux::applyInset($inset, top: '-mt-1.5', right: '-me-3', bottom: '-mb-1.5', left: '-ms-3'),
-        'xs' => $square
-            ? Flux::applyInset($inset, top: '-mt-1', right: '-me-1', bottom: '-mb-1', left: '-ms-1')
-            : Flux::applyInset($inset, top: '-mt-1', right: '-me-2', bottom: '-mb-1', left: '-ms-2'),
-    } : '')
+    ->add($inset ? Flux::applyInset(
+        $inset,
+        top: $insetOffsets['top'],
+        right: $insetOffsets['right'],
+        bottom: $insetOffsets['bottom'],
+        left: $insetOffsets['left']
+    ) : '')
     ->add(match ($variant) { // Background color...
         'primary' => 'bg-[var(--color-accent)] hover:bg-[color-mix(in_oklab,_var(--color-accent),_transparent_10%)]',
         'filled' => 'bg-zinc-800/5 hover:bg-zinc-800/10 dark:bg-white/10 dark:hover:bg-white/20',
@@ -109,11 +361,7 @@ $classes = Flux::classes()
     ->add(match ($variant) { // Shadows...
         'primary' => 'shadow-[inset_0px_1px_--theme(--color-white/.2)]',
         'danger' => 'shadow-[inset_0px_1px_var(--color-red-500),inset_0px_2px_--theme(--color-white/.15)] dark:shadow-none',
-        'outline' => match ($size) {
-            'base' => 'shadow-xs',
-            'sm' => 'shadow-xs',
-            'xs' => 'shadow-none',
-        },
+        'outline' => $sizeTokens['outlineShadow'],
         default => '',
     })
     ->add(match ($variant) { // Grouped border treatments...
