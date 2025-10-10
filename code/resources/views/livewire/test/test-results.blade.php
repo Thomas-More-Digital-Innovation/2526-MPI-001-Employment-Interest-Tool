@@ -78,7 +78,7 @@
     </div>
 
     <div class="mt-8 flex justify-center">
-        <x-btn variant="primary" href="{{ route('dashboard') }}">
+        <x-btn variant="primary-user" href="{{ route('dashboard') }}">
             {{ __('Doorgaan') }}
         </x-btn>
     </div>

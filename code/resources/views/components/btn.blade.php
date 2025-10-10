@@ -1,15 +1,15 @@
 @props([
     'href' => null,
     'type' => 'button',
-    'variant' => 'primary',
+    'variant' => 'primary-user',
 ])
 
 @php
     $baseClasses = "inline-flex items-center justify-center px-6 py-2 rounded-lg font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition";
 
     $variants = [
-        'primary' => "bg-mpi hover:bg-mpi-500 text-white text-2xl px-6 py-4",
-        'secondary' => "bg-zinc-200 text-zinc-800 hover:bg-zinc-300",
+        'primary-user' => "bg-mpi hover:bg-mpi-500 text-white text-2xl px-6 py-4",
+        'secondary-user' => "bg-mpi hover:bg-mpi-500 text-white text-xl px-6 py-4",
     ];
 
     $classes = $baseClasses . ' ' . ($variants[$variant] ?? $variants['primary']);
