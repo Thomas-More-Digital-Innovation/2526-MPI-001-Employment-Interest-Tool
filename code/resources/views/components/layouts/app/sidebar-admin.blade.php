@@ -5,6 +5,6 @@
 
     <!-- Admin specific navigation -->
     <flux:navlist.group :heading="__('Admin Specific SideBar')" class="grid">
-        <flux:navlist.item icon="home" :href="route('admin.example')" :current="request()->routeIs('admin.example')" wire:navigate>{{ __('Example') }}</flux:navlist.item>
+        <flux:navlist.item icon="home" :href="route('admin.feedback')" :current="request()->routeIs('admin.feedback')" wire:navigate>{{ __('pageFeedback.Feedback') }}</flux:navlist.item>
     </flux:navlist.group>
 </flux:navlist>

@@ -85,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Admin'])->group(function () {
         Route::view('admin/dashboard', 'roles.admin.dashboard')->name('admin.dashboard');
-        Route::view('admin/example', 'roles.admin.example')->name('admin.example');
+        Route::view('admin/feedback', 'roles.admin.feedback')->name('admin.feedback');
     });
 
     Route::middleware(['role:Mentor'])->group(function () {
