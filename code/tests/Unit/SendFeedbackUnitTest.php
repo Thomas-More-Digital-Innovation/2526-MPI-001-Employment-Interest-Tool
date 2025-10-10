@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Livewire\SendFeedbackTest;
+use App\Livewire\Test\SendFeedbackTest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;

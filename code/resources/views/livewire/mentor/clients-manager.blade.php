@@ -1,7 +1,7 @@
 <div
     x-data="{}"
     x-on:modal-open.window="$event.detail && $event.detail.name && $flux.modal($event.detail.name).show()"
-    x-on:modal-close.window="$event.detail && $event.detail.name && $flux.modal($event.detail.name).hide()"
+    x-on:modal-close.window="$event.detail && $event.detail.name && $flux.modal($event.detail.name).close()"
     class="space-y-6">
     @if (session('status'))
     <div class="rounded-md bg-green-50 p-4 text-green-800">
@@ -18,7 +18,7 @@
                 id="client-search"
                 type="search"
                 icon="magnifying-glass"
-                wire:model.debounce.400ms="search"
+                wire:model.live.debounce.300ms="search"
                 placeholder="{{ $showInactivated ? __('Search all clients by name or username') : __('Search active clients by name or username') }}" />
         </div>
         <div class="flex-shrink-0 content-end">
