@@ -28,6 +28,17 @@
                 </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end gap-2">
+                        <flux:modal.trigger name="">
+                            <flux:button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                icon="eye"
+                                color="green"
+                                wire:click="viewTests({{ $client->user_id }})">
+                                {{ __('viewTests') }}
+                            </flux:button>
+                        </flux:modal.trigger>
                         <flux:modal.trigger name="mentor-client-form">
                             <flux:button
                                 type="button"
