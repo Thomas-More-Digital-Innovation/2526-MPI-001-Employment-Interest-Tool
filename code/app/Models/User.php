@@ -55,6 +55,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the raw filename of the user's profile picture without URL transformation.
+     */
+    public function getRawProfilePictureName()
+    {
+        return $this->attributes['profile_picture_url'] ?? null;
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
@@ -219,11 +227,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is an admin (SuperAdmin or Admin).
+     * Check if user is an admin.
      */
     public function isAdmin(): bool
     {
-        return $this->hasAnyRole([Role::SUPER_ADMIN, Role::ADMIN]);
+        return $this->hasRole(Role::ADMIN);
     }
 
     /**
