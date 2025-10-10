@@ -50,10 +50,6 @@ class ClientsManager extends BaseCrudComponent
      */
     protected ?int $defaultLanguageId = null;
 
-    /**
-     * Cached disability option ids for detach logic.
-     */
-    protected array $disabilityUniverse = [];
 
     /**
      * Languages available for selection.
@@ -180,7 +176,7 @@ class ClientsManager extends BaseCrudComponent
         return User::query()
             ->where('mentor_id', $this->mentorId)
             ->where('organisation_id', $this->mentorOrganisationId)
-            ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::CLIENT))
+            ->whereHas('roles', fn(Builder $query) => $query->where('role', Role::CLIENT))
             ->where('active', true)
             ->with([
                 'language',
@@ -189,13 +185,14 @@ class ClientsManager extends BaseCrudComponent
             ->orderBy('last_name');
     }
 
-    protected function inactivatedClientsQuery(): Builder {
+    protected function inactivatedClientsQuery(): Builder
+    {
         $this->ensureMentorContext();
 
         return User::query()
             ->where('mentor_id', $this->mentorId)
             ->where('organisation_id', $this->mentorOrganisationId)
-            ->whereHas('roles', fn (Builder $query) => $query->where('role', Role::CLIENT))
+            ->whereHas('roles', fn(Builder $query) => $query->where('role', Role::CLIENT))
             ->where('active', false)
             ->with([
                 'language',
@@ -236,8 +233,6 @@ class ClientsManager extends BaseCrudComponent
 
         return $record;
     }
-
-    
 
     protected function transformRecordToForm($record): array
     {
@@ -315,18 +310,12 @@ class ClientsManager extends BaseCrudComponent
             'vision_type' => $this->form['vision_type'],
         ];
 
-        $disabilityIds = collect($this->form['disability_ids'] ?? [])
-            ->map(fn ($id) => (int) $id)
-            ->filter(fn ($id) => in_array($id, $this->disabilityUniverse, true))
-            ->unique()
-            ->values()
-            ->all();
 
         $isEditing = (bool) $this->editingId;
 
         $client = null;
 
-        DB::transaction(function () use (&$client, $attributes, $disabilityIds, $isEditing) {
+        DB::transaction(function () use (&$client, $attributes, $isEditing) {
             if (!isset($this->clientRole)) {
                 $this->clientRole = Role::where('role', Role::CLIENT)->firstOrFail();
             }
@@ -429,7 +418,7 @@ class ClientsManager extends BaseCrudComponent
         if ($force || empty($this->languages)) {
             $languageCollection = Language::orderBy('language_name')->get();
             $this->languages = $languageCollection
-                ->map(fn (Language $language) => [
+                ->map(fn(Language $language) => [
                     'id' => $language->language_id,
                     'label' => $language->language_name,
                     'code' => $language->language_code,
