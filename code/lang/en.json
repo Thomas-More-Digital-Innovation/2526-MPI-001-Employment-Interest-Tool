@@ -303,5 +303,8 @@
     "Language": "Language",
     "English": "English",
     "Dutch": "Dutch",
-    "Enter your username and password below to log in": "Enter your username and password below to log in"
+    "Enter your username and password below to log in": "Enter your username and password below to log in",
+    "Stop Test": "Stop Test",
+    "Are you sure you want to stop the test?": "Are you sure you want to stop the test?",
+    "Your progress will be lost if you stop now.": "Your progress will be lost if you stop now."
 }
