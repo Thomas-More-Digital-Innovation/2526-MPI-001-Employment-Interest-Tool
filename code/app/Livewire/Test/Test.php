@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Test;
 
 use Carbon\Carbon;
 use App\Models\User;
@@ -84,7 +84,7 @@ class Test extends Component
         $this->imageDescription = $question->getImageDescription($currentLocale);
         $this->audio = $question->getSoundLink($currentLocale);
 
-        return view('livewire.test')->layout('components.layouts.test');
+        return view('livewire.test.test')->layout('components.layouts.test');
     }
 
     public function close()

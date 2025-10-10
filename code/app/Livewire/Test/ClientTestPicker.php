@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Test;
 
 use App\Models\Test;
 use Livewire\Component;
@@ -32,6 +32,6 @@ class ClientTestPicker extends Component
     }
     public function render()
     {
-        return view('livewire.client-test-picker');
+        return view('livewire.test.client-test-picker');
     }
 }
