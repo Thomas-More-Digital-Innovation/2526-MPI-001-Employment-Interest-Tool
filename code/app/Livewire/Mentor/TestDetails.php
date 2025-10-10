@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Mentor;
 
 use App\Models\Question;
 use App\Models\Test;
@@ -9,20 +9,13 @@ use Livewire\Component;
 
 class TestDetails extends Component
 {
-    public $testId;
-    public $tests = [];
-    public $testName;
+    public $testAtemptId;
+    public $testClientId;
     public function mount()
     {
-        $this->testId = "1";
-        $this->testName = $this->test->test_name;
-        $this->totalQuestions = Question::where('test_id', $this->testId)->count();
+        $this->viewingClientId = session(key: 'viewingClient');
 
-    }
-    public function viewTests(int $clientId)
-    {
-        session()->flash('viewingClient', $clientId);
-        return redirect()->route('/mentor/clientTests');
+
     }
     public function render()
     {
