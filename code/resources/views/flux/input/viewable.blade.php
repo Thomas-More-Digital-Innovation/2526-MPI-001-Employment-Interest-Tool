@@ -12,11 +12,35 @@ $buttonSizeMap = [
     'xs' => 'xs',
     'sm' => 'xs',
     'md' => 'sm',
-    'lg' => 'base',
-    'xl' => 'base',
+    'lg' => 'md',
+    'xl' => 'lg',
+    '2xl' => 'xl',
+    '3xl' => '2xl',
+    '4xl' => '3xl',
+    '5xl' => '4xl',
+    '6xl' => '5xl',
 ];
 
 $buttonSize = $buttonSizeMap[$normalizedSize] ?? 'sm';
+
+$iconConfig = [
+    'xs' => ['variant' => 'micro', 'sizeClass' => 'size-4'],
+    'sm' => ['variant' => 'micro', 'sizeClass' => 'size-4'],
+    'md' => ['variant' => 'mini', 'sizeClass' => 'size-5'],
+    'lg' => ['variant' => 'mini', 'sizeClass' => 'size-5'],
+    'xl' => ['variant' => 'mini', 'sizeClass' => 'size-6'],
+    '2xl' => ['variant' => 'mini', 'sizeClass' => 'size-7'],
+    '3xl' => ['variant' => 'mini', 'sizeClass' => 'size-8'],
+    '4xl' => ['variant' => 'mini', 'sizeClass' => 'size-9'],
+    '5xl' => ['variant' => 'mini', 'sizeClass' => 'size-10'],
+    '6xl' => ['variant' => 'mini', 'sizeClass' => 'size-12'],
+];
+
+$iconVariant = $iconConfig[$normalizedSize]['variant'] ?? 'mini';
+$iconSizeClass = $iconConfig[$normalizedSize]['sizeClass'] ?? 'size-5';
+
+$iconWhenOpenClasses = Flux::classes('hidden [[data-viewable-open]>&]:block')->add($iconSizeClass);
+$iconWhenClosedClasses = Flux::classes('block [[data-viewable-open]>&]:hidden')->add($iconSizeClass);
 
 $attributes = $attributes->merge([
     'variant' => 'subtle',
@@ -49,6 +73,6 @@ $attributes = $attributes->merge([
         observer.observe(input, { attributes: true, attributeFilter: ['type'] });
     "
 >
-    <flux:icon.eye-slash variant="micro" class="hidden [[data-viewable-open]>&]:block" />
-    <flux:icon.eye variant="micro" class="block [[data-viewable-open]>&]:hidden" />
+    <flux:icon.eye-slash :variant="$iconVariant" :class="$iconWhenOpenClasses" />
+    <flux:icon.eye :variant="$iconVariant" :class="$iconWhenClosedClasses" />
 </flux:button>

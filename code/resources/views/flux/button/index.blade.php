@@ -24,7 +24,9 @@ $iconLeading = $icon ??= $iconLeading;
 
 $sizeMap = [
     'xs' => [
-        'baseClass' => 'h-6 text-xs rounded-md',
+        'baseClass' => 'h-6 text-xs',
+        'radius' => 'rounded-md',
+        'squareRadius' => 'rounded-md',
         'squareClass' => 'w-6',
         'padding' => [
             'defaultLeft' => 'ps-2',
@@ -44,10 +46,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-1', 'right' => '-me-2', 'bottom' => '-mb-1', 'left' => '-ms-2'],
             'square' => ['top' => '-mt-1', 'right' => '-me-1', 'bottom' => '-mb-1', 'left' => '-ms-1'],
         ],
-        'outlineShadow' => 'shadow-none',
+        'outlineShadow' => [
+            'default' => 'shadow-none',
+            'square' => 'shadow-none [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     'sm' => [
-        'baseClass' => 'h-8 text-sm rounded-md',
+        'baseClass' => 'h-8 text-sm',
+        'radius' => 'rounded-md',
+        'squareRadius' => 'rounded-md',
         'squareClass' => 'w-8',
         'padding' => [
             'defaultLeft' => 'ps-3',
@@ -67,10 +74,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-1.5', 'right' => '-me-3', 'bottom' => '-mb-1.5', 'left' => '-ms-3'],
             'square' => ['top' => '-mt-1.5', 'right' => '-me-1.5', 'bottom' => '-mb-1.5', 'left' => '-ms-1.5'],
         ],
-        'outlineShadow' => 'shadow-xs',
+        'outlineShadow' => [
+            'default' => 'shadow-xs',
+            'square' => 'shadow-xs [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     'md' => [
-        'baseClass' => 'h-10 text-sm rounded-lg',
+        'baseClass' => 'h-10 text-sm',
+        'radius' => 'rounded-lg',
+        'squareRadius' => 'rounded-lg',
         'squareClass' => 'w-10',
         'padding' => [
             'defaultLeft' => 'ps-4',
@@ -90,10 +102,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-2.5', 'right' => '-me-4', 'bottom' => '-mb-3', 'left' => '-ms-4'],
             'square' => ['top' => '-mt-2.5', 'right' => '-me-2.5', 'bottom' => '-mb-2.5', 'left' => '-ms-2.5'],
         ],
-        'outlineShadow' => 'shadow-xs',
+        'outlineShadow' => [
+            'default' => 'shadow-xs',
+            'square' => 'shadow-xs [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     'lg' => [
-        'baseClass' => 'h-12 text-base rounded-xl',
+        'baseClass' => 'h-12 text-base',
+        'radius' => 'rounded-xl',
+        'squareRadius' => 'rounded-xl',
         'squareClass' => 'w-12',
         'padding' => [
             'defaultLeft' => 'ps-5',
@@ -113,10 +130,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-3', 'right' => '-me-5', 'bottom' => '-mb-3', 'left' => '-ms-5'],
             'square' => ['top' => '-mt-3', 'right' => '-me-3', 'bottom' => '-mb-3', 'left' => '-ms-3'],
         ],
-        'outlineShadow' => 'shadow-sm',
+        'outlineShadow' => [
+            'default' => 'shadow-sm',
+            'square' => 'shadow-sm [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     'xl' => [
-        'baseClass' => 'h-14 text-lg rounded-2xl',
+        'baseClass' => 'h-14 text-lg',
+        'radius' => 'rounded-2xl',
+        'squareRadius' => 'rounded-xl',
         'squareClass' => 'w-14',
         'padding' => [
             'defaultLeft' => 'ps-6',
@@ -136,10 +158,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-3.5', 'right' => '-me-6', 'bottom' => '-mb-3.5', 'left' => '-ms-6'],
             'square' => ['top' => '-mt-3.5', 'right' => '-me-3.5', 'bottom' => '-mb-3.5', 'left' => '-ms-3.5'],
         ],
-        'outlineShadow' => 'shadow-md',
+        'outlineShadow' => [
+            'default' => 'shadow-md',
+            'square' => 'shadow-md [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     '2xl' => [
-        'baseClass' => 'h-16 text-xl rounded-3xl',
+        'baseClass' => 'h-16 text-xl',
+        'radius' => 'rounded-3xl',
+        'squareRadius' => 'rounded-2xl',
         'squareClass' => 'w-16',
         'padding' => [
             'defaultLeft' => 'ps-7',
@@ -159,10 +186,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-4', 'right' => '-me-7', 'bottom' => '-mb-4', 'left' => '-ms-7'],
             'square' => ['top' => '-mt-4', 'right' => '-me-4', 'bottom' => '-mb-4', 'left' => '-ms-4'],
         ],
-        'outlineShadow' => 'shadow-md',
+        'outlineShadow' => [
+            'default' => 'shadow-md',
+            'square' => 'shadow-md [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     '3xl' => [
-        'baseClass' => 'h-20 text-2xl rounded-full',
+        'baseClass' => 'h-20 text-2xl',
+        'radius' => 'rounded-full',
+        'squareRadius' => 'rounded-3xl',
         'squareClass' => 'w-20',
         'padding' => [
             'defaultLeft' => 'ps-8',
@@ -182,10 +214,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-5', 'right' => '-me-8', 'bottom' => '-mb-5', 'left' => '-ms-8'],
             'square' => ['top' => '-mt-5', 'right' => '-me-5', 'bottom' => '-mb-5', 'left' => '-ms-5'],
         ],
-        'outlineShadow' => 'shadow-lg',
+        'outlineShadow' => [
+            'default' => 'shadow-lg',
+            'square' => 'shadow-lg [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     '4xl' => [
-        'baseClass' => 'h-24 text-3xl rounded-full',
+        'baseClass' => 'h-24 text-3xl',
+        'radius' => 'rounded-full',
+        'squareRadius' => 'rounded-[2rem]',
         'squareClass' => 'w-24',
         'padding' => [
             'defaultLeft' => 'ps-9',
@@ -205,10 +242,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-6', 'right' => '-me-9', 'bottom' => '-mb-6', 'left' => '-ms-9'],
             'square' => ['top' => '-mt-6', 'right' => '-me-6', 'bottom' => '-mb-6', 'left' => '-ms-6'],
         ],
-        'outlineShadow' => 'shadow-lg',
+        'outlineShadow' => [
+            'default' => 'shadow-lg',
+            'square' => 'shadow-lg [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     '5xl' => [
-        'baseClass' => 'h-28 text-4xl rounded-full',
+        'baseClass' => 'h-28 text-4xl',
+        'radius' => 'rounded-full',
+        'squareRadius' => 'rounded-[2.25rem]',
         'squareClass' => 'w-28',
         'padding' => [
             'defaultLeft' => 'ps-10',
@@ -228,10 +270,15 @@ $sizeMap = [
             'default' => ['top' => '-mt-7', 'right' => '-me-10', 'bottom' => '-mb-7', 'left' => '-ms-10'],
             'square' => ['top' => '-mt-7', 'right' => '-me-7', 'bottom' => '-mb-7', 'left' => '-ms-7'],
         ],
-        'outlineShadow' => 'shadow-xl',
+        'outlineShadow' => [
+            'default' => 'shadow-xl',
+            'square' => 'shadow-xl [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
     '6xl' => [
-        'baseClass' => 'h-32 text-5xl rounded-full',
+        'baseClass' => 'h-32 text-5xl',
+        'radius' => 'rounded-full',
+        'squareRadius' => 'rounded-[2.5rem]',
         'squareClass' => 'w-32',
         'padding' => [
             'defaultLeft' => 'ps-12',
@@ -251,7 +298,10 @@ $sizeMap = [
             'default' => ['top' => '-mt-8', 'right' => '-me-12', 'bottom' => '-mb-8', 'left' => '-ms-12'],
             'square' => ['top' => '-mt-8', 'right' => '-me-8', 'bottom' => '-mb-8', 'left' => '-ms-8'],
         ],
-        'outlineShadow' => 'shadow-2xl',
+        'outlineShadow' => [
+            'default' => 'shadow-2xl',
+            'square' => 'shadow-2xl [&::after]:rounded-[inherit] hover:[&::after]:rounded-[inherit]',
+        ],
     ],
 ];
 
@@ -275,8 +325,17 @@ if (! array_key_exists($normalizedSize, $sizeMap)) {
 $size = $normalizedSize;
 $sizeTokens = $sizeMap[$size];
 
+$radiusClass = $sizeTokens['radius'] ?? null;
+$squareRadiusClass = $sizeTokens['squareRadius'] ?? $radiusClass;
+
 // Button should be a square if it has no text contents...
 $square ??= $slot->isEmpty();
+
+$outlineShadowClass = $sizeTokens['outlineShadow'] ?? '';
+
+if (is_array($outlineShadowClass)) {
+    $outlineShadowClass = $outlineShadowClass[$square ? 'square' : 'default'] ?? ($outlineShadowClass['default'] ?? '');
+}
 
 // Size-up icons based on the normalized size tokens...
 $iconVariant ??= $sizeTokens['iconVariants'][$square ? 'square' : 'default'];
@@ -328,6 +387,7 @@ $classes = Flux::classes()
     ->add('relative items-center font-medium justify-center gap-2 whitespace-nowrap')
     ->add('disabled:opacity-75 dark:disabled:opacity-75 disabled:cursor-default disabled:pointer-events-none')
     ->add($sizeTokens['baseClass'])
+    ->add($square ? $squareRadiusClass : $radiusClass)
     ->add($paddingClasses)
     ->add('inline-flex') // Buttons are inline by default but links are blocks, so inline-flex is needed here to ensure link-buttons are displayed the same as buttons...
     ->add($inset ? Flux::applyInset(
@@ -361,7 +421,7 @@ $classes = Flux::classes()
     ->add(match ($variant) { // Shadows...
         'primary' => 'shadow-[inset_0px_1px_--theme(--color-white/.2)]',
         'danger' => 'shadow-[inset_0px_1px_var(--color-red-500),inset_0px_2px_--theme(--color-white/.15)] dark:shadow-none',
-        'outline' => $sizeTokens['outlineShadow'],
+        'outline' => $outlineShadowClass,
         default => '',
     })
     ->add(match ($variant) { // Grouped border treatments...
