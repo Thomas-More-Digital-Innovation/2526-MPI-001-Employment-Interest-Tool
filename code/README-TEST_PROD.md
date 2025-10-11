@@ -1,0 +1,3 @@
+- docker compose -f compose.test.prod.yml up --build -d
+- docker compose -f compose.test.prod.yml exec app sh
+    - php artisan db:seed
