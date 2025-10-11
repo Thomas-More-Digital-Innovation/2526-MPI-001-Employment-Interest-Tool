@@ -12,7 +12,7 @@ class TestContentOverview extends Component
     public string $testName;
     public Collection $testContent; // Collection<int, Builder<Question>>
     public ?int $testId;
-    public int $userId;
+    public ?int $userId;
     public int $totalQuestions;
     public string $currentLocale;
     
