@@ -1,14 +1,14 @@
-name: Test Prod AUTO-DEPLOY
+name: Deploy Test Production Environment
 
 on:
   push:
     branches:
-      - '**'
+      - 'prod-test-env'
   workflow_dispatch:
     
 jobs:
   ssh_command:
-    name: Run SSH command
+    name: Deploy to Test Production Environment via SSH
     runs-on: ubuntu-latest
     steps:
     - name: Connect and run command on remote server
