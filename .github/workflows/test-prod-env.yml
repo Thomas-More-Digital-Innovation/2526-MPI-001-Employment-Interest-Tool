@@ -52,5 +52,8 @@ jobs:
           # Stop the existing docker compose stack
           docker compose -f compose.test.prod.yml down
 
+          # Docker builder prune
+          docker builder prune --all -f
+
           # Start the docker compose stack
           docker compose -f compose.test.prod.yml up --build -d
