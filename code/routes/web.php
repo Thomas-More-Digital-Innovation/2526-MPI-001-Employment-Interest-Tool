@@ -4,6 +4,7 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Test\Test;
+use App\Livewire\Test\TestContentOverview;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\Test\TestResults;
@@ -103,8 +104,13 @@ Route::middleware(['auth'])->group(function () {
         Route::view('client/dashboard', 'roles.client.dashboard')->name('client.dashboard');
         //This is kept as reference
 //        Route::view('client/taketest', 'roles.client.taketest')->name('client.taketest');
-
     });
+
+    Route::middleware(['role:Mentor,Admin,SuperAdmin'])->group(function () {
+        Route::view('staff/test-picker', view: 'roles.staff.test-picker')->name('staff.test-picker');
+        Route::get('staff/test-content-overview', TestContentOverview::class)->name('livewire.test.test-content-overview');
+    });
+
 
     // Example of multiple roles
     // Route::middleware(['role:SuperAdmin,Admin'])->group(function () {
