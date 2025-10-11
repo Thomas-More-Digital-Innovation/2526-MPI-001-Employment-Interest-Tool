@@ -15,7 +15,7 @@
             <img src="{{ $question->getImageUrl($currentLocale) }}" class="w-full h-64 object-cover rounded-t-2xl" alt="{{ $question->getImageDescription($currentLocale) }}">
             <div class="p-2">
                 <div class="flex justify-between">
-                    <p class="font-bold">{{ $questionNumber }}.</p>
+                    <p class="font-bold">{{ $questionNumber + 1 }}.</p>
                     @php
                     $audio = $question->getSoundLink($currentLocale);
                     @endphp
