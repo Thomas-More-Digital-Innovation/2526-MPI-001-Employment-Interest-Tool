@@ -35,7 +35,7 @@ jobs:
           BRANCH="${BRANCH#refs/heads/}"
 
           echo "Cloning repository $REPO_URL (branch: $BRANCH) into $APP_DIR"
-          git clone --depth 1 --branch "$BRANCH" "$REPO_URL"
+            git clone --depth 1 --branch "$BRANCH" "$REPO_URL" .
           cd code
 
           # Copy APP_KEY from /etc/laravel/app_key
