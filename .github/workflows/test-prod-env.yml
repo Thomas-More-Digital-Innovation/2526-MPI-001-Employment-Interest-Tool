@@ -1,0 +1,63 @@
+name: Deploy Test Production Environment
+
+on:
+  push:
+    branches:
+      - 'prod-test-env'
+  workflow_dispatch:
+    
+jobs:
+  ssh_command:
+    name: Deploy to Test Production Environment via SSH
+    runs-on: ubuntu-latest
+    steps:
+    - name: Connect and run command on remote server
+      uses: and-fm/cloudflared-ssh-action@v3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        private_key_filename: ${{ secrets.SSH_PRIVATE_KEY_FILENAME }}
+        private_key_value: ${{ secrets.SSH_PRIVATE_KEY_VALUE }}
+        port: 22
+        service_token_id: ${{ secrets.SERVICE_TOKEN_ID }}
+        service_token_secret: ${{ secrets.SERVICE_TOKEN_SECRET }}
+        commands: |
+          set -euo pipefail
+
+          APP_DIR=2526-MPI-001-Employment-Interest-Tool
+          echo "Removing existing files in $APP_DIR"
+          rm -rf "$APP_DIR" || true
+          mkdir -p "$APP_DIR"
+
+          cd "$APP_DIR"
+          REPO_URL="https://github.com/${{ github.repository }}.git"
+          BRANCH='${{ github.ref }}'
+          BRANCH="${BRANCH#refs/heads/}"
+
+          echo "Cloning repository $REPO_URL (branch: $BRANCH) into $APP_DIR"
+            git clone --depth 1 --branch "$BRANCH" "$REPO_URL" .
+          cd code
+
+          # Copy APP_KEY from /etc/laravel/app_key
+          if [ -f /etc/laravel/app_key ]; then
+            cat /etc/laravel/app_key >> .env.test.prod
+          else
+            echo "ERROR: /etc/laravel/app_key not found on server" >&2
+            exit 2
+          fi
+
+          # Copy .env.test.prod to .env
+          cp .env.test.prod .env
+
+          # Stop the existing docker compose stack
+          docker compose -f compose.test.prod.yml down
+
+          # Docker builder prune
+          docker builder prune --all -f
+
+          # Export host UID/GID to docker compose environment
+          export HOST_UID=$(id -u)
+          export HOST_GID=$(id -g)
+
+          # Start the docker compose stack
+          docker compose -f compose.test.prod.yml up --build -d

@@ -20,13 +20,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $language = \App\Models\Language::create([
-            'language_code' => 'en',
-            'language_name' => 'English',
+            'language_code' => 'nl',
+            'language_name' => 'Dutch',
         ]);
 
         \App\Models\Language::create([
-            'language_code' => 'nl',
-            'language_name' => 'Dutch',
+            'language_code' => 'en',
+            'language_name' => 'English',
         ]);
 
         // Create roles
