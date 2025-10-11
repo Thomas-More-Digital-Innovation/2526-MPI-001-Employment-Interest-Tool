@@ -60,7 +60,8 @@ class TestContentOverviewTest extends TestCase
             ->assertSet('currentLocale', app()->getLocale())
             ->assertCount('testContent', 2)
             ->assertSee('First question?')
-            ->assertSee('Second question?');
+            ->assertSee('Second question?')
+            ->assertSee('Sample Staff Test');
     }
 
     public function test_redirects_to_picker_when_not_authenticated(): void
