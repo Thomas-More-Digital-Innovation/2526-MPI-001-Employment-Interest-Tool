@@ -1,4 +1,5 @@
-<div class="flex flex-wrap gap-3 justify-center">
+<div class="flex flex-wrap gap-3 justify-center relative">
+    <flux:button icon="arrow-left" wire:click="close" class="fixed top-0 left-0"></flux:button>
     @forelse ($testContent as $questionNumber => $question)
     <div class="w-80 rounded-2xl bg-zinc-600">
         <img src="{{ $question->getImageUrl($currentLocale) }}" class="w-full h-64 object-cover rounded-t-2xl" alt="{{ $question->getImageDescription($currentLocale) }}">

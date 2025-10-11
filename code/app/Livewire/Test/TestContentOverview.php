@@ -37,4 +37,8 @@ class TestContentOverview extends Component
     {
         return view('livewire.test.test-content-overview');
     }
+
+    public function close() {
+        return redirect()->route('staff.test-picker');
+    }
 }
