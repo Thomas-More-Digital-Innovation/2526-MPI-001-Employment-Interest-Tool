@@ -17,6 +17,8 @@ services:
       DB_DATABASE: ${DB_DATABASE}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+      HOST_UID: ${HOST_UID}
+      HOST_GID: ${HOST_GID}
     volumes:
       - storage:/usr/share/nginx/html/storage:rw
       - ./public:/usr/share/nginx/html/public:rw

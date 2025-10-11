@@ -55,5 +55,9 @@ jobs:
           # Docker builder prune
           docker builder prune --all -f
 
+          # Export host UID/GID to docker compose environment
+          export HOST_UID=$(id -u)
+          export HOST_GID=$(id -g)
+
           # Start the docker compose stack
           docker compose -f compose.test.prod.yml up --build -d
