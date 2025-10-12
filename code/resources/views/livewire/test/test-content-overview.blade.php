@@ -2,7 +2,9 @@
     <div class="space-y-6 pb-6 sticky top-0 z-20">
         <div class="bg-white shadow rounded-lg  border-b border-gray-200">
             <div class="px-4 py-5 sm:px-6 flex gap-2 items-center">
-                <flux:button icon="arrow-left" wire:click="close" class="shrink-0"></flux:button>
+                <flux:tooltip content="{{ __('testOverview.close') }}">
+                    <flux:button icon="arrow-left" wire:click="close" class="shrink-0"></flux:button>
+                </flux:tooltip>
 
                 <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ $testName }}</h2>
             </div>
@@ -39,7 +41,7 @@
         </div>
 
         @empty
-        <p>{{ __('No questions found') }}</p>
+        <p>{{ __('testOverview.no_questions_found') }}</p>
         @endforelse
     </div>
 </div>
