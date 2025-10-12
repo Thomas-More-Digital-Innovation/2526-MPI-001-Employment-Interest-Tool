@@ -25,12 +25,17 @@ jobs:
           set -euo pipefail
 
           APP_DIR=2526-MPI-001-Employment-Interest-Tool
-          cd "$APP_DIR/code"
-          # Stop the existing docker compose stack
-          docker compose -f compose.test.prod.yml down
+          if [ -e "$APP_DIR/code/compose.test.prod.yml ]; then
+            echo "File exists."
+            cd "$APP_DIR/code"
+            # Stop the existing docker compose stack
+            docker compose -f compose.test.prod.yml down
 
-          # Docker builder prune
-          docker builder prune --all -f
+            # Docker builder prune
+            docker builder prune --all -f
+          else
+            echo "File does not exist."
+          fi
 
           cd /home/mpi
 
