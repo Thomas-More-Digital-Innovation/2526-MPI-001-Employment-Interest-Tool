@@ -25,11 +25,16 @@ jobs:
           set -euo pipefail
 
           APP_DIR=2526-MPI-001-Employment-Interest-Tool
+          cd "$APP_DIR"
+          # Stop the existing docker compose stack
+          docker compose -f compose.test.prod.yml down
+
+          # Docker builder prune
+          docker builder prune --all -f
+
           echo "Removing existing files in $APP_DIR"
           rm -rf "$APP_DIR" || true
           mkdir -p "$APP_DIR"
-
-          cd "$APP_DIR"
           REPO_URL="https://github.com/${{ github.repository }}.git"
           BRANCH='${{ github.ref }}'
           BRANCH="${BRANCH#refs/heads/}"
@@ -48,13 +53,7 @@ jobs:
 
           # Copy .env.test.prod to .env
           cp .env.test.prod .env
-
-          # Stop the existing docker compose stack
-          docker compose -f compose.test.prod.yml down
-
-          # Docker builder prune
-          docker builder prune --all -f
-
+          
           # Export host UID/GID to docker compose environment
           export HOST_UID=$(id -u)
           export HOST_GID=$(id -g)
