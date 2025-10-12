@@ -108,7 +108,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Mentor,Admin,SuperAdmin'])->group(function () {
         Route::view('staff/test-picker', view: 'roles.staff.test-picker')->name('staff.test-picker');
-        Route::get('staff/test-content-overview', TestContentOverview::class)->name('livewire.test.test-content-overview');
+        Route::view('staff/test-content-overview', 'roles.staff.test-content-overview')->name('roles.staff.test-content-overview');
     });
 
 

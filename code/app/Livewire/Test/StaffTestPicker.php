@@ -11,7 +11,7 @@ class StaffTestPicker extends ClientTestPicker
 
     public function startTest(int $testId) {
         session()->flash('testId', $testId);
-        return redirect()->route('livewire.test.test-content-overview');
+        return redirect()->route('roles.staff.test-content-overview');
     }
 
     public function mount() {

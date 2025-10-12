@@ -1,4 +1,4 @@
-<article>
+<div>
     <div class="space-y-6 pb-6 sticky top-0 z-20">
         <div class="bg-white shadow rounded-lg  border-b border-gray-200">
             <div class="px-4 py-5 sm:px-6 flex gap-2 items-center">
@@ -42,4 +42,4 @@
         <p>{{ __('No questions found') }}</p>
         @endforelse
     </div>
-</article>
+</div>
