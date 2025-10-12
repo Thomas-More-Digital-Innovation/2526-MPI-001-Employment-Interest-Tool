@@ -20,10 +20,10 @@
                     $audio = $question->getSoundLink($currentLocale);
                     @endphp
                     @if ($audio)
-                    <audio x-ref="questionaudio{{$questionNumber}}" src="{{ $audio }}"></audio>
+                    <audio x-ref="questionaudio{{$questionNumber}}" src="/{{ $audio }}" type="audio/mpeg"></audio>
                     <button class="text-2xl @if(!$audio) invisible @endif"
                         @click="
-                        let audio = $audio;
+                        let audio = $refs.questionaudio{{$questionNumber}};
                         audio.pause();
                         audio.currentTime = 0;
                         audio.load();
