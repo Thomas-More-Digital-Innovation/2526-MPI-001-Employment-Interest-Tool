@@ -456,4 +456,10 @@ class ClientsManager extends BaseCrudComponent
 
         return $options;
     }
+
+    public function assignTests(int $clientId): void
+    {
+        // Open the Assign Tests modal popup and pass the client ID
+        $this->dispatch('open-assign-tests-modal', $clientId);
+    }
 }

@@ -14,7 +14,7 @@
         <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
             @forelse ($attempts as $attempt)
             <tr wire:key="test-row-{{ $attempt->testattempt_id}}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
-                <td class="px-4 py-3">{{ $attempt->attempt_id}}</td>
+                <td class="px-4 py-3">{{ $attempt->testattempt_id}}</td>
                 <td class="px-4 py-3">{{ $attempt->name ?? data_get($attempt, 'attempt.test.name', '—') }}</td>
                 <td class="px-4 py-3">
                     @if(optional($attempt)->finished)
