@@ -10,11 +10,11 @@ jobs:
   ssh_command:
     name: Deploy to Test Production Environment via SSH
     runs-on: ubuntu-latest
-    env:
-      ROOT_PASSWORD: ${{ secrets.ROOT_PASSWORD }}
     steps:
     - name: Connect and run command on remote server
       uses: and-fm/cloudflared-ssh-action@v3
+      env:
+        ROOT_PASSWORD: ${{ secrets.ROOT_PASSWORD }}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
