@@ -10,7 +10,7 @@ use Livewire\WithPagination;
 class TestContentOverview extends Component
 {
     public string $testName;
-    public Collection $testContent; // Collection<int, Builder<Question>>
+    public $testContent; // Collection<int, Question>
     public ?int $testId;
     public ?int $userId;
     public int $totalQuestions;
