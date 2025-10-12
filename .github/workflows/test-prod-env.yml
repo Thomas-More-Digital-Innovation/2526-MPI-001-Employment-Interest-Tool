@@ -25,12 +25,14 @@ jobs:
           set -euo pipefail
 
           APP_DIR=2526-MPI-001-Employment-Interest-Tool
-          cd "$APP_DIR"
+          cd "$APP_DIR/code"
           # Stop the existing docker compose stack
           docker compose -f compose.test.prod.yml down
 
           # Docker builder prune
           docker builder prune --all -f
+
+          cd /home/mpi
 
           echo "Removing existing files in $APP_DIR"
           rm -rf "$APP_DIR" || true
@@ -38,6 +40,8 @@ jobs:
           REPO_URL="https://github.com/${{ github.repository }}.git"
           BRANCH='${{ github.ref }}'
           BRANCH="${BRANCH#refs/heads/}"
+
+          cd "$APP_DIR"
 
           echo "Cloning repository $REPO_URL (branch: $BRANCH) into $APP_DIR"
             git clone --depth 1 --branch "$BRANCH" "$REPO_URL" .
