@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Faq;
 use App\Models\Role;
+use App\Models\OrganisationTest;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -131,5 +132,20 @@ class DatabaseSeeder extends Seeder
 
        // Run the TestSeeder to populate test and question data
        $this->call(TestSeeder::class);
+
+
+       // TODO: no direct link to tests
+       OrganisationTest::create(
+        [
+            'organisation_id' => $organisation->organisation_id,
+            'test_id' => 1,
+        ]
+       );  
+       OrganisationTest::create(
+        [
+            'organisation_id' => $organisation->organisation_id,
+            'test_id' => 2,
+        ]
+       );  
     }
 }

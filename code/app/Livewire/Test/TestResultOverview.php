@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\TestAttempt;
 use Illuminate\Support\Facades\Auth;
 
-class TestOverview extends Component
+class TestResultOverview extends Component
 {
     public $attempts;
 
@@ -20,6 +20,6 @@ class TestOverview extends Component
 
     public function render()
     {
-        return view('livewire.test.test-overview');
+        return view('livewire.test.test-result-overview');
     }
 }
