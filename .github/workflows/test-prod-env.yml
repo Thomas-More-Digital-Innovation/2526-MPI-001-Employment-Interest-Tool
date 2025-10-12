@@ -13,8 +13,6 @@ jobs:
     steps:
     - name: Connect and run command on remote server
       uses: and-fm/cloudflared-ssh-action@v3
-      env:
-        ROOT_PASSWORD: ${{ secrets.ROOT_PASSWORD }}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
@@ -25,6 +23,7 @@ jobs:
         service_token_secret: ${{ secrets.SERVICE_TOKEN_SECRET }}
         commands: |
           set -euo pipefail
+          ROOT_PASSWORD="${{ secrets.ROOT_PASSWORD }}"
 
           APP_DIR=2526-MPI-001-Employment-Interest-Tool
           if [ -e "$APP_DIR/code/compose.test.prod.yml" ]; then
