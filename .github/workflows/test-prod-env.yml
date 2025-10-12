@@ -6,6 +6,10 @@ on:
       - 'prod-test-env'
   workflow_dispatch:
     
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+    
 jobs:
   ssh_command:
     name: Deploy to Test Production Environment via SSH
@@ -23,16 +27,31 @@ jobs:
         service_token_secret: ${{ secrets.SERVICE_TOKEN_SECRET }}
         commands: |
           set -euo pipefail
+          ROOT_PASSWORD="${{ secrets.ROOT_PASSWORD }}"
 
           APP_DIR=2526-MPI-001-Employment-Interest-Tool
-          echo "Removing existing files in $APP_DIR"
-          rm -rf "$APP_DIR" || true
-          mkdir -p "$APP_DIR"
+          if [ -e "$APP_DIR/code/compose.test.prod.yml" ]; then
+            echo "File exists."
+            cd "$APP_DIR/code"
+            # Stop the existing docker compose stack
+            docker compose -f compose.test.prod.yml down
 
-          cd "$APP_DIR"
+            # Docker builder prune
+            docker builder prune --all -f
+          else
+            echo "File does not exist."
+          fi
+
+          cd /home/mpi
+
+          echo "Removing existing files in $APP_DIR"
+          echo "$ROOT_PASSWORD" | sudo -S rm -rf "$APP_DIR" || true
+          mkdir -p "$APP_DIR"
           REPO_URL="https://github.com/${{ github.repository }}.git"
           BRANCH='${{ github.ref }}'
           BRANCH="${BRANCH#refs/heads/}"
+
+          cd "$APP_DIR"
 
           echo "Cloning repository $REPO_URL (branch: $BRANCH) into $APP_DIR"
             git clone --depth 1 --branch "$BRANCH" "$REPO_URL" .
@@ -48,13 +67,7 @@ jobs:
 
           # Copy .env.test.prod to .env
           cp .env.test.prod .env
-
-          # Stop the existing docker compose stack
-          docker compose -f compose.test.prod.yml down
-
-          # Docker builder prune
-          docker builder prune --all -f
-
+          
           # Export host UID/GID to docker compose environment
           export HOST_UID=$(id -u)
           export HOST_GID=$(id -g)
