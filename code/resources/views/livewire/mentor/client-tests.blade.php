@@ -13,11 +13,11 @@
 
         <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
             @forelse ($attempts as $attempt)
-            <tr wire:key="test-row-{{ $attempt->testattempt_id}}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
-                <td class="px-4 py-3">{{ $attempt->testattempt_id}}</td>
-                <td class="px-4 py-3">{{ $attempt->name ?? data_get($attempt, 'attempt.test.name', '—') }}</td>
+            <tr wire:key="test-row-{{ $index}}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
+                <td class="px-4 py-3">{{ $index++}}</td>
+                <td class="px-4 py-3">{{ $attempt->test->test_name ?? data_get($attempt, 'attempt.test.name', '—') }}</td>
                 <td class="px-4 py-3">
-                    @if(optional($attempt)->finished)
+                    @if($attempt->finished)
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-green-100 text-green-800">{{ __('Completed') }}</span>
                     @else
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800">{{ __('Pending') }}</span>
@@ -30,7 +30,7 @@
                             size="sm"
                             icon="eye"
                             class="bg-color-mpi text-amber-50"
-                            wire:click="viewTestResults({{ $attempt->id }})">
+                            wire:click="viewTestResults({{ $attempt->test_attempt_id }})">
                             {{ __('View results') }}
                         </flux:button>
                     </div>

@@ -9,12 +9,22 @@ class ClientTests extends Component
 {
     public $viewingClientId;
     public $viewingClient;
-    public $testAttempts = [];
+    public $testAttempts;
+    public $index;
+
     public function mount()
 
     {
         $this->viewingClientId = session('viewingClient');
         $this->loadViewingClient();
+
+        $this->testAttempts = TestAttempt::where('user_id', $this->viewingClientId)
+            ->whereNotNull('test_id')
+            ->with('test')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $this->index = 1;
     }
 
     protected function loadViewingClient(): void
@@ -26,13 +36,7 @@ class ClientTests extends Component
         }
 
         $this->viewingClient = User::find($this->viewingClientId);
-        $this->testAttempts = TestAttempt::query()
-            ->join('test','testAttempt.test_id', '=', 'test.test_id')
-            ->where('user_id', $this->viewingClientId)
-            ->where('test_id', '!=', null)
-            ->select('testAttempt.*')
-            ->select('test.*')
-            ->orderBy('created_at', 'desc');
+      
     }
 
     /**
