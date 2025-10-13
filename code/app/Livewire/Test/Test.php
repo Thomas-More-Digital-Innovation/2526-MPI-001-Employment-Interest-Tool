@@ -89,7 +89,7 @@ class Test extends Component
                     $this->questionNumber = $this->totalQuestions;
                 }
             } else {
-                // No answers yet, start from question 1
+                // No answers yet
                 $this->questionNumber = 1;
             }
         }
