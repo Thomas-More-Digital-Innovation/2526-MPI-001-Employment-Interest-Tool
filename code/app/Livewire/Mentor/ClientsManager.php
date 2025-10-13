@@ -165,6 +165,11 @@ class ClientsManager extends BaseCrudComponent
         $this->resetFormState();
         $this->dispatch('modal-close', name: 'mentor-client-form');
     }
+    public function viewTests(int $clientId)
+    {
+        session()->flash('viewingClient', $clientId);
+        return redirect()->route('mentor.client-tests');
+    }
 
     /**
      * Only show enabled clients in base query
@@ -450,5 +455,11 @@ class ClientsManager extends BaseCrudComponent
         }
 
         return $options;
+    }
+
+    public function assignTests(int $clientId): void
+    {
+        // Open the Assign Tests modal popup and pass the client ID
+        $this->dispatch('open-assign-tests-modal', $clientId);
     }
 }

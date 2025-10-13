@@ -26,20 +26,61 @@
                         {{ $client->active ? __('Active') : __('Inactive') }}
                     </span>
                 </td>
-                <td class="px-4 py-3">
-                    <div class="flex justify-end gap-2">
-                        <flux:modal.trigger name="mentor-client-form">
-                            <flux:button
-                                type="button"
-                                variant="outline"
-                                size="sm"
+                <td class="px-4 py-3 text-right">
+                    <flux:dropdown placement="bottom-end">
+                        <flux.dropdown.trigger>
+                            <flux:button size="sm" variant="outline" icon="chevrons-up-down" />
+                        </flux.dropdown.trigger>
+
+                        <flux:menu>
+                            <flux:menu.item
                                 icon="pencil"
                                 wire:click="startEdit({{ $client->user_id }})">
                                 {{ __('Edit') }}
-                            </flux:button>
-                        </flux:modal.trigger>
-                    </div>
+                            </flux:menu.item>
+
+                            <flux:menu.separator />
+
+                            <flux:menu.item
+                                icon="eye"
+                                wire:click="viewTests({{ $client->user_id }})">
+                                {{ __('View tests') }}
+                            </flux:menu.item>
+
+                            <flux:menu.item
+                                icon="plus-circle"
+                                wire:click="assignTests({{ $client->user_id }})">
+                                {{ __('Assign tests') }}
+                            </flux:menu.item>
+                        </flux:menu>
+                    </flux:dropdown>
                 </td>
+{{--                In comment in case we need it back--}}
+                {{--                <td class="px-4 py-3">--}}
+{{--                    <div class="flex justify-end gap-2">--}}
+{{--                        <flux:modal.trigger name="">--}}
+{{--                            <flux:button--}}
+{{--                                type="button"--}}
+{{--                                variant="outline"--}}
+{{--                                size="sm"--}}
+{{--                                icon="eye"--}}
+{{--                                color="green"--}}
+{{--                                wire:click="viewTests({{ $client->user_id }})">--}}
+{{--                                {{ __('viewTests') }}--}}
+{{--                            </flux:button>--}}
+{{--                        </flux:modal.trigger>--}}
+{{--                        <flux:modal.trigger name="mentor-client-form">--}}
+{{--                            <flux:button--}}
+{{--                                type="button"--}}
+{{--                                variant="outline"--}}
+{{--                                size="sm"--}}
+{{--                                icon="pencil"--}}
+{{--                                wire:click="startEdit({{ $client->user_id }})">--}}
+{{--                                {{ __('Edit') }}--}}
+{{--                            </flux:button>--}}
+{{--                        </flux:modal.trigger>--}}
+{{--                    </div>--}}
+{{--                </td>--}}
             </tr>
             @empty
             <tr>

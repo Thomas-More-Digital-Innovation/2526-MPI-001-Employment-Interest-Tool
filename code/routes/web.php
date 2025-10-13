@@ -147,6 +147,8 @@ Route::middleware(['auth'])->group(function () {
         Route::view('mentor/dashboard', 'roles.mentor.dashboard')->name('mentor.dashboard');
         Route::view('mentor/example', 'roles.mentor.example')->name('mentor.example');
         Route::view('mentor/clients-manager', 'roles.mentor.clients-manager')->name('mentor.clients-manager');
+        Route::view('mentor/client-tests', ('roles.mentor.client-tests'))->name('mentor.client-tests');
+        Route::view('mentor/test-details', ('roles.mentor.test-details'))->name('mentor.test-details');
     });
 
     Route::middleware(['role:Researcher'])->group(function () {
