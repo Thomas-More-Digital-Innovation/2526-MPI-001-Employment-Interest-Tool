@@ -81,13 +81,6 @@ class MentorManager extends MentorsCrudManager
         return $form;
     }
 
-    protected function rules(): array
-    {
-        return array_merge(parent::rules(), [
-            'form.mentor_id' => ['required', 'integer', 'exists:users,user_id'],
-        ]);
-    }
-
     public function startCreate(): void
     {
         $this->ensureMentorContext();
@@ -212,7 +205,7 @@ class MentorManager extends MentorsCrudManager
     {
         $this->ensureMentorContext();
 
-//        $this->validate();
+        $this->validate();
 
         $attributes = [
             'first_name' => trim($this->form['first_name']),
