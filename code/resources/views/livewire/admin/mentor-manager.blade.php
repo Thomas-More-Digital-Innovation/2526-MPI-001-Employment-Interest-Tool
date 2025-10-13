@@ -4,29 +4,28 @@
     x-on:modal-close.window="$event.detail && $event.detail.name && $flux.modal($event.detail.name).close()"
     class="space-y-6">
     @if (session('status'))
-    <div class="rounded-md bg-green-50 p-4 text-green-800">
-        {{ session('status') }}
-    </div>
+        <div class="rounded-md bg-green-50 p-4 text-green-800">
+            {{ session('status') }}
+        </div>
     @endif
 
     <div class="flex flex-col gap-4 md:flex-row md:items-end-safe md:justify-between">
         <div class="flex-1">
-            <flux:label class="block text-sm font-medium" for="client-search">
-                {{ __('Search clients') }}
+            <flux:label class="block text-sm font-medium" for="mentor-search">
+                {{__('manage-mentors.SearchMentors')}}
             </flux:label>
             <flux:input
-                id="client-search"
+                id="mentor-search"
                 type="search"
                 icon="magnifying-glass"
                 wire:model.live.debounce.300ms="search"
-                placeholder="{{ $showInactivated ? __('Search all clients by name or username') : __('Search active clients by name or username') }}">
+                placeholder="{{ $showInactivated ? __('manage-mentors.SearchMentorBy') : __('manage-mentors.SearchMentorByAndActive') }}">
             </flux:input>
         </div>
         <div class="flex-shrink-0 content-end">
             <flux:modal.trigger name="admin-client-form">
-
                 <flux:button type="button" wire:click="startCreate" icon="user-plus" class="bg-color-mpi">
-                    {{ __('Add client') }}
+                    {{ __('manage-mentors.addMentor') }}
                 </flux:button>
             </flux:modal.trigger>
         </div>
@@ -34,22 +33,18 @@
 
     <div class="space-y-8">
         @forelse ($activeClientGroups as $group)
-        <section class="space-y-3">
-            <div class="flex items-center justify-between gap-3">
-                <flux:heading size="md">
-                    {{ $group['mentor_name'] }}
-                </flux:heading>
-                <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                    {{ trans_choice('{0}No clients|{1}:count client|[2,*]:count clients', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
+            <section class="space-y-3">
+                <div class="flex items-center justify-between gap-3">
+                    <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
+                    {{ trans_choice('{0}No mentors|{1}:count mentor|[2,*]:count mentors', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
                 </span>
-            </div>
-
-            @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients']])
-        </section>
+                </div>
+                @include('livewire.admin.mentor-manager-table', ['records' => $group['clients']])
+            </section>
         @empty
-        <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
-            {{ __('No clients found yet.') }}
-        </div>
+            <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
+                {{ __('manage-mentors.NoMentorsFound') }}
+            </div>
         @endforelse
     </div>
 
@@ -60,32 +55,29 @@
             wire:click="toggleShowInactivated"
             class="bg-color-mpi-500 text-amber-50">
 
-            {{ $showInactivated ? __('Hide inactivated clients') :  __('Show inactivated clients') }}
+            {{ $showInactivated ? __('manage-mentors.HideInactive') :  __('manage-mentors.ShowInactive') }}
         </flux:button>
     </div>
     @if ($showInactivated)
-    <div class="mt-4">
-        <div class="space-y-8">
-            @forelse ($inactiveClientGroups as $group)
-            <section class="space-y-3">
-                <div class="flex items-center justify-between gap-3">
-                    <flux:heading size="md">
-                        {{ $group['mentor_name'] }}
-                    </flux:heading>
-                    <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                        {{ trans_choice('{0}No clients|{1}:count client|[2,*]:count clients', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
+        <div class="mt-4">
+            <div class="space-y-8">
+                @forelse ($inactiveClientGroups as $group)
+                    <section class="space-y-3">
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
+                        {{ trans_choice('{0}No mentors|{1}:count mentor|[2,*]:count mentors', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
                     </span>
-                </div>
+                        </div>
 
-                @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients']])
-            </section>
-            @empty
-            <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
-                {{ __('No inactive clients found.') }}
+                        @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients']])
+                    </section>
+                @empty
+                    <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
+                        {{ __('manage-mentors.NoInactiveFound') }}
+                    </div>
+                @endforelse
             </div>
-            @endforelse
         </div>
-    </div>
     @endif
 
     <flux:modal
@@ -94,7 +86,7 @@
         x-on:close="$wire.call('closeFormModal')">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ $formModalMode === 'edit' ? __('Edit client') : __('Add client') }}
+                {{ $formModalMode === 'edit' ? __('manage-mentors.EditMentor') : __('Add mentor') }}
             </flux:heading>
 
             <form wire:submit.prevent="save" class="space-y-6">
@@ -117,7 +109,7 @@
                             id="client-last-name"
                             type="text"
                             wire:model.defer="form.last_name"
-                            :label="__('Last name (optional)')" />
+                            :label="__('Last name')" />
                         @error('form.last_name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -148,61 +140,16 @@
                     </div>
 
                     <div class="md:col-span-2">
-                        <flux:checkbox
-                            id="client-sound"
-                            wire:model.defer="form.is_sound_on"
-                            :label="$form['is_sound_on'] ? __('user.sound_on') : __('user.sound_off')" />
-                        @error('form.is_sound_on')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <flux:select
-                            id="client-mentor"
-                            wire:model.defer="form.mentor_id"
-                            :label="__('Mentor')"
-                            required>
-                            <option value="">{{ __('Select a mentor') }}</option>
-                            @foreach ($mentorOptions as $mentor)
-                            <option value="{{ $mentor['id'] }}" @selected((string) $mentor['id']===(string) $form['mentor_id'])>
-                                {{ $mentor['label'] }}
-                            </option>
-                            @endforeach
-                        </flux:select>
-                        @error('form.mentor_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <flux:select
-                            id="client-vision-type"
-                            wire:model.defer="form.vision_type"
-                            :label="__('user.vision_type')"
-                            required>
-                            @forelse ($visionTypes as $value => $label)
-                            <option value="{{ $value }}">{{ $label }}</option>
-                            @empty
-                            <option value="">{{ __('No vision type assigned') }}</option>
-                            @endforelse
-                        </flux:select>
-                        @error('form.vision_type')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="md:col-span-2">
                         <flux:select
                             id="client-language"
                             wire:model.defer="form.language_id"
                             :label="__('Language')"
                             required>
                             @foreach ($languages as $language)
-                            {{-- use the language of the users form to determine default language --}}
-                            <option value="{{ $language['id'] }}" {{ $language['id'] === $form['language_id'] ? 'selected' : '' }}>
-                                {{ $language['label'] }}
-                            </option>
+                                {{-- use the language of the users form to determine default language --}}
+                                <option value="{{ $language['id'] }}" {{ $language['id'] === $form['language_id'] ? 'selected' : '' }}>
+                                    {{ $language['label'] }}
+                                </option>
                             @endforeach
                         </flux:select>
                         @error('form.language_id')
@@ -218,21 +165,21 @@
                             <flux:checkbox
                                 id="client-active"
                                 wire:model.defer="form.active"
-                                :label="__('Client can sign in')" />
+                                :label="__('manage-mentors.MentorCanSignIn')" />
                         </div>
                         @error('form.active')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
                     @if ($editingId && !$form["active"])
-                    <flux:button
-                        type="button"
-                        variant="danger"
-                        size="sm"
-                        icon="trash"
-                        wire:click="requestDelete({{ $editingId }})">
-                        {{ __('Delete') }}
-                    </flux:button>
+                        <flux:button
+                            type="button"
+                            variant="danger"
+                            size="sm"
+                            icon="trash"
+                            wire:click="requestDelete({{ $editingId }})">
+                            {{ __('Delete') }}
+                        </flux:button>
                     @endif
                 </div>
 
@@ -249,7 +196,7 @@
                     <flux:button
                         type="submit"
                         variant="primary">
-                        {{ $editingId ? __('Save changes') : __('Create client') }}
+                        {{ $editingId ? __('Save changes') : __('manage-mentors.CreateMentor') }}
                     </flux:button>
                 </div>
             </form>
@@ -297,11 +244,11 @@
         x-on:close="$wire.call('closeDeleteModal')">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ __('Delete client') }}
+                {{ __('manage-mentors.DeleteMentor') }}
             </flux:heading>
 
             <flux:text class="text-sm text-gray-700">
-                {{ __('Are you sure you want to delete :client? This action is irreversible.', ['client' => $toggleModalName]) }}
+                {{ __('Are you sure you want to delete :mentor? This action is irreversible.', ['client' => $toggleModalName]) }}
             </flux:text>
 
             <div class="flex justify-end gap-3 pt-4">
@@ -318,7 +265,7 @@
                     type="button"
                     variant="danger"
                     wire:click="confirmDelete">
-                    {{ __('Delete client') }}
+                    {{ __('manage-mentors.DeleteMentor') }}
                 </flux:button>
             </div>
         </div>
