@@ -3,10 +3,10 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Test;
+use App\Livewire\Test\Test;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Livewire\TestResults;
+use App\Livewire\Test\TestResults;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -85,9 +85,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:Admin'])->group(function () {
         Route::view('admin/dashboard', 'roles.admin.dashboard')->name('admin.dashboard');
-        Route::view('admin/example', 'roles.admin.example')->name('admin.example');
+        Route::view('admin/feedback', 'roles.admin.feedback')->name('admin.feedback');
         Route::view(uri: 'admin/admin-clients-manager', view: 'roles.admin.admin-clients-manager')->name('admin.admin-clients-manager');
-
     });
 
     Route::middleware(['role:Mentor'])->group(function () {

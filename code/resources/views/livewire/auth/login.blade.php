@@ -19,6 +19,7 @@
             required
             autofocus
             autocomplete="username"
+            size="4xl"
             :placeholder="__('Username')"
         />
 
@@ -30,6 +31,7 @@
                 type="password"
                 required
                 autocomplete="current-password"
+                size="4xl"
                 :placeholder="__('Password')"
                 viewable
             />
@@ -42,7 +44,7 @@
         </div>
 
         <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full" data-test="login-button">
+            <flux:button variant="primary" size="3xl" type="submit" class="w-full" data-test="login-button">
                 {{ __('Log in') }}
             </flux:button>
         </div>
