@@ -21,4 +21,5 @@ return [
     'delete_success' => 'Interest field deleted successfully.',
     'delete_error' => 'Interest field cannot be deleted as it is used by a question.',
     'delete_heading' => 'Confirm Deletion',
+    'default' => 'Default',
 ];

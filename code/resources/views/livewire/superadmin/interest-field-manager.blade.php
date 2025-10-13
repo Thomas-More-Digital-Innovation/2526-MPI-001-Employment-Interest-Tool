@@ -47,8 +47,8 @@
             <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
                 @forelse ($records as $interestField)
                 <tr wire:key="interest-field-{{ $interestField->interest_field_id }}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
-                    <td class="px-4 py-3">{{ $interestField->name }}</td>
-                    <td class="px-4 py-3">{{ $interestField->description }}</td>
+                    <td class="px-4 py-3">{{ $interestField->getName(app()->getLocale()) }}</td>
+                    <td class="px-4 py-3">{{ $interestField->getDescription(app()->getLocale()) }}</td>
                     <td class="px-4 py-3">
                         <div class="flex justify-end gap-2">
                             <flux:modal.trigger name="create-interest-field-form">
@@ -97,28 +97,104 @@
                 <div class="space-y-4">
                     <div>
                         <flux:input
-                            id="interest-field-name"
+                            id="interest-field-name-default"
                             type="text"
                             wire:model.defer="form.name"
-                            :label="__('interestfield.name')"
+                            :label="__('interestfield.name') . ' (' . __('interestfield.default') . ')'"
                             required
-                            autofocus />
+                        />
                         @error('form.name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
                         <flux:textarea
-                            id="interest-field-description"
+                            id="interest-field-description-default"
                             wire:model.defer="form.description"
-                            :label="__('interestfield.description')"
+                            :label="__('interestfield.description') . ' (' . __('interestfield.default') . ')'"
                             rows="3"
-                            required />
+                            required
+                        />
                         @error('form.description')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    @if ($editingId)
+                        <div>
+                            <h1>Add translation</h1>
+                            <div class="flex justify-end items-center gap-2">
+                                <flux:select
+                                    id="new-translation-language"
+                                    wire:model="newTranslationLanguage">
+                                    <option value="" disabled selected>{{ __('Select a language') }}</option>
+                                    @foreach ($availableLanguages as $languageCode => $languageName)
+                                        @if (!isset($form['translations'][$languageCode]))
+                                            <option value="{{ $languageCode }}">
+                                                {{ $languageName }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </flux:select>
+
+                                <flux:button
+                                    type="button"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white"
+                                    wire:click="addTranslation">
+                                    {{ __('Add') }}
+                                </flux:button>
+                            </div>
+                        </div>
+
+                        @foreach ($form['translations'] as $languageCode => $translation)
+                            <div class="border rounded-md p-4 mb-4" x-data="{ open: false }">
+                                <div class="flex justify-between items-center">
+                                    <div x-show="!open" class="flex items-center gap-2">
+                                        <flux:button
+                                            type="button"
+                                            icon="chevron-down"
+                                            x-on:click="open = true">
+                                        </flux:button>
+                                        <h2 class="text-lg font-medium">{{ $availableLanguages[$languageCode] ?? $languageCode }}</h2>
+                                    </div>
+                                    <div x-show="open" class="flex items-center gap-2">
+                                        <flux:button
+                                            type="button"
+                                            icon="chevron-up"
+                                            x-on:click="open = false">
+                                        </flux:button>
+                                        <h2 class="text-lg font-medium">{{ $availableLanguages[$languageCode] ?? $languageCode }}</h2>
+                                    </div>
+                                </div>
+
+                                <div x-show="open" class="mt-4 space-y-4">
+                                    <div>
+                                        <flux:input
+                                            wire:model.defer="form.translations.{{ $languageCode }}.name"
+                                            :label="__('interestfield.name')"
+                                            required
+                                        />
+                                        @error('form.translations.' . $languageCode . '.name')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div>
+                                        <flux:textarea
+                                            wire:model.defer="form.translations.{{ $languageCode }}.description"
+                                            :label="__('interestfield.description')"
+                                            rows="3"
+                                            required
+                                        />
+                                        @error('form.translations.' . $languageCode . '.description')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
 
                 <div class="flex justify-end space-x-2 rtl:space-x-reverse">

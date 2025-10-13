@@ -21,4 +21,5 @@ return [
     'delete_success' => 'Interessegebied succesvol verwijderd.',
     'delete_error' => 'Interessegebied kan niet worden verwijderd omdat het wordt gebruikt door een vraag.',
     'delete_heading' => 'Bevestig Verwijdering',
+    'default' => 'Standaard',
 ];

@@ -4,10 +4,15 @@ namespace App\Livewire\SuperAdmin;
 
 use App\Livewire\Crud\BaseCrudComponent;
 use App\Models\InterestField;
+use App\Models\Language;
 use Illuminate\Database\Eloquent\Builder;
 
 class InterestFieldManager extends BaseCrudComponent
 {
+    public string $newTranslationLanguage = '';
+
+    public array $availableLanguages = [];
+
     protected function rules(): array
     {
         return [
@@ -35,6 +40,25 @@ class InterestFieldManager extends BaseCrudComponent
                 'name' => $this->form['name'],
                 'description' => $this->form['description'],
             ]);
+
+            // Update translations
+            foreach ($this->form['translations'] as $languageCode => $translation) {
+                $interestFieldTranslation = $interestField->interestFieldTranslations()
+                    ->whereHas('language', function ($query) use ($languageCode) {
+                        $query->where('language_code', $languageCode);
+                    })
+                    ->first();
+
+                if ($interestFieldTranslation) {
+                    $interestFieldTranslation->update($translation);
+                } else {
+                    $interestField->interestFieldTranslations()->create([
+                        'language_code' => $languageCode,
+                        'name' => $translation['name'],
+                        'description' => $translation['description'],
+                    ]);
+                }
+            }
         } else {
             // Create new interest field
             InterestField::create([
@@ -46,6 +70,7 @@ class InterestFieldManager extends BaseCrudComponent
         $this->resetFormState();
         $this->dispatch('modal-close', name: 'create-interest-field-form');
     }
+
     protected function view(): string
     {
         return 'livewire.superadmin.interest-field-manager';
@@ -53,11 +78,15 @@ class InterestFieldManager extends BaseCrudComponent
 
     protected function defaultFormState(): array
     {
-        // $this->ensureMentorContext();
-        return [
+        $languages = Language::all();
+
+        $form = [
             'name' => '',
             'description' => '',
+            'translations' => [],
         ];
+
+        return $form;
     }
 
     protected function baseQuery(): Builder
@@ -70,12 +99,22 @@ class InterestFieldManager extends BaseCrudComponent
         return InterestField::where('interest_field_id', $id)->firstOrFail();
     }
 
-    protected function transformRecordToForm($record): array
+    public function transformRecordToForm($record): array
     {
-        return [
+        $form = [
             'name' => $record->name,
             'description' => $record->description,
+            'translations' => [],
         ];
+
+        foreach ($record->interestFieldTranslations as $translation) {
+            $form['translations'][$translation->language->language_code] = [
+                'name' => $translation->name,
+                'description' => $translation->description,
+            ];
+        }
+
+        return $form;
     }
 
     protected function applySearch(Builder $query): Builder
@@ -85,8 +124,8 @@ class InterestFieldManager extends BaseCrudComponent
         }
 
         return $query->where(function ($q) {
-            $q->where('name', 'like', '%' . $this->search . '%')
-              ->orWhere('description', 'like', '%' . $this->search . '%');
+            $q->where('name', 'like', '%'.$this->search.'%')
+                ->orWhere('description', 'like', '%'.$this->search.'%');
         });
     }
 
@@ -105,7 +144,7 @@ class InterestFieldManager extends BaseCrudComponent
     {
         $interestField = InterestField::where('interest_field_id', $this->editingId)->first();
 
-        if ($interestField && !$interestField->questions()->exists()) {
+        if ($interestField && ! $interestField->questions()->exists()) {
             $interestField->delete();
             session()->flash('status', [
                 'message' => __('interestfield.delete_success'),
@@ -120,5 +159,79 @@ class InterestFieldManager extends BaseCrudComponent
 
         $this->resetFormState();
         $this->dispatch('modal-close', name: 'delete-interest-field-confirmation');
+    }
+
+    public function addTranslation(): void
+    {
+        // Ensure newTranslationLanguage is a valid string and not empty
+        if (! is_string($this->newTranslationLanguage) || trim($this->newTranslationLanguage) === '') {
+            session()->flash('status', [
+                'message' => __('Please select a valid language.'),
+                'type' => 'error',
+            ]);
+            $this->newTranslationLanguage = ''; // Reset if invalid
+
+            return;
+        }
+
+        $this->newTranslationLanguage = trim($this->newTranslationLanguage);
+
+        // Fetch the language ID from the database
+        $languageId = Language::where('language_code', $this->newTranslationLanguage)->value('language_id');
+
+        if (! $languageId) {
+            session()->flash('status', [
+                'message' => __('Language not found for the provided code.'),
+                'type' => 'error',
+            ]);
+
+            return;
+        }
+
+        // Add the new translation to the form
+        $this->form['translations'][$this->newTranslationLanguage] = [
+            'name' => '__',
+            'description' => '__',
+        ];
+
+        // If editing an existing interest field, ensure the translation includes language_id
+        if ($this->editingId) {
+            $interestField = InterestField::where('interest_field_id', $this->editingId)->firstOrFail();
+            $interestField->interestFieldTranslations()->create([
+                'language_code' => $this->newTranslationLanguage,
+                'language_id' => $languageId,
+                'name' => '',
+                'description' => '',
+            ]);
+        }
+
+        $this->newTranslationLanguage = ''; // Reset the selected language
+    }
+
+    public function mount(): void
+    {
+        $this->form = [
+            'name' => '',
+            'description' => '',
+            'translations' => [],
+        ];
+
+        // Fetch available languages from the database, excluding Dutch
+        $this->availableLanguages = Language::where('language_code', '!=', 'nl')
+            ->pluck('language_name', 'language_code')
+            ->toArray();
+    }
+
+    public function updatedNewTranslationLanguage($value): void
+    {
+        // Ensure newTranslationLanguage is always a valid string
+        $this->newTranslationLanguage = is_string($value) && array_key_exists($value, $this->availableLanguages)
+            ? $value
+            : '';
+    }
+
+    public function getRecordsProperty()
+    {
+        return $this->baseQuery()->paginate(50); // Fetch 50 records per page for the table
     }
 }
