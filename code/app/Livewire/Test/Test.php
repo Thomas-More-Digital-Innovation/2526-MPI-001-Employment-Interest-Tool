@@ -50,10 +50,6 @@ class Test extends Component
             return redirect()->route('dashboard');
         }
 
-        if ($this->questionNumber == 1) {
-            $this->previousEnabled = false;
-        }
-
         $this->totalQuestions = Question::where('test_id', $this->testId)->count();
         $this->testName = \App\Models\Test::where('test_id', $this->testId)->value('test_name');
         $this->clientName = User::where('user_id', '=', $this->userId)->value('first_name');
@@ -62,10 +58,44 @@ class Test extends Component
         $this->mailMentor = User::where('user_id', '=', $mentorId)->value('email');
 
         if (!$this->testAttemptId) {
+            // Create a new test attempt
             $this->testAttemptId = TestAttempt::create([
                 'test_id' => $this->testId,
                 'user_id' => $this->userId,
             ])->test_attempt_id;
+            $this->questionNumber = 1;
+        } else {
+            // Resuming an existing test attempt
+            $attempt = TestAttempt::where('test_attempt_id', $this->testAttemptId)
+                ->where('user_id', $this->userId)
+                ->first();
+
+            if (!$attempt || $attempt->finished) {
+                // If attempt doesn't exist or is already finished, redirect to dashboard
+                return redirect()->route('dashboard');
+            }
+
+            // Find the last answered question to resume from the next one
+            $lastAnswer = Answer::join('question', 'answer.question_id', '=', 'question.question_id')
+                ->where('answer.test_attempt_id', $this->testAttemptId)
+                ->orderBy('question.question_number', 'desc')
+                ->first();
+            if ($lastAnswer) {
+                // Resume from the next question after the last answered one
+                $this->questionNumber = $lastAnswer->question_number + 1;
+                
+                // If we've answered all questions, go to the last one
+                if ($this->questionNumber > $this->totalQuestions) {
+                    $this->questionNumber = $this->totalQuestions;
+                }
+            } else {
+                // No answers yet, start from question 1
+                $this->questionNumber = 1;
+            }
+        }
+
+        if ($this->questionNumber == 1) {
+            $this->previousEnabled = false;
         }
 
         $this->isQuestionLoading = true;
