@@ -166,7 +166,7 @@ class InterestFieldManager extends BaseCrudComponent
         // Ensure newTranslationLanguage is a valid string and not empty
         if (! is_string($this->newTranslationLanguage) || trim($this->newTranslationLanguage) === '') {
             session()->flash('status', [
-                'message' => __('Please select a valid language.'),
+                'message' => __('interestfield.select_valid_language'),
                 'type' => 'error',
             ]);
             $this->newTranslationLanguage = ''; // Reset if invalid
@@ -181,7 +181,7 @@ class InterestFieldManager extends BaseCrudComponent
 
         if (! $languageId) {
             session()->flash('status', [
-                'message' => __('Language not found for the provided code.'),
+                'message' => __('interestfield.language_not_found'),
                 'type' => 'error',
             ]);
 
@@ -250,7 +250,7 @@ class InterestFieldManager extends BaseCrudComponent
             }
 
             session()->flash('status', [
-                'message' => __('Translation removed successfully.'),
+                'message' => __('interestfield.translation_removed_success'),
                 'type' => 'success',
             ]);
         }

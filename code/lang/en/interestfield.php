@@ -22,4 +22,7 @@ return [
     'delete_error' => 'Interest field cannot be deleted as it is used by a question.',
     'delete_heading' => 'Confirm Deletion',
     'default' => 'Default',
+    'translation_removed_success' => 'Translation removed successfully.',
+    'select_valid_language' => 'Please select a valid language.',
+    'language_not_found' => 'Language not found for the provided code.',
 ];
