@@ -25,4 +25,5 @@ return [
     'translation_removed_success' => 'Translation removed successfully.',
     'select_valid_language' => 'Please select a valid language.',
     'language_not_found' => 'Language not found for the provided code.',
+    'no_fields_found' => 'No interest fields found yet.',
 ];

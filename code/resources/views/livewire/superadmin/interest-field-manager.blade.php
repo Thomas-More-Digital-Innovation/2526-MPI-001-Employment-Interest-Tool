@@ -75,7 +75,7 @@
                 @empty
                 <tr>
                     <td colspan="7" class="px-4 py-6 text-center text-sm text-gray-500">
-                        {{ __('No interest fields found yet.') }}
+                        {{ __('interestfield.no_fields_found') }}
                     </td>
                 </tr>
                 @endforelse
