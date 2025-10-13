@@ -234,4 +234,25 @@ class InterestFieldManager extends BaseCrudComponent
     {
         return $this->baseQuery()->paginate(10);
     }
+
+    public function removeTranslation(string $languageCode): void
+    {
+        if (isset($this->form['translations'][$languageCode])) {
+            unset($this->form['translations'][$languageCode]);
+
+            if ($this->editingId) {
+                $interestField = InterestField::where('interest_field_id', $this->editingId)->firstOrFail();
+                $interestField->interestFieldTranslations()
+                    ->whereHas('language', function ($query) use ($languageCode) {
+                        $query->where('language_code', $languageCode);
+                    })
+                    ->delete();
+            }
+
+            session()->flash('status', [
+                'message' => __('Translation removed successfully.'),
+                'type' => 'success',
+            ]);
+        }
+    }
 }

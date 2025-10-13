@@ -171,6 +171,13 @@
                                         </flux:button>
                                         <h2 class="text-lg font-medium">{{ $availableLanguages[$languageCode] ?? $languageCode }}</h2>
                                     </div>
+                                    <flux:button
+                                        type="button"
+                                        icon="x-mark"
+                                        variant="danger"
+                                        size="sm"
+                                        class="ml-auto"
+                                        wire:click="removeTranslation('{{ $languageCode }}')"/>
                                 </div>
 
                                 <div x-show="open" class="mt-4 space-y-4">
