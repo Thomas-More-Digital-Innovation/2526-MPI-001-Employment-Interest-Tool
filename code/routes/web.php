@@ -140,6 +140,7 @@ Route::middleware(['auth'])->group(function () {
         Route::view('admin/dashboard', 'roles.admin.dashboard')->name('admin.dashboard');
         Route::view('admin/feedback', 'roles.admin.feedback')->name('admin.feedback');
         Route::view(uri: 'admin/admin-clients-manager', view: 'roles.admin.admin-clients-manager')->name('admin.admin-clients-manager');
+        Route::view(uri:'admin/manage-mentors', view:'roles.admin.manage-mentors')->name('admin.manage-mentors');
     });
 
     Route::middleware(['role:Mentor'])->group(function () {
