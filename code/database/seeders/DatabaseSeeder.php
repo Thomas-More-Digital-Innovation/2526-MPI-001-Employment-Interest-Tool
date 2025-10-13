@@ -140,12 +140,12 @@ class DatabaseSeeder extends Seeder
             'organisation_id' => $organisation->organisation_id,
             'test_id' => 1,
         ]
-       );  
+       );
        OrganisationTest::create(
         [
             'organisation_id' => $organisation->organisation_id,
             'test_id' => 2,
         ]
-       );  
+       );
     }
 }
