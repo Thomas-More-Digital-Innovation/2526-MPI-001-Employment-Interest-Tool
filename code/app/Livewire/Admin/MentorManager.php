@@ -213,6 +213,7 @@ class MentorManager extends MentorsCrudManager
             'username' => trim($this->form['username']),
             'language_id' => (int) $this->form['language_id'],
             'active' => (bool) $this->form['active'],
+            'vision_type' => "normal",
             'organisation_id' => $this->organisationId,
         ];
 

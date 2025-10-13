@@ -109,7 +109,8 @@
                             id="client-last-name"
                             type="text"
                             wire:model.defer="form.last_name"
-                            :label="__('Last name')" />
+                            :label="__('Last name')"
+                            required/>
                         @error('form.last_name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
