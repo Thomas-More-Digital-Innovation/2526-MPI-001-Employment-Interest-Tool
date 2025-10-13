@@ -30,11 +30,6 @@ class DatabaseSeeder extends Seeder
             'language_name' => 'English',
         ]);
 
-        \App\Models\Language::create([
-            'language_code' => 'de',
-            'language_name' => 'German',
-        ]);
-
         // Create roles
         $superAdminRole = Role::create([
             'role' => Role::SUPER_ADMIN,
