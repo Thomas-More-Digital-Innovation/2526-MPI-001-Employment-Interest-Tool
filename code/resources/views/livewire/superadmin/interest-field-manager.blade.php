@@ -4,9 +4,13 @@
     x-on:modal-close.window="$event.detail && $event.detail.name && $flux.modal($event.detail.name).close()"
     class="space-y-6">
     @if (session('status'))
-    <div class="rounded-md bg-green-50 p-4 text-green-800 dark:bg-green-900 dark:text-green-200">
-        {{ session('status') }}
-    </div>
+        @php
+            $statusType = session('status')['type'] ?? 'success';
+            $statusMessage = session('status')['message'] ?? '';
+        @endphp
+        <div class="rounded-md p-4 text-sm {{ $statusType === 'success' ? 'bg-green-50 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-50 text-red-800 dark:bg-red-900 dark:text-red-200' }}">
+            {{ $statusMessage }}
+        </div>
     @endif
 
     <div class="flex flex-col gap-4 md:flex-row md:items-end-safe md:justify-between">
@@ -57,6 +61,14 @@
                                     {{ __('Edit') }}
                                 </flux:button>
                             </flux:modal.trigger>
+                            <flux:button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                icon="trash"
+                                wire:click="confirmDelete({{ $interestField->interest_field_id }})">
+                                {{ __('Delete') }}
+                            </flux:button>
                         </div>
                     </td>
                 </tr>
@@ -121,6 +133,34 @@
                     </flux:button>
                 </div>
             </form>
+        </div>
+    </flux:modal>
+
+    <!-- Delete Interest Field Confirmation Modal -->
+    <flux:modal
+        name="delete-interest-field-confirmation"
+        class="max-w-md">
+        <div class="space-y-6">
+            <flux:heading size="lg">
+                {{ __('interestfield.delete_heading') }}
+            </flux:heading>
+
+            <p>{{ __('interestfield.delete_confirm') }}</p>
+
+            <div class="flex justify-end space-x-2 rtl:space-x-reverse">
+                <flux:modal.close>
+                    <flux:button type="button" variant="filled">
+                        {{ __('Cancel') }}
+                    </flux:button>
+                </flux:modal.close>
+
+                <flux:button
+                    type="button"
+                    variant="danger"
+                    wire:click="deleteInterestField">
+                    {{ __('Delete') }}
+                </flux:button>
+            </div>
         </div>
     </flux:modal>
 </div>

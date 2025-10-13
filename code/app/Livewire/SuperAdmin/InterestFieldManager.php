@@ -35,16 +35,12 @@ class InterestFieldManager extends BaseCrudComponent
                 'name' => $this->form['name'],
                 'description' => $this->form['description'],
             ]);
-
-            session()->flash('status', __('Interest field updated successfully.'));
         } else {
             // Create new interest field
             InterestField::create([
                 'name' => $this->form['name'],
                 'description' => $this->form['description'],
             ]);
-
-            session()->flash('status', __('Interest field created successfully.'));
         }
 
         $this->resetFormState();
@@ -99,4 +95,30 @@ class InterestFieldManager extends BaseCrudComponent
         $this->resetFormState();
     }
 
+    public function confirmDelete(int $id): void
+    {
+        $this->editingId = $id; // Store the ID of the interest field to be deleted
+        $this->dispatch('modal-open', name: 'delete-interest-field-confirmation');
+    }
+
+    public function deleteInterestField(): void
+    {
+        $interestField = InterestField::where('interest_field_id', $this->editingId)->first();
+
+        if ($interestField && !$interestField->questions()->exists()) {
+            $interestField->delete();
+            session()->flash('status', [
+                'message' => __('interestfield.delete_success'),
+                'type' => 'success',
+            ]);
+        } else {
+            session()->flash('status', [
+                'message' => __('interestfield.delete_error'),
+                'type' => 'error',
+            ]);
+        }
+
+        $this->resetFormState();
+        $this->dispatch('modal-close', name: 'delete-interest-field-confirmation');
+    }
 }
