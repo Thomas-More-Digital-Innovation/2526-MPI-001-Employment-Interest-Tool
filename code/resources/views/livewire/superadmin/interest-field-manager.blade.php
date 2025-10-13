@@ -83,6 +83,11 @@
         </x-table>
     </div>
 
+    <!-- Pagination -->
+    <div class="mt-4">
+        {{ $records->links() }}
+    </div>
+
     <!-- Add Interest Field Modal -->
     <flux:modal
         name="create-interest-field-form"

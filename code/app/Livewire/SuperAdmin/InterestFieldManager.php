@@ -232,6 +232,6 @@ class InterestFieldManager extends BaseCrudComponent
 
     public function getRecordsProperty()
     {
-        return $this->baseQuery()->paginate(50); // Fetch 50 records per page for the table
+        return $this->baseQuery()->paginate(10);
     }
 }
