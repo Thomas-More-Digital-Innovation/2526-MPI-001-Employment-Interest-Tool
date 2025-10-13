@@ -9,7 +9,7 @@ use App\Models\InterestFieldTranslation;
 use App\Models\Question;
 use App\Models\QuestionTranslation;
 
-class TestSeeder extends Seeder
+class TestSeederTwo extends Seeder
 {
     /**
      * Seed the test database table with one test and three questions.
@@ -202,12 +202,12 @@ class TestSeeder extends Seeder
         $clientUser = DB::table('users')->where('username', 'client')->first();
 
         if ($clientUser) {
-            DB::table('user_test')->insert([
-                'user_id' => $clientUser->user_id,
-                'test_id' => $testOne,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // DB::table('user_test')->insert([
+            //     'user_id' => $clientUser->user_id,
+            //     'test_id' => $testOne,
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]);
 
             // Create a test attempt for test 1
             $testAttemptId = DB::table('test_attempt')->insertGetId([
@@ -236,7 +236,7 @@ class TestSeeder extends Seeder
 
         // Create test 2
         $testTwo = DB::table('test')->insertGetId([
-            'test_name' => 'Demo Test',
+            'test_name' => 'Short Test',
             'active' => true,
         ]);
 
@@ -402,12 +402,12 @@ class TestSeeder extends Seeder
 
         // Attach the test 2 to the client user
         if ($clientUser) {
-            DB::table('user_test')->insert([
-                'user_id' => $clientUser->user_id,
-                'test_id' => $testTwo,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // DB::table('user_test')->insert([
+            //     'user_id' => $clientUser->user_id,
+            //     'test_id' => $testTwo,
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]);
 
             // Create a test attempt for test 2
             $testTwoAttemptId = DB::table('test_attempt')->insertGetId([

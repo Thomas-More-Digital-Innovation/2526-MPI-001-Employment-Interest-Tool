@@ -131,8 +131,8 @@ class DatabaseSeeder extends Seeder
        Faq::factory(5)->create();
 
        // Run the TestSeeder to populate test and question data
-       $this->call(TestSeeder::class);
-
+       $this->call(TestSeederOne::class);
+       $this->call(TestSeederTwo::class);
 
        // TODO: no direct link to tests
        OrganisationTest::create(
@@ -145,6 +145,12 @@ class DatabaseSeeder extends Seeder
         [
             'organisation_id' => $organisation->organisation_id,
             'test_id' => 2,
+        ]
+       );
+       OrganisationTest::create(
+        [
+            'organisation_id' => $organisation->organisation_id,
+            'test_id' => 3,
         ]
        );
     }
