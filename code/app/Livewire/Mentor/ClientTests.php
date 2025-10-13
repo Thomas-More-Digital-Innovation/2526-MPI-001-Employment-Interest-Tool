@@ -63,6 +63,13 @@ class ClientTests extends Component
         return collect();
     }
 
+    public function viewTestResults(int $testAttemptId)
+    {
+        session()->flash('testAttempt', $testAttemptId);
+        session()->flash('testUser', $this->viewingClientId);
+
+        return redirect()->route('mentor.test-details');
+    }
     public function render()
     {
         return view('livewire.mentor.client-tests', [

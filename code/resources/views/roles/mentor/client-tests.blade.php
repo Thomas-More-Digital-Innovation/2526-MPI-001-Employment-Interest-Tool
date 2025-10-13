@@ -1,6 +1,3 @@
-
-@section('title', 'Client Tests')
-
 @section('content')
 <x-layouts.app.sidebar>
     <flux:main>
