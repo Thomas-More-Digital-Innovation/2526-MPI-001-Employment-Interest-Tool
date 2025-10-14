@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v5
     
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
 
     # Run docker buildx
     - name: Build Docker image
@@ -31,7 +31,7 @@ jobs:
         docker save mpi-employment-interest-tool:latest -o mpi-employment-interest-tool.tar
 
     - name: Upload Docker tar file as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: docker-image-tar
         path: mpi-employment-interest-tool.tar
