@@ -21,22 +21,35 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    # Run docker buildx
+    # Build the application Docker image
     - name: Build Docker image
       working-directory: code
       run: |
         docker buildx build --platform linux/amd64 -t mpi-employment-interest-tool:latest --load .
 
-    - name: Save Docker image to tar file
+    # Build the custom Nginx Docker image
+    - name: Build custom Nginx Docker image
+      working-directory: code
+      run: |
+        docker buildx build --platform linux/amd64 -f Dockerfile.nginx -t custom-nginx:latest --load .
+
+    - name: Save application Docker image to tar file
       working-directory: code
       run: |
         docker save mpi-employment-interest-tool:latest -o mpi-employment-interest-tool.tar
 
-    - name: Upload Docker tar file as artifact
+    - name: Save custom Nginx Docker image to tar file
+      working-directory: code
+      run: |
+        docker save custom-nginx:latest -o custom-nginx.tar
+
+    - name: Upload Docker tar files as artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: docker-image-tar
-        path: code/mpi-employment-interest-tool.tar
+        name: docker-images-tar
+        path: |
+          code/mpi-employment-interest-tool.tar
+          code/custom-nginx.tar
 
     # steps:
     # - name: Connect and run command on remote server

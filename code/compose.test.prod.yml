@@ -24,14 +24,15 @@ services:
       - ./public:/usr/share/nginx/html/public:rw
   nginx:
     container_name: nginx
-    image: nginx:1-alpine
+    build:
+      context: .
+      dockerfile: code/Dockerfile.nginx
     ports:
       - 443:443
     depends_on:
       - app
     restart: unless-stopped
     volumes:
-      - ./nginx.conf:/etc/nginx/templates/default.conf.template
       - /etc/laravel/ssl:/etc/nginx/ssl:ro # SSL certs generated beforehand
       - storage:/usr/share/nginx/html/storage:rw
       - ./public:/usr/share/nginx/html/public:ro
