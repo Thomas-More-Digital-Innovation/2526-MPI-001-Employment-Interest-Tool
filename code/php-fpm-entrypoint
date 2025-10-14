@@ -31,16 +31,6 @@ run_npm_build() {
     fi
 }
 
-# After building assets, if HOST_UID/HOST_GID are supplied, ensure the built files
-# are owned by that UID/GID so they appear as owned by the deploy user on the host.
-maybe_fix_permissions_for_host() {
-    if [ -n "${HOST_UID:-}" ] && [ -n "${HOST_GID:-}" ]; then
-        echo "Setting ownership of public files to ${HOST_UID}:${HOST_GID}"
-        # Attempt to chown the public directory where built assets live
-        chown -R "${HOST_UID}:${HOST_GID}" /usr/share/nginx/html/public || true
-    fi
-}
-
 prepare_storage() {
     # Create required directories for Laravel
     mkdir -p /usr/share/nginx/html/storage/framework/cache/data
