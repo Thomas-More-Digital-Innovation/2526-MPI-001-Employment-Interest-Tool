@@ -51,7 +51,7 @@ jobs:
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             code/mpi-employment-interest-tool.tar \
             code/custom-nginx.tar \
-            mpi@mpissh2.stijnrombouts.be:~/
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/
     
     # Copy the .env.test.prod file to the vm and copy it to .env and .env.test.prod
     - name: Copy .env.test.prod to VM and setup environment
@@ -60,11 +60,11 @@ jobs:
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             code/.env.test.prod \
-            mpi@mpissh2.stijnrombouts.be:~/.env.test.prod
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/.env.test.prod
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            mpi@mpissh2.stijnrombouts.be \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
             "if [ -f /etc/laravel/app_key ]; then cat /etc/laravel/app_key >> .env.test.prod; else echo 'ERROR: /etc/laravel/app_key not found on server' >&2; exit 2; fi && cp .env.test.prod .env"
 
     # Stop the compose on the vm
@@ -73,7 +73,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            mpi@mpissh2.stijnrombouts.be \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
             "docker compose down"
 
     # copy the compose.test.prod.yml to the vm
@@ -83,7 +83,7 @@ jobs:
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             code/compose.test.prod.yml \
-            mpi@mpissh2.stijnrombouts.be:~/compose.yml
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/compose.yml
 
     # Import the images on the vm
     - name: Import Docker images on VM
@@ -91,7 +91,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            mpi@mpissh2.stijnrombouts.be \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
             "docker import \
               --change 'ENTRYPOINT [\"/usr/local/bin/php-entrypoint\"]' \
               --change 'CMD [\"php-fpm\"]' \
@@ -109,5 +109,5 @@ jobs:
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            mpi@mpissh2.stijnrombouts.be \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
             "docker compose up -d"
