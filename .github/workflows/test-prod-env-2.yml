@@ -22,7 +22,7 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     # Build the application Docker image
-    - name: Build Docker image
+    - name: Build custom App Docker image
       working-directory: code
       run: |
         docker buildx build --platform linux/amd64 -t mpi-employment-interest-tool:latest --load .
@@ -43,6 +43,11 @@ jobs:
       run: |
         docker save custom-nginx:latest -o custom-nginx.tar
 
+    - name: Save SSH private key
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY_VALUE }}" > ${{ secrets.SSH_PRIVATE_KEY_FILENAME }}
+        chmod 600 ${{ secrets.SSH_PRIVATE_KEY_FILENAME }}
+
     - name: Install cloudflared
       run: |
         curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
@@ -53,7 +58,7 @@ jobs:
       run: |
         scp -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
-            -i ~/.ssh/mpissh_key \
+            -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             code/mpi-employment-interest-tool.tar \
             code/custom-nginx.tar \
-            mpi@mpissh2.stijnrombouts.be:~/
+            mpi@mpissh.stijnrombouts.be:~/
