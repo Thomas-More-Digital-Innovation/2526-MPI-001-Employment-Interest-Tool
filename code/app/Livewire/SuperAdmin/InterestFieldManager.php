@@ -1,0 +1,258 @@
+<?php
+
+namespace App\Livewire\SuperAdmin;
+
+use App\Livewire\Crud\BaseCrudComponent;
+use App\Models\InterestField;
+use App\Models\Language;
+use Illuminate\Database\Eloquent\Builder;
+
+class InterestFieldManager extends BaseCrudComponent
+{
+    public string $newTranslationLanguage = '';
+
+    public array $availableLanguages = [];
+
+    protected function rules(): array
+    {
+        return [
+            'form.name' => 'required|string|max:255',
+            'form.description' => 'required|string|max:1000',
+        ];
+    }
+
+    protected function validationAttributes(): array
+    {
+        return [
+            'form.name' => 'name',
+            'form.description' => 'description',
+        ];
+    }
+
+    public function save(): void
+    {
+        $this->validate();
+
+        if ($this->editingId) {
+            // Update existing interest field
+            $interestField = InterestField::where('interest_field_id', $this->editingId)->firstOrFail();
+            $interestField->update([
+                'name' => $this->form['name'],
+                'description' => $this->form['description'],
+            ]);
+
+            // Update translations
+            foreach ($this->form['translations'] as $languageCode => $translation) {
+                $interestFieldTranslation = $interestField->interestFieldTranslations()
+                    ->whereHas('language', function ($query) use ($languageCode) {
+                        $query->where('language_code', $languageCode);
+                    })
+                    ->first();
+
+                if ($interestFieldTranslation) {
+                    $interestFieldTranslation->update($translation);
+                } else {
+                    $interestField->interestFieldTranslations()->create([
+                        'language_code' => $languageCode,
+                        'name' => $translation['name'],
+                        'description' => $translation['description'],
+                    ]);
+                }
+            }
+        } else {
+            // Create new interest field
+            InterestField::create([
+                'name' => $this->form['name'],
+                'description' => $this->form['description'],
+            ]);
+        }
+
+        $this->resetFormState();
+        $this->dispatch('modal-close', name: 'create-interest-field-form');
+    }
+
+    protected function view(): string
+    {
+        return 'livewire.superadmin.interest-field-manager';
+    }
+
+    protected function defaultFormState(): array
+    {
+        $languages = Language::all();
+
+        $form = [
+            'name' => '',
+            'description' => '',
+            'translations' => [],
+        ];
+
+        return $form;
+    }
+
+    protected function baseQuery(): Builder
+    {
+        return InterestField::query();
+    }
+
+    protected function findRecord(int $id)
+    {
+        return InterestField::where('interest_field_id', $id)->firstOrFail();
+    }
+
+    public function transformRecordToForm($record): array
+    {
+        $form = [
+            'name' => $record->name,
+            'description' => $record->description,
+            'translations' => [],
+        ];
+
+        foreach ($record->interestFieldTranslations as $translation) {
+            $form['translations'][$translation->language->language_code] = [
+                'name' => $translation->name,
+                'description' => $translation->description,
+            ];
+        }
+
+        return $form;
+    }
+
+    protected function applySearch(Builder $query): Builder
+    {
+        if (empty($this->search)) {
+            return $query;
+        }
+
+        return $query->where(function ($q) {
+            $q->where('name', 'like', '%'.$this->search.'%')
+                ->orWhere('description', 'like', '%'.$this->search.'%');
+        });
+    }
+
+    public function closeFormModal(): void
+    {
+        $this->resetFormState();
+    }
+
+    public function confirmDelete(int $id): void
+    {
+        $this->editingId = $id; // Store the ID of the interest field to be deleted
+        $this->dispatch('modal-open', name: 'delete-interest-field-confirmation');
+    }
+
+    public function deleteInterestField(): void
+    {
+        $interestField = InterestField::where('interest_field_id', $this->editingId)->first();
+
+        if ($interestField && ! $interestField->questions()->exists()) {
+            $interestField->delete();
+            session()->flash('status', [
+                'message' => __('interestfield.delete_success'),
+                'type' => 'success',
+            ]);
+        } else {
+            session()->flash('status', [
+                'message' => __('interestfield.delete_error'),
+                'type' => 'error',
+            ]);
+        }
+
+        $this->resetFormState();
+        $this->dispatch('modal-close', name: 'delete-interest-field-confirmation');
+    }
+
+    public function addTranslation(): void
+    {
+        // Ensure newTranslationLanguage is a valid string and not empty
+        if (! is_string($this->newTranslationLanguage) || trim($this->newTranslationLanguage) === '') {
+            session()->flash('status', [
+                'message' => __('interestfield.select_valid_language'),
+                'type' => 'error',
+            ]);
+            $this->newTranslationLanguage = ''; // Reset if invalid
+
+            return;
+        }
+
+        $this->newTranslationLanguage = trim($this->newTranslationLanguage);
+
+        // Fetch the language ID from the database
+        $languageId = Language::where('language_code', $this->newTranslationLanguage)->value('language_id');
+
+        if (! $languageId) {
+            session()->flash('status', [
+                'message' => __('interestfield.language_not_found'),
+                'type' => 'error',
+            ]);
+
+            return;
+        }
+
+        // Add the new translation to the form
+        $this->form['translations'][$this->newTranslationLanguage] = [
+            'name' => '__',
+            'description' => '__',
+        ];
+
+        // If editing an existing interest field, ensure the translation includes language_id
+        if ($this->editingId) {
+            $interestField = InterestField::where('interest_field_id', $this->editingId)->firstOrFail();
+            $interestField->interestFieldTranslations()->create([
+                'language_code' => $this->newTranslationLanguage,
+                'language_id' => $languageId,
+                'name' => '',
+                'description' => '',
+            ]);
+        }
+
+        $this->newTranslationLanguage = ''; // Reset the selected language
+    }
+
+    public function mount(): void
+    {
+        $this->form = [
+            'name' => '',
+            'description' => '',
+            'translations' => [],
+        ];
+
+        // Fetch available languages from the database, excluding Dutch
+        $this->availableLanguages = Language::where('language_code', '!=', 'nl')
+            ->pluck('language_name', 'language_code')
+            ->toArray();
+    }
+
+    public function updatedNewTranslationLanguage($value): void
+    {
+        // Ensure newTranslationLanguage is always a valid string
+        $this->newTranslationLanguage = is_string($value) && array_key_exists($value, $this->availableLanguages)
+            ? $value
+            : '';
+    }
+
+    public function getRecordsProperty()
+    {
+        return $this->baseQuery()->paginate(10);
+    }
+
+    public function removeTranslation(string $languageCode): void
+    {
+        if (isset($this->form['translations'][$languageCode])) {
+            unset($this->form['translations'][$languageCode]);
+
+            if ($this->editingId) {
+                $interestField = InterestField::where('interest_field_id', $this->editingId)->firstOrFail();
+                $interestField->interestFieldTranslations()
+                    ->whereHas('language', function ($query) use ($languageCode) {
+                        $query->where('language_code', $languageCode);
+                    })
+                    ->delete();
+            }
+
+            session()->flash('status', [
+                'message' => __('interestfield.translation_removed_success'),
+                'type' => 'success',
+            ]);
+        }
+    }
+}

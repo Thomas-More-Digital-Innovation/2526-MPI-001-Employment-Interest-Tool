@@ -223,4 +223,6 @@
             </div>
         </div>
     </flux:modal>
+
+<livewire:mentor.assign-tests-to-client-modal />
 </div>
