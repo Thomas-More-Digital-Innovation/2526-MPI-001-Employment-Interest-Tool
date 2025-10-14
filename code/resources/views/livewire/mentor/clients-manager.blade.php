@@ -225,5 +225,5 @@
         </div>
     </flux:modal>
 
-<livewire:shared.assign-tests-to-client-modal />
+<livewire:staff.assign-tests-to-client-modal />
 </div>

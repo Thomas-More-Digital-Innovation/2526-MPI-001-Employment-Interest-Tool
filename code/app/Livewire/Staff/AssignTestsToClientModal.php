@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Shared;
+namespace App\Livewire\Staff;
 
 use Livewire\Component;
 use App\Models\User;
@@ -35,7 +35,7 @@ class AssignTestsToClientModal extends Component
 
     public function render()
     {
-        return view('livewire.Shared.assign-tests-to-client-modal', [
+        return view('roles.staff.assign-tests-to-client-modal', [
             'tests' => Test::all(), // Fetch all available tests
         ]);
     }
