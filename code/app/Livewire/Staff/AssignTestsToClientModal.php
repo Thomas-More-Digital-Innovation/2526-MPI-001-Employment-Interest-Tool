@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Mentor;
+namespace App\Livewire\Staff;
 
 use Livewire\Component;
 use App\Models\User;
@@ -29,13 +29,13 @@ class AssignTestsToClientModal extends Component
         // Sync selected tests for this client
         $this->client->tests()->sync($this->selectedTests);
 
-        $this->dispatch('close-modal', name: 'assign-tests-to-client');
+        $this->dispatch('modal-close', name: 'assign-tests-to-client');
         $this->dispatch('notify', message: __('Tests assigned successfully!'));
     }
 
     public function render()
     {
-        return view('livewire.mentor.assign-tests-to-client-modal', [
+        return view('roles.staff.assign-tests-to-client-modal', [
             'tests' => Test::all(), // Fetch all available tests
         ]);
     }
