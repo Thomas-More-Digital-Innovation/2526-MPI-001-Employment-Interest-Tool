@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\InterestField;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class TestCreation extends Component
 {
@@ -169,6 +170,7 @@ class TestCreation extends Component
             'interest' => -1,
             'circleFill' => 'red',
             'media_link' => null,
+            'uploaded_sound' => null,
             'sound_link' => null,
         ];
     }
@@ -230,47 +232,51 @@ class TestCreation extends Component
 
 
 
-    public function uploadSound(int $index)
+    public function uploadSound(int $index): void
     {
+        if (!isset($this->questions[$index]['uploaded_sound'])) {
+            $this->addError("questions.$index.uploaded_sound", 'No file uploaded.');
+            return;
+        }
 
+        /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile $uploadedFile */
         $uploadedFile = $this->questions[$index]['uploaded_sound'];
 
         try {
-            // Validate the uploaded file
+            // validate like image, keep it simple but friendly to MediaRecorder
             $this->validate([
-                // TODO: PUT IN .ENV
-                "questions.$index.uploaded_sound" => "required|file|mimetypes:audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm,audio/mp4,audio/x-m4a,audio/aac|max:5120",
+                "questions.$index.uploaded_sound" => "required|file|mimetypes:audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm,video/webm,audio/mp4,audio/x-m4a,audio/aac|max:5120",
             ]);
 
-            // Check if file is valid
             if ($uploadedFile->isValid()) {
-                $extension = strtolower($uploadedFile->getClientOriginalExtension());
+                $extension = strtolower($uploadedFile->getClientOriginalExtension() ?: 'webm');
+
+                // generate a unique filename in the *public disk root*, same as your image flow
                 do {
                     $filename = uniqid().'.'.$extension;
-                    $exists = Storage::disk('public')->exists($filename);
+                    $exists = \Storage::disk('public')->exists($filename);
                 } while ($exists);
 
-                // Store the file in the public disk root
+                // store to public disk root
                 $path = $uploadedFile->storeAs('', $filename, 'public');
 
                 if ($path) {
-                    // Update the media_link for the question with only the filename
+                    // store only filename in state, identical to image logic
                     $this->questions[$index]['sound_link'] = $filename;
                 }
             }
 
-            // Clear the uploaded sound after processing
+            // clear temp after processing
             unset($this->questions[$index]['uploaded_sound']);
-        } catch (\Exception $e) {
-            // Clear the file input first
+        } catch (\Throwable $e) {
             unset($this->questions[$index]['uploaded_sound']);
 
-            // Then throw the exception with custom message
             throw \Illuminate\Validation\ValidationException::withMessages([
-                'questions.'.$index.'.uploaded_sound' => 'Failed to upload the sound.',
+                "questions.$index.uploaded_sound" => 'Failed to upload the sound.',
             ]);
         }
     }
+
 
     public function uploadImage(int $index)
     {

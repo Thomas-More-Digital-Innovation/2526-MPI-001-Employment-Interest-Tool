@@ -54,74 +54,32 @@
                             @endforeach
                         </flux:select>
                         {{-- AUDIO BOX, tied to the currently selected question --}}
+                        @php
+                            $soundName = $questions[$selectedQuestion]['sound_link'] ?? null;
+                            $soundUrl  = $soundName ? route('question.sound', ['filename' => $soundName]) : null;
+                        @endphp
+
+
+                        {{-- AUDIO BOX, tied to the currently selected question --}}
                         <div
-                            wire:key="audio-box-{{ $selectedQuestion }}"
-                            x-data="audioRec({ qid: {{ $selectedQuestion }} })"
+                            x-data="recorder({ qid: {{ $selectedQuestion }}, existingUrl: @js($soundUrl) })"
                             x-init="init()"
-                            class="flex flex-col gap-3 p-3 m-2 rounded-2xl bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600"
+                            wire:key="recorder-{{ $selectedQuestion }}"
+                            wire:ignore
+                            class="flex items-center gap-3"
                         >
-                            <div class="flex items-center gap-3 flex-wrap">
-                                <!-- Record Button -->
-                                <button
-                                    type="button"
-                                    class="px-4 py-2 rounded-xl text-white bg-red-600 active:opacity-80"
-                                    x-text="isRecording ? 'Recording..' : 'Record'"
-                                    @pointerdown.prevent="start()"
-                                    @pointerup="stop()"
-                                    @pointerleave="stop()"
-                                ></button>
+                            <button @click="start" x-show="!isRecording" class="px-3 py-2 rounded bg-red-600 text-white">● Record</button>
+                            <button @click="stop"  x-show="isRecording"  class="px-3 py-2 rounded bg-gray-800 text-white">Stop</button>
 
-                                <!-- Play Button -->
-                                <button
-                                    type="button"
-                                    class="px-4 py-2 rounded-xl border"
-                                    x-show="hasAudio"
-                                    x-text="isPlaying ? 'Pause' : 'Play'"
-                                    @click="togglePlay()"
-                                ></button>
+                            <button @click="togglePlay" x-show="hasAudio" class="px-3 py-2 rounded bg-blue-600 text-white">
+                                <span x-text="isPlaying ? 'Pause' : 'Play'"></span>
+                            </button>
 
-                                <!-- File Upload -->
-                                <input
-                                    type="file"
-                                    accept="audio/*"
-                                    class="hidden"
-                                    :id="`soundInput-${qid}`"
-                                    :name="`soundInput-${qid}`"
-                                    :key="`soundInput-${qid}`"
-                                    :wire:model="`questions.${qid}.uploaded_sound`"
-                                />
-                                <label :for="`soundInput-${qid}`">
-                                    <span class="px-4 py-2 rounded-xl border cursor-pointer">Browse</span>
-                                </label>
+                            <button @click="clearClient" x-show="hasAudio" class="px-3 py-2 rounded bg-gray-200">Clear</button>
 
-                                <!-- Clear Button -->
-                                <flux:button
-                                    variant="ghost"
-                                    class="p-2"
-                                    title="Remove audio"
-                                    @click.prevent="clearClient(); $wire.set('questions.'+qid+'.sound_link', null)"
-                                >
-                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path d="M10 11v6M14 11v6M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                                    </svg>
-                                </flux:button>
-                            </div>
+                            <span class="text-sm text-gray-600" x-text="label"></span>
 
-                            <!-- Audio Element -->
-                            <audio x-ref="audio" class="hidden" preload="metadata"></audio>
-
-                            <!-- Validation Error -->
-                            @error('questions.'.$selectedQuestion.'.uploaded_sound')
-                                <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
-                            @enderror
-
-                            <!-- Debug Info -->
-                            <div class="text-xs text-zinc-400">
-                                <p>sound_link: {{ data_get($questions[$selectedQuestion] ?? [], 'sound_link', 'null') }}</p>
-                                <p>hasAudio: <span x-text="hasAudio"></span></p>
-                                <p>isRecording: <span x-text="isRecording"></span></p>
-                                <p>isPlaying: <span x-text="isPlaying"></span></p>
-                            </div>
+                            <audio x-ref="audio"></audio>
                         </div>
                     </div>
                 </div>
@@ -190,93 +148,149 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
         <script>
-            window.audioRec = (cfg) => ({
-                qid: cfg.qid,
+            function recorder(cfg) {
+                return {
+                    qid: cfg.qid,
+                    existingUrl: cfg.existingUrl ?? null,
 
-                isRecording: false,
-                isPlaying: false,
-                label: 'Can record, no sound file added',
-                hasAudio: false,
+                    isRecording: false,
+                    isPlaying: false,
+                    label: 'Can record, no sound file added',
+                    hasAudio: false,
 
-                _stream: null,
-                _recorder: null,
-                _chunks: [],
-                _segments: [],
+                    _stream: null,
+                    _recorder: null,
+                    _chunks: [],
+                    _segments: [],
+                    _currentUrl: null,
+                    _loadedExisting: false,
 
-                init() {
-                document.addEventListener('livewire:message.processed', () => this._rebuild());
-                this._rebuild();
-                },
+                    init() {
+                        document.addEventListener('livewire:message.processed', () => this._rebuild());
+                        this._loadExistingIfAny().then(() => this._rebuild());
+                    },
 
-                async _ensureMic() {
-                if (!this._stream) {
-                    this._stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                }
-                },
+                    async _loadExistingIfAny() {
+                        if (!this.existingUrl || this._loadedExisting) return;
+                        try {
+                            const res = await fetch(this.existingUrl, { cache: 'no-store' });
+                            if (!res.ok) return;
+                            const blob = await res.blob();
+                            if (blob.size > 0) {
+                                this._segments = [blob]; // seed with server audio
+                                this._loadedExisting = true;
+                                this.label = 'Existing audio loaded, you can record to add more';
+                                this.hasAudio = true;
+                            }
+                        } catch {
+                            // ignore fetch issues, user can still record fresh audio
+                        }
+                    },
 
-                async start() {
-                if (this.isRecording) return;
-                await this._ensureMic();
-                this._chunks = [];
-                this._recorder = new MediaRecorder(this._stream);
-                this._recorder.ondataavailable = e => this._chunks.push(e.data);
-                this._recorder.onstop = () => {
-                    if (this._chunks.length) this._segments.push(new Blob(this._chunks, { type: 'audio/webm' }));
-                    this.isRecording = false;
-                    this._rebuild();
+                    async _ensureMic() {
+                        if (!this._stream) {
+                            this._stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        }
+                    },
+
+                    async start() {
+                        if (this.isRecording) return;
+                        await this._ensureMic();
+
+                        this._chunks = [];
+                        const options = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+                            ? { mimeType: 'audio/webm;codecs=opus' }
+                            : undefined;
+
+                        this._recorder = new MediaRecorder(this._stream, options);
+                        this._recorder.ondataavailable = e => { if (e.data?.size) this._chunks.push(e.data); };
+                        this._recorder.onstop = () => {
+                            if (this._chunks.length) {
+                                const part = new Blob(this._chunks, { type: 'audio/webm' });
+                                this._segments.push(part); // append after existing if any
+                            }
+                            this.isRecording = false;
+                            this._rebuild();
+                        };
+                        this._recorder.start();
+                        this.isRecording = true;
+                        this.label = 'Recording...';
+                    },
+
+                    stop() {
+                        if (this._recorder && this.isRecording) this._recorder.stop();
+                    },
+
+                    togglePlay() {
+                        const a = this.$refs.audio;
+                        if (!a?.src) return;
+                        if (a.paused) {
+                            a.play().then(() => { this.isPlaying = true; }).catch(() => {});
+                        } else {
+                            a.pause();
+                            this.isPlaying = false;
+                        }
+                        a.onended = () => { this.isPlaying = false; };
+                    },
+
+                    clearClient() {
+                        this._chunks = [];
+                        this._segments = [];
+                        this._loadedExisting = false;
+                        this._rebuild();
+                    },
+
+                    async _uploadBlobToLivewire(blob) {
+                        const file = new File([blob], `recording-${this.qid}.webm`, { type: 'audio/webm' });
+                        const prop = `questions.${this.qid}.uploaded_sound`;
+
+                        this.$wire.upload(
+                            prop,
+                            file,
+                            () => { /* success, server will post-process in updated() */ },
+                            () => { this.label = 'Upload failed, try again'; },
+                            () => {}
+                        );
+                    },
+
+                    _rebuild() {
+                        const a = this.$refs.audio;
+
+                        if (this._currentUrl) {
+                            URL.revokeObjectURL(this._currentUrl);
+                            this._currentUrl = null;
+                        }
+
+                        if (!this._segments.length) {
+                            if (this.existingUrl && this._loadedExisting) {
+                                a.src = this.existingUrl;
+                                a.load();
+                                this.label = 'Existing audio';
+                                this.hasAudio = true;
+                                return;
+                            }
+                            if (a) { a.removeAttribute('src'); a.load(); }
+                            this.label = 'Can record, no sound file added';
+                            this.hasAudio = false;
+                            this.isPlaying = false;
+                            return;
+                        }
+
+                        const blob = new Blob(this._segments, { type: 'audio/webm' });
+                        const url  = URL.createObjectURL(blob);
+                        this._currentUrl = url;
+
+                        a.src = url;
+                        a.load();
+                        this.label = 'Sound file added, can still record to add to the sound';
+                        this.hasAudio = true;
+
+                        this._uploadBlobToLivewire(blob);
+                    },
                 };
-                this._recorder.start();
-                this.isRecording = true;
-                },
-
-                stop() {
-                if (this._recorder && this.isRecording) this._recorder.stop();
-                },
-
-                togglePlay() {
-                const a = this.$refs.audio;
-                if (!a?.src) return;
-                if (a.paused) {
-                    a.play().catch(() => {});
-                    this.isPlaying = true;
-                } else {
-                    a.pause();
-                    this.isPlaying = false;
-                }
-                a.onended = () => { this.isPlaying = false; };
-                },
-
-                clearClient() {
-                this._chunks = [];
-                this._segments = [];
-                this._rebuild();
-                },
-
-                _uploadBlobToLivewire(blob) {
-                const file = new File([blob], `recording-${this.qid}.webm`, { type: 'audio/webm' });
-                // build the property path with qid at runtime — no Blade inside template strings
-                const prop = 'questions.' + this.qid + '.uploaded_sound';
-                $wire.upload(prop, file, () => {}, () => {}, () => {});
-                },
-
-                _rebuild() {
-                const a = this.$refs.audio;
-                if (!this._segments.length) {
-                    if (a) { a.removeAttribute('src'); a.load(); }
-                    this.label = 'Can record, no sound file added';
-                    this.hasAudio = false;
-                    return;
-                }
-                const blob = new Blob(this._segments, { type: 'audio/webm' });
-                const url  = URL.createObjectURL(blob);
-                a.src = url;
-                this.label = 'Sound file added, can still record to add to the sound';
-                this.hasAudio = true;
-
-                this._uploadBlobToLivewire(blob); // triggers parent updated -> uploadSound(index)
-                },
-            });
+            }
             </script>
+
 
     @endpush
 </div>
