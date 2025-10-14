@@ -36,7 +36,7 @@
             <section class="space-y-3">
                 <div class="flex items-center justify-between gap-3">
                     <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                    {{ trans_choice('{0}No mentors|{1}:count mentor|[2,*]:count mentors', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
+                    {{ trans_choice('{0}No researcher|{1}:count researcher|[2,*]:count researchers', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
                 </span>
                 </div>
                 @include('livewire.admin.mentor-manager-table', ['records' => $group['clients']])
