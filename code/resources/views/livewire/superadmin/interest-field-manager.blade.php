@@ -128,12 +128,12 @@
 
                     @if ($editingId)
                         <div>
-                            <h1>Add translation</h1>
+                            <h1>{{ __('interestfield.add_translation') }}</h1>
                             <div class="flex justify-end items-center gap-2">
                                 <flux:select
                                     id="new-translation-language"
                                     wire:model="newTranslationLanguage">
-                                    <option value="" disabled selected>{{ __('Select a language') }}</option>
+                                    <option value="" disabled selected>{{ __('interestfield.select_language') }}</option>
                                     @foreach ($availableLanguages as $languageCode => $languageName)
                                         @if (!isset($form['translations'][$languageCode]))
                                             <option value="{{ $languageCode }}">
