@@ -185,7 +185,7 @@
                     hasAudio: false,
                     canRecord: true,
 
-                    label: 'Can record, no sound file added',
+                    label: __('testcreation.can_record'),
 
                     
                     _stream: null,
@@ -196,7 +196,7 @@
                         // Logic for loading existing audio if available in the DB
                         if (this.existingUrl) {
                             this._setAudio(this.existingUrl);
-                            this.label = 'Audio loaded';
+                            this.label = __('testcreation.audio_loaded');
                             this.hasAudio = true;
                             this.canRecord = false;
                         } else {
@@ -228,7 +228,7 @@
                             const { index } = e.detail || {};
                             if (index === this.qid) {
                                 this._clearAudioEl();
-                                this.label = 'Cleared. You can record or browse again';
+                                this.label = __('testcreation.record_cleared');
                                 this.hasAudio = false;
                                 this.canRecord = true;
                             }

@@ -23,4 +23,7 @@ return [
     'untitled' => 'Untitled',
     'question_title' => 'Question :number - :title',
     'question_undefined' => 'Question :number - Undefined',
+    'audio_loaded' => 'Audio Loaded',
+    'can_record' => 'Can record, no sound file added',
+    'record_cleared' => 'Cleared. You can record or browse again'
 ];
