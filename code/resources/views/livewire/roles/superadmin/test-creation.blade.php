@@ -218,7 +218,7 @@
                             const { index, url } = e.detail || {};
                             if (index === this.qid && url) {
                                 this._setAudio(url);
-                                this.label = 'Audio ready';
+                                this.label = __('testcreation.audio_ready');
                                 this.hasAudio = true;
                                 this.canRecord = false;
                             }
@@ -250,7 +250,7 @@
                         this._rec.onstop = () => { this._onStopRecording(); };
                         this._rec.start();
                         this.isRecording = true;
-                        this.label = 'Recording..';
+                        this.label = __('testcreation.recording');
                     },
                     // Stop recording
                     stop() {
@@ -272,17 +272,17 @@
                         const file = new File([blob], `rec_${Date.now()}.webm`, { type: 'audio/webm' });
                         
                         this.canRecord = false;
-                        this.label = 'Uploading...';
+                        this.label = __('testcreation.uploading');
 
                         
                         this.$wire.upload(`questions.${this.qid}.uploaded_sound`, file,
                             () => {
                                 
-                                this.label = 'Uploaded';
+                                this.label = __('testcreation.uploaded');
                             },
                             (err) => {
                                 
-                                this.label = 'Upload failed';
+                                this.label = __('testcreation.upload_failed');
                                 this.canRecord = true;
                                 this.hasAudio = false;
                                 this._clearAudioEl();
@@ -306,7 +306,7 @@
                     // Clear the audio, re-enable recording
                     async clearAll() {
                         
-                        this.label = 'Clearing...';
+                        this.label = __('testcreation.clearing');
                         await this.$wire.call('clearSound', this.qid);
                         
                     },

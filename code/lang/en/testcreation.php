@@ -25,5 +25,11 @@ return [
     'question_undefined' => 'Question :number - Undefined',
     'audio_loaded' => 'Audio Loaded',
     'can_record' => 'Can record, no sound file added',
-    'record_cleared' => 'Cleared. You can record or browse again'
+    'record_cleared' => 'Cleared. You can record or browse again',
+    'audio_ready' => 'Audio Ready',
+    'recording' => 'Recording...',
+    'uploading' => 'Uploading...',
+    'uploaded' => 'Uploaded',
+    'upload_failed' => 'Upload Failed',
+    'clearing' => 'Clearing...'
 ];
