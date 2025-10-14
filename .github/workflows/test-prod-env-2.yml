@@ -25,7 +25,7 @@ jobs:
     - name: Build Docker image
       working-directory: code
       run: |
-        docker buildx build --platform linux/amd64 -t mpi-employment-interest-tool:latest .
+        docker buildx build --platform linux/amd64 -t mpi-employment-interest-tool:latest --load .
 
     - name: Save Docker image to tar file
       working-directory: code
