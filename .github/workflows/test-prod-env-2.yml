@@ -43,71 +43,17 @@ jobs:
       run: |
         docker save custom-nginx:latest -o custom-nginx.tar
 
-    # - name: Upload Docker tar files as artifacts
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: docker-images-tar
-    #     path: |
-    #       code/mpi-employment-interest-tool.tar
-    #       code/custom-nginx.tar
+    - name: Install cloudflared
+      run: |
+        curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+        chmod +x cloudflared
+        sudo mv cloudflared /usr/local/bin/
 
-    # steps:
-    # - name: Connect and run command on remote server
-    #   uses: and-fm/cloudflared-ssh-action@v3
-    #   with:
-    #     host: ${{ secrets.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USERNAME }}
-    #     private_key_filename: ${{ secrets.SSH_PRIVATE_KEY_FILENAME }}
-    #     private_key_value: ${{ secrets.SSH_PRIVATE_KEY_VALUE }}
-    #     port: 22
-    #     service_token_id: ${{ secrets.SERVICE_TOKEN_ID }}
-    #     service_token_secret: ${{ secrets.SERVICE_TOKEN_SECRET }}
-    #     commands: |
-    #       set -euo pipefail
-    #       ROOT_PASSWORD="${{ secrets.ROOT_PASSWORD }}"
-
-    #       APP_DIR=2526-MPI-001-Employment-Interest-Tool
-    #       if [ -e "$APP_DIR/code/compose.test.prod.yml" ]; then
-    #         echo "File exists."
-    #         cd "$APP_DIR/code"
-    #         # Stop the existing docker compose stack
-    #         docker compose -f compose.test.prod.yml down
-
-    #         # Docker builder prune
-    #         docker builder prune --all -f
-    #       else
-    #         echo "File does not exist."
-    #       fi
-
-    #       cd /home/mpi
-
-    #       echo "Removing existing files in $APP_DIR"
-    #       echo "$ROOT_PASSWORD" | sudo -S rm -rf "$APP_DIR" || true
-    #       mkdir -p "$APP_DIR"
-    #       REPO_URL="https://github.com/${{ github.repository }}.git"
-    #       BRANCH='${{ github.ref }}'
-    #       BRANCH="${BRANCH#refs/heads/}"
-
-    #       cd "$APP_DIR"
-
-    #       echo "Cloning repository $REPO_URL (branch: $BRANCH) into $APP_DIR"
-    #         git clone --depth 1 --branch "$BRANCH" "$REPO_URL" .
-    #       cd code
-
-    #       # Copy APP_KEY from /etc/laravel/app_key
-    #       if [ -f /etc/laravel/app_key ]; then
-    #         cat /etc/laravel/app_key >> .env.test.prod
-    #       else
-    #         echo "ERROR: /etc/laravel/app_key not found on server" >&2
-    #         exit 2
-    #       fi
-
-    #       # Copy .env.test.prod to .env
-    #       cp .env.test.prod .env
-          
-    #       # Export host UID/GID to docker compose environment
-    #       export HOST_UID=$(id -u)
-    #       export HOST_GID=$(id -g)
-
-    #       # Start the docker compose stack
-    #       docker compose -f compose.test.prod.yml up --build -d
+    - name: Transfer Docker images to VM
+      run: |
+        scp -o StrictHostKeyChecking=no \
+            -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
+            -i ~/.ssh/mpissh_key \
+            code/mpi-employment-interest-tool.tar \
+            code/custom-nginx.tar \
+            mpi@mpissh2.stijnrombouts.be:~/
