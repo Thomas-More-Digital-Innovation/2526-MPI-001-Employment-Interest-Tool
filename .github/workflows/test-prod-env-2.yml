@@ -43,13 +43,13 @@ jobs:
       run: |
         docker save custom-nginx:latest -o custom-nginx.tar
 
-    - name: Upload Docker tar files as artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: docker-images-tar
-        path: |
-          code/mpi-employment-interest-tool.tar
-          code/custom-nginx.tar
+    # - name: Upload Docker tar files as artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: docker-images-tar
+    #     path: |
+    #       code/mpi-employment-interest-tool.tar
+    #       code/custom-nginx.tar
 
     # steps:
     # - name: Connect and run command on remote server

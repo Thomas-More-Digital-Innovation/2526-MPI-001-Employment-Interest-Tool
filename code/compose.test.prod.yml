@@ -21,7 +21,6 @@ services:
       HOST_GID: ${HOST_GID}
     volumes:
       - storage:/usr/share/nginx/html/storage:rw
-      - ./public:/usr/share/nginx/html/public:rw
   nginx:
     container_name: nginx
     build:
@@ -35,7 +34,6 @@ services:
     volumes:
       - /etc/laravel/ssl:/etc/nginx/ssl:ro # SSL certs generated beforehand
       - storage:/usr/share/nginx/html/storage:rw
-      - ./public:/usr/share/nginx/html/public:ro
   db:
     container_name: db
     image: mariadb:11
