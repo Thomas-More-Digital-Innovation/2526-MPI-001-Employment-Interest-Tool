@@ -22,4 +22,18 @@ class TestResultOverview extends Component
     {
         return view('livewire.test.test-result-overview');
     }
+
+    public function continueTest($index) {
+        // Verify the index is valid
+        if (!isset($this->attempts[$index])) {
+            return;
+        }
+
+        $attempt = $this->attempts[$index];
+
+        session()->flash('testAttemptId', $attempt->test_attempt_id);
+        session()->flash('testId', $attempt->test_id);
+
+        return redirect()->route('client.test');
+    }
 }

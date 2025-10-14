@@ -4,6 +4,7 @@ namespace App\Livewire\Test;
 
 use App\Models\Answer;
 use App\Models\InterestField;
+use App\Models\TestAttempt;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -27,6 +28,10 @@ class TestResults extends Component
         if (!$this->testAttemptId) {
             return redirect()->route('dashboard');
         }
+
+        // Mark the test attempt as finished
+        TestAttempt::where('test_attempt_id', $this->testAttemptId)
+            ->update(['finished' => true]);
 
 
         // 1) Selected answers for this attempt

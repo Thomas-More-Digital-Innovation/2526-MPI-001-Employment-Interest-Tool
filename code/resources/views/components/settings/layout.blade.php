@@ -4,10 +4,13 @@
             <flux:navlist.item :href="route('settings.profile')" wire:navigate :current="request()->routeIs('settings.profile')">{{ __('Profile') }}</flux:navlist.item>
             <flux:navlist.item :href="route('settings.password')" wire:navigate :current="request()->routeIs('settings.password')">{{ __('Password') }}</flux:navlist.item>
             <flux:navlist.item :href="route('settings.appearance')" wire:navigate :current="request()->routeIs('settings.appearance')">{{ __('System') }}</flux:navlist.item>
-            @if(Auth::user()->isClient())
-                <flux:navlist.item icon="arrow-left" :href="route('dashboard')" wire:navigate :current="request()->routeIs('dashboard')">{{ __('user.return_to_dashboard') }}</flux:navlist.item>
-            @endif
         </flux:navlist>
+        
+        @if(Auth::user()->isClient())
+            <flux:button icon="arrow-left" :href="route('dashboard')" wire:navigate variant="primary" color="green" size="xl" class="mt-4 w-full">
+                {{ __('user.return_to_dashboard') }}
+            </flux:button>
+        @endif
     </div>
 
     <flux:separator class="md:hidden" />
