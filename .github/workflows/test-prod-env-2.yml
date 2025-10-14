@@ -61,4 +61,4 @@ jobs:
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             code/mpi-employment-interest-tool.tar \
             code/custom-nginx.tar \
-            mpi@mpissh.stijnrombouts.be:~/
+            mpi@mpissh2.stijnrombouts.be:~/
