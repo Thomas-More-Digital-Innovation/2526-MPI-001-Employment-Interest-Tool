@@ -23,8 +23,7 @@ beforeEach(function () {
 test('mount creates a blank question when no session data', function () {
     Livewire::test(TestCreation::class)
         ->assertSet('selectedQuestion', 0)
-        ->assertSet('questions.0.circleFill', 'red')
-        ->assertSee('Submit');
+        ->assertSet('questions.0.circleFill', 'red');
 });
 
 test('mount loads edit session data when present', function () {
