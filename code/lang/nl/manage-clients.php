@@ -28,4 +28,9 @@ return [
     'noMentorAssigned' => 'Geen mentor toegewezen',
     'deleteClient' => 'Cliënt verwijderen',
     'ConfirmDeleteClient' => 'Weet je zeker dat je :client wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    'assignTestsToClient' => 'Tests toewijzen aan cliënt',
+    'selectTestsForClient' => 'Selecteer de tests die je wilt toewijzen aan <strong>:client</strong>.',
+    'selectClientFirst' => 'Selecteer eerst een cliënt om tests toe te wijzen.',
+    'assign' => 'Toewijzen',
+    'testsAssignedSuccess' => 'Tests succesvol toegewezen!',
 ];
