@@ -31,10 +31,14 @@ class TestCreation extends Component
     {
         $this->interestFields = InterestField::all();
 
-        if (session()->has('edit_test_id')) {
-            $this->test_id = session('edit_test_id');
-            $this->test_name = session('edit_test_name');
-            $this->questions = session('edit_questions', []);
+        $editId = session()->pull('edit_test_id');
+        $editName = session()->pull('edit_test_name');
+        $editQuestions = session()->pull('edit_questions');
+
+        if ($editId !== null) {
+            $this->test_id = $editId;
+            $this->test_name = $editName ?? '';
+            $this->questions = is_array($editQuestions) ? array_values($editQuestions) : [];
         } else {
             $this->questions[] = $this->blankQuestion();
         }
@@ -46,37 +50,36 @@ class TestCreation extends Component
     }
 
     // This function updates the color of the status circle on the questions
-    public function updateCircleFill(int $index) {
-        // Select the specific question using the index
-        $question = $this->questions[$index];
-
-        // Validate title
-        $hasTitle = trim($question['title'] ?? '') !== '';
-        // Validate description
-        $hasDescription = trim($question['description'] ?? '') !== '';
-        // Validate interest
-        $hasInterest = isset($question['interest']) && $question['interest'] >= 0;
-
-        // If all inputs have been filled, make the circle green
-        if ($hasTitle && $hasInterest) {
-            $question['circleFill'] = "green";
-        // if a couple but not all inputs have been filled, make the circle yellow
-        } elseif ($hasTitle || $hasDescription || $hasInterest) {
-            $question['circleFill'] = "yellow";
-        // if no questions are filled make the circle red
-        } else {
-            $question['circleFill'] = "red";
+    public function updateCircleFill(int $index): void
+    {
+        if (!array_key_exists($index, $this->questions) || !is_array($this->questions[$index])) {
+            return; // question got deleted or index shifted
         }
-        $this->questions[$index] = $question;
+
+        $q =& $this->questions[$index]; // by reference
+
+        $title    = isset($q['title']) ? trim((string) $q['title']) : '';
+        $desc     = isset($q['description']) ? trim((string) $q['description']) : '';
+        $interest = isset($q['interest']) ? (int) $q['interest'] : -1;
+
+        if ($title !== '' && $interest >= 0) {
+            $q['circleFill'] = 'green';
+        } elseif ($title !== '' || $desc !== '' || $interest >= 0) {
+            $q['circleFill'] = 'yellow';
+        } else {
+            $q['circleFill'] = 'red';
+        }
     }
 
+
     public function uploadTest() {
+        // Validate and sanitize
         $this->validate([
         'test_name' => 'required|string|min:3',
         'questions' => 'required|array|min:1',
         ]);
 
-        // then check the colors
+        // then check the colors, all must be green to submit test
         foreach ($this->questions as $i => $q) {
             if (($q['circleFill'] ?? null) !== 'green') {
                 $this->addError('questions.'.$i, 'Question '.($i + 1).' is incomplete.');
@@ -87,10 +90,13 @@ class TestCreation extends Component
         if ($this->getErrorBag()->isNotEmpty()) {
             return;
         }
-
-        if (session()->has('edit_test_id')) {
-            $test = Test::findOrFail(session('edit_test_id'));
+        // check if test is being edited or created
+        if ($this->test_id) {
+            // if edited then find the test
+            $test = Test::findOrFail($this->test_id);
+            // update the test name
             $test->update(['test_name' => $this->test_name]);
+            // remove all questions for said test
             Question::where('test_id', $test->test_id)->delete();
         } else {
             // otherwise safe to create
@@ -99,13 +105,15 @@ class TestCreation extends Component
             ]);
         }
         foreach ($this->questions as $index => $question) {
+            // create new questions for the test
             Question::create([
                 'test_id' => $test->test_id,
                 'interest_field_id' => $question['interest'],
                 'question_number' => $question['question_number'],
                 'question' => $question['title'],
                 'image_description' => $question['description'],
-                'media_link' => $question['media_link'] ?? null, // Added media_link to the database insertion
+                'media_link' => $question['media_link'] ?? null,
+                'sound_link' => $question['sound_link'] ?? null,
             ]);
         }
         $this->clearSession();
@@ -115,7 +123,7 @@ class TestCreation extends Component
     public function updated(string $name, $value)
     {
         // do not run if inputting test_name as that is test global, not question specific
-        if ($name === "test_name") {
+        if ($name === "test_name" || $name == "selectedQuestion") {
             return;
         }
 
@@ -132,12 +140,23 @@ class TestCreation extends Component
             return;
         }
 
+        if (str_contains($name, '.uploaded_sound')) {
+            $parts = explode('.', $name);
+            $index = (int) $parts[1];
+            if (isset($this->questions[$index]['uploaded_sound'])) {
+                $this->uploadSound($index);
+            }
+            return;
+        }
+        
         // We are using this to split the string into an array at every point (question.0.title becomes ["question", "0", "title])
         // We can now use this to take the index
-        $exploded_string = explode(".", $name);
-
-        // Send the index to the updateCircleFill function
-        $this->updateCircleFill((int) $exploded_string[1]);
+        if (preg_match('/^questions\.(\d+)\./', $name, $m)) {
+            $i = (int) $m[1];
+            if (array_key_exists($i, $this->questions)) {
+                $this->updateCircleFill($i);
+            }
+        }
     }
 
     // Defining the initial blank question as a function so it does not have to be rewritten
@@ -149,6 +168,8 @@ class TestCreation extends Component
             'description' => '',
             'interest' => -1,
             'circleFill' => 'red',
+            'media_link' => null,
+            'sound_link' => null,
         ];
     }
 
@@ -205,6 +226,50 @@ class TestCreation extends Component
 
         // return the sorted array to the page :)
         $this->questions = array_values($items);
+    }
+
+
+
+    public function uploadSound(int $index)
+    {
+
+        $uploadedFile = $this->questions[$index]['uploaded_sound'];
+
+        try {
+            // Validate the uploaded file
+            $this->validate([
+                // TODO: PUT IN .ENV
+                "questions.$index.uploaded_sound" => "required|file|mimetypes:audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm,audio/mp4,audio/x-m4a,audio/aac|max:5120",
+            ]);
+
+            // Check if file is valid
+            if ($uploadedFile->isValid()) {
+                $extension = strtolower($uploadedFile->getClientOriginalExtension());
+                do {
+                    $filename = uniqid().'.'.$extension;
+                    $exists = Storage::disk('public')->exists($filename);
+                } while ($exists);
+
+                // Store the file in the public disk root
+                $path = $uploadedFile->storeAs('', $filename, 'public');
+
+                if ($path) {
+                    // Update the media_link for the question with only the filename
+                    $this->questions[$index]['sound_link'] = $filename;
+                }
+            }
+
+            // Clear the uploaded sound after processing
+            unset($this->questions[$index]['uploaded_sound']);
+        } catch (\Exception $e) {
+            // Clear the file input first
+            unset($this->questions[$index]['uploaded_sound']);
+
+            // Then throw the exception with custom message
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'questions.'.$index.'.uploaded_sound' => 'Failed to upload the sound.',
+            ]);
+        }
     }
 
     public function uploadImage(int $index)

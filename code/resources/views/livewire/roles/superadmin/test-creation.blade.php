@@ -53,6 +53,76 @@
                                 <flux:select.option value="{{ $interestField->interest_field_id }}">{{ $interestField->getName(app()->getLocale()) }}</flux:select.option>
                             @endforeach
                         </flux:select>
+                        {{-- AUDIO BOX, tied to the currently selected question --}}
+                        <div
+                            wire:key="audio-box-{{ $selectedQuestion }}"
+                            x-data="audioRec({ qid: {{ $selectedQuestion }} })"
+                            x-init="init()"
+                            class="flex flex-col gap-3 p-3 m-2 rounded-2xl bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600"
+                        >
+                            <div class="flex items-center gap-3 flex-wrap">
+                                <!-- Record Button -->
+                                <button
+                                    type="button"
+                                    class="px-4 py-2 rounded-xl text-white bg-red-600 active:opacity-80"
+                                    x-text="isRecording ? 'Recording..' : 'Record'"
+                                    @pointerdown.prevent="start()"
+                                    @pointerup="stop()"
+                                    @pointerleave="stop()"
+                                ></button>
+
+                                <!-- Play Button -->
+                                <button
+                                    type="button"
+                                    class="px-4 py-2 rounded-xl border"
+                                    x-show="hasAudio"
+                                    x-text="isPlaying ? 'Pause' : 'Play'"
+                                    @click="togglePlay()"
+                                ></button>
+
+                                <!-- File Upload -->
+                                <input
+                                    type="file"
+                                    accept="audio/*"
+                                    class="hidden"
+                                    :id="`soundInput-${qid}`"
+                                    :name="`soundInput-${qid}`"
+                                    :key="`soundInput-${qid}`"
+                                    :wire:model="`questions.${qid}.uploaded_sound`"
+                                />
+                                <label :for="`soundInput-${qid}`">
+                                    <span class="px-4 py-2 rounded-xl border cursor-pointer">Browse</span>
+                                </label>
+
+                                <!-- Clear Button -->
+                                <flux:button
+                                    variant="ghost"
+                                    class="p-2"
+                                    title="Remove audio"
+                                    @click.prevent="clearClient(); $wire.set('questions.'+qid+'.sound_link', null)"
+                                >
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path d="M10 11v6M14 11v6M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </flux:button>
+                            </div>
+
+                            <!-- Audio Element -->
+                            <audio x-ref="audio" class="hidden" preload="metadata"></audio>
+
+                            <!-- Validation Error -->
+                            @error('questions.'.$selectedQuestion.'.uploaded_sound')
+                                <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                            @enderror
+
+                            <!-- Debug Info -->
+                            <div class="text-xs text-zinc-400">
+                                <p>sound_link: {{ data_get($questions[$selectedQuestion] ?? [], 'sound_link', 'null') }}</p>
+                                <p>hasAudio: <span x-text="hasAudio"></span></p>
+                                <p>isRecording: <span x-text="isRecording"></span></p>
+                                <p>isPlaying: <span x-text="isPlaying"></span></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,7 +151,20 @@
                 <flux:button type="button" wire:click.stop="createQuestion" variant="primary" color="green">+</flux:button>
             </div>
             {{-- Container to list + sort questions automatically, Basic-sortable is a selector for the sortable.js script --}}
-            <ul id="Basic-sortable" class="w-full px-2">
+            <ul id="Basic-sortable" class="w-full px-2"
+                x-data
+                x-init="
+                if (!$el._sortableBound) {
+                    $el._sortableBound = true;
+                    new Sortable($el, {
+                    animation: 150,
+                    onEnd(e) {
+                        if (e.oldIndex === e.newIndex) return;
+                        $wire.reorderQuestions(e.oldIndex, e.newIndex);
+                    }
+                    });
+                }
+                ">
                 {{-- Accessing the array within the array --}}
                 @foreach ($questions as $index => $question)
                     <li wire:key="question-{{ $index }}" class="cursor-grab w-full flex justify-between items-center bg-zinc-600 rounded my-2">
@@ -90,7 +173,7 @@
                         {{-- Icon to indicate whether question is good to be submitted or not --}}
                         <div class="flex items-center justify-center w-1/12">
                             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
-                                <circle r="6" cx="7" cy="7" fill="{{ $question['circleFill'] }}" />
+                                <circle r="6" cx="7" cy="7" fill="{{ $question['circleFill'] ?? 'red' }}" />
                             </svg>
                         </div>
                         {{-- Button that assigns the clicked question as the selected one and displays the values on the main container, text is truncated and shows up on hover as a tooltip :-) --}}
@@ -107,24 +190,93 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
         <script>
-        document.addEventListener('livewire:init', () => {
-            const el = document.getElementById('Basic-sortable');
-            if (!el) return;
+            window.audioRec = (cfg) => ({
+                qid: cfg.qid,
 
-            new Sortable(el, {
-                animation: 150,
-                // onEnd executes code when the container being held is let go
-                onEnd(evt) {
-                    // If the item is in the same spot then just return
-                    if (evt.oldIndex === evt.newIndex) return;
-                    // Runs if the item is in a new position and sends the last and new indexes of the item ot the reorderQuestions function
-                    @this.call('reorderQuestions', evt.oldIndex, evt.newIndex);
+                isRecording: false,
+                isPlaying: false,
+                label: 'Can record, no sound file added',
+                hasAudio: false,
+
+                _stream: null,
+                _recorder: null,
+                _chunks: [],
+                _segments: [],
+
+                init() {
+                document.addEventListener('livewire:message.processed', () => this._rebuild());
+                this._rebuild();
+                },
+
+                async _ensureMic() {
+                if (!this._stream) {
+                    this._stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 }
+                },
+
+                async start() {
+                if (this.isRecording) return;
+                await this._ensureMic();
+                this._chunks = [];
+                this._recorder = new MediaRecorder(this._stream);
+                this._recorder.ondataavailable = e => this._chunks.push(e.data);
+                this._recorder.onstop = () => {
+                    if (this._chunks.length) this._segments.push(new Blob(this._chunks, { type: 'audio/webm' }));
+                    this.isRecording = false;
+                    this._rebuild();
+                };
+                this._recorder.start();
+                this.isRecording = true;
+                },
+
+                stop() {
+                if (this._recorder && this.isRecording) this._recorder.stop();
+                },
+
+                togglePlay() {
+                const a = this.$refs.audio;
+                if (!a?.src) return;
+                if (a.paused) {
+                    a.play().catch(() => {});
+                    this.isPlaying = true;
+                } else {
+                    a.pause();
+                    this.isPlaying = false;
+                }
+                a.onended = () => { this.isPlaying = false; };
+                },
+
+                clearClient() {
+                this._chunks = [];
+                this._segments = [];
+                this._rebuild();
+                },
+
+                _uploadBlobToLivewire(blob) {
+                const file = new File([blob], `recording-${this.qid}.webm`, { type: 'audio/webm' });
+                // build the property path with qid at runtime — no Blade inside template strings
+                const prop = 'questions.' + this.qid + '.uploaded_sound';
+                $wire.upload(prop, file, () => {}, () => {}, () => {});
+                },
+
+                _rebuild() {
+                const a = this.$refs.audio;
+                if (!this._segments.length) {
+                    if (a) { a.removeAttribute('src'); a.load(); }
+                    this.label = 'Can record, no sound file added';
+                    this.hasAudio = false;
+                    return;
+                }
+                const blob = new Blob(this._segments, { type: 'audio/webm' });
+                const url  = URL.createObjectURL(blob);
+                a.src = url;
+                this.label = 'Sound file added, can still record to add to the sound';
+                this.hasAudio = true;
+
+                this._uploadBlobToLivewire(blob); // triggers parent updated -> uploadSound(index)
+                },
             });
-        });
-        document.addEventListener('livewire:navigating', (event) => {
-            @this.call('clearSession')
-        });
-        </script>
+            </script>
+
     @endpush
 </div>
