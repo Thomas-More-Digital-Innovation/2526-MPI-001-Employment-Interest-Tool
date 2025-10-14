@@ -61,8 +61,8 @@ class TestDetails extends Component
         if ($this->attempt && isset($this->attempt->answers)) {
             $locale = $this->currentLocale ?? app()->getLocale();
 
-            // Map of interest_field_id => aggregated yes flag
-            $fieldYesMap = [];
+            // Map of interest_field_id => count of yes answers
+            $fieldYesCount = [];
 
             foreach ($this->attempt->answers as $answer) {
                 $question = $answer->question ?? null;
@@ -74,18 +74,21 @@ class TestDetails extends Component
                 $fieldId = $interest->interest_field_id;
 
                 // Initialize if not yet present
-                if (! array_key_exists($fieldId, $fieldYesMap)) {
-                    $fieldYesMap[$fieldId] = false;
+                if (! array_key_exists($fieldId, $fieldYesCount)) {
+                    $fieldYesCount[$fieldId] = 0;
                 }
 
-                // If any answer for the field is truthy (yes), mark as true
+                // Increment count for each yes answer
                 if ($answer->answer) {
-                    $fieldYesMap[$fieldId] = true;
+                    $fieldYesCount[$fieldId]++;
                 }
             }
 
+            // Sort by count descending
+            arsort($fieldYesCount);
+
             // Convert map to ordered labels and data
-            foreach ($fieldYesMap as $fieldId => $hasYes) {
+            foreach ($fieldYesCount as $fieldId => $yesCount) {
                 // find the InterestField instance from one of the answers to get the name
                 $interest = null;
                 foreach ($this->attempt->answers as $answer) {
@@ -98,7 +101,7 @@ class TestDetails extends Component
 
                 $label = $interest ? $interest->getName($locale) : ('Field ' . $fieldId);
                 $this->graphLabels[] = $label;
-                $this->graphData[] = $hasYes ? 1 : 0;
+                $this->graphData[] = $yesCount;
             }
         }
         // If we didn't get clientInfo from the request/session but the attempt includes the user relation, use it.

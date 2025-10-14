@@ -9,7 +9,7 @@
                 </div>
         </div>
 
-        <div style="flex:1; border:1px solid #ccc; padding:16px; border-radius:8px;">
+        <div class="w-3/4 mx-auto overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white shadow-sm " >
             <h2 style="margin-top:0">Results</h2>
             @php
                 // Build labels and data from the attempt answers.
@@ -44,24 +44,36 @@
                             Question {{ $qIndex }}
                         </td>
                         <td class="px-4 py-3">
-                            @if ($answer->answer)
-                                {{ __('Yes') }}
-                            @elseif ($answer->unclear)
-                                {{ __('Unclear (check e-mail)') }}
-                            @elseif ($answer->answer === null)
-                                {{ __('Skipped') }}
-                            @else
-                                {{ __('No') }}
-                            @endif
-                        </td>
-                        <td class="px-4 py-3">
                             @php
                                 $timeSpent = data_get($answer, 'response_time') ?? data_get($answer, 'duration') ?? null;
                             @endphp
                             @if($timeSpent !== null)
-                                Minutes: {{ gmdate($timeSpent >= 3600 ? 'H:i:s' : 'i:s', (int) $timeSpent) }}
+                            Minutes: {{ gmdate($timeSpent >= 3600 ? 'H:i:s' : 'i:s', (int) $timeSpent) }}
                             @else
-                                —
+                            —
+                            @endif
+                        </td>
+                        <td class="px-4 py-3">
+                            @if ($answer->answer)
+                                {{ __('Like') }}
+                                <span class="inline-block align-middle ml-2">
+                                    <flux:icon.check-circle class="text-green-500 w-5 h-5" />
+                                </span>
+                            @elseif ($answer->unclear)
+                                {{ __('Unclear') }}
+                                <span class="inline-block align-middle ml-2">
+                                    <flux:icon.question-mark-circle class="text-amber-500 w-5 h-5" />
+                                </span>
+                            @elseif ($answer->answer === null)
+                                {{ __('Skipped') }}
+                                <span class="inline-block align-middle ml-2">
+                                    <flux:icon.question-mark-circle class="text-amber-500 w-5 h-5" />
+                                </span>
+                            @else
+                                {{ __('Dislike') }}
+                                <span class="inline-block align-middle ml-2">
+                                    <flux:icon.x-circle class="text-red-500 w-5 h-5" />
+                                </span>
                             @endif
                         </td>
                         <td>
