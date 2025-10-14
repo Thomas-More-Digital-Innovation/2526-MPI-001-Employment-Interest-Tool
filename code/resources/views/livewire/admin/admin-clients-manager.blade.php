@@ -12,21 +12,21 @@
     <div class="flex flex-col gap-4 md:flex-row md:items-end-safe md:justify-between">
         <div class="flex-1">
             <flux:label class="block text-sm font-medium" for="client-search">
-                {{ __('Search clients') }}
+                {{ __('manage-clients.SearchClients') }}
             </flux:label>
             <flux:input
                 id="client-search"
                 type="search"
                 icon="magnifying-glass"
                 wire:model.live.debounce.300ms="search"
-                placeholder="{{ $showInactivated ? __('Search all clients by name or username') : __('Search active clients by name or username') }}">
+                placeholder="{{ $showInactivated ? __('manage-clients.SearchClientBy') : __('manage-clients.SearchClientByAndActive') }}">
             </flux:input>
         </div>
         <div class="flex-shrink-0 content-end">
             <flux:modal.trigger name="admin-client-form">
 
                 <flux:button type="button" wire:click="startCreate" icon="user-plus" class="bg-color-mpi">
-                    {{ __('Add client') }}
+                    {{ __('manage-clients.AddClient') }}
                 </flux:button>
             </flux:modal.trigger>
         </div>
@@ -48,7 +48,7 @@
         </section>
         @empty
         <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
-            {{ __('No clients found yet.') }}
+            {{ __('manage-clients.NoClientsFound') }}
         </div>
         @endforelse
     </div>
@@ -60,7 +60,7 @@
             wire:click="toggleShowInactivated"
             class="bg-color-mpi-500 text-amber-50">
 
-            {{ $showInactivated ? __('Hide inactivated clients') :  __('Show inactivated clients') }}
+            {{ $showInactivated ? __('manage-clients.HideInactive') :  __('manage-clients.ShowInactive') }}
         </flux:button>
     </div>
     @if ($showInactivated)
@@ -81,7 +81,7 @@
             </section>
             @empty
             <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
-                {{ __('No inactive clients found.') }}
+                {{ __('manage-clients.NoInactiveFound') }}
             </div>
             @endforelse
         </div>
@@ -94,7 +94,7 @@
         x-on:close="$wire.call('closeFormModal')">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ $formModalMode === 'edit' ? __('Edit client') : __('Add client') }}
+                {{ $formModalMode === 'edit' ? __('manage-clients.EditClient') : __('manage-clients.AddClient') }}
             </flux:heading>
 
             <form wire:submit.prevent="save" class="space-y-6">
@@ -104,7 +104,7 @@
                             id="client-first-name"
                             type="text"
                             wire:model.defer="form.first_name"
-                            :label="__('First name')"
+                            :label="__('user.first_name')"
                             required
                             autofocus />
                         @error('form.first_name')
@@ -117,7 +117,8 @@
                             id="client-last-name"
                             type="text"
                             wire:model.defer="form.last_name"
-                            :label="__('Last name (optional)')" />
+                            required
+                            :label="__('user.last_name')" />
                         @error('form.last_name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -128,7 +129,7 @@
                             id="client-username"
                             type="text"
                             wire:model.defer="form.username"
-                            :label="__('Username')"
+                            :label="__('user.username')"
                             required />
                         @error('form.username')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -140,7 +141,7 @@
                             id="client-password"
                             type="password"
                             wire:model.defer="form.password"
-                            :label="$editingId ? __('New password (leave blank to keep current)') : __('Password')"
+                            :label="$editingId ? __('user.new_password_optional') : __('user.password')"
                             :required="!$editingId" />
                         @error('form.password')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -163,7 +164,7 @@
                             wire:model.defer="form.mentor_id"
                             :label="__('Mentor')"
                             required>
-                            <option value="">{{ __('Select a mentor') }}</option>
+                            <option value="">{{ __('manage-clients.noMentorAssigned') }}</option>
                             @foreach ($mentorOptions as $mentor)
                             <option value="{{ $mentor['id'] }}" @selected((string) $mentor['id']===(string) $form['mentor_id'])>
                                 {{ $mentor['label'] }}
@@ -212,13 +213,13 @@
 
                     <div class="md:col-span-2">
                         <flux:label for="client-active" class="block text-sm font-medium">
-                            {{ __('Active') }}
+                            {{ __('user.account_status') }}
                         </flux:label>
                         <div class="mt-2">
                             <flux:checkbox
                                 id="client-active"
                                 wire:model.defer="form.active"
-                                :label="__('Client can sign in')" />
+                                :label="__('manage-clients.ClientCanSignIn')" />
                         </div>
                         @error('form.active')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -231,7 +232,7 @@
                         size="sm"
                         icon="trash"
                         wire:click="requestDelete({{ $editingId }})">
-                        {{ __('Delete') }}
+                        {{ __('manage-clients.deleteClient') }}
                     </flux:button>
                     @endif
                 </div>
@@ -242,14 +243,14 @@
                             type="button"
                             variant="outline"
                             wire:click="cancelForm">
-                            {{ __('Cancel') }}
+                            {{ __('manage-clients.Cancel') }}
                         </flux:button>
                     </flux:modal.close>
 
                     <flux:button
                         type="submit"
                         variant="primary">
-                        {{ $editingId ? __('Save changes') : __('Create client') }}
+                        {{ $editingId ? __('manage-clients.SaveChanges') : __('manage-clients.CreateClient') }}
                     </flux:button>
                 </div>
             </form>
@@ -263,12 +264,12 @@
         x-on:close="$wire.call('closeToggleModal')">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ $toggleModalWillActivate ? __('Enable client') : __('Disable client') }}
+                {{ $toggleModalWillActivate ? __('manage-clients.EnableClient') : __('manage-clients.DisableClient') }}
             </flux:heading>
             <flux:text class="text-sm text-gray-700">
                 {{ $toggleModalWillActivate
-                            ? __('Are you sure you want to enable :client? They will regain access immediately.', ['client' => $toggleModalName])
-                            : __('Are you sure you want to disable :client? They will lose access until re-enabled.', ['client' => $toggleModalName]) }}
+                            ? __('manage-clients.EnableClientConfirmation', ['client' => $toggleModalName])
+                            : __('manage-clients.DisableClientConfirmation', ['client' => $toggleModalName]) }}
             </flux:text>
 
             <div class="flex justify-end gap-3 pt-4">
@@ -277,7 +278,7 @@
                         type="button"
                         variant="outline"
                         wire:click="closeToggleModal">
-                        {{ __('Cancel') }}
+                        {{ __('manage-clients.Cancel') }}
                     </flux:button>
                 </flux:modal.close>
 
@@ -285,7 +286,7 @@
                     type="button"
                     variant="{{ $toggleModalWillActivate ? 'primary' : 'danger' }}"
                     wire:click="confirmToggle">
-                    {{ $toggleModalWillActivate ? __('Enable client') : __('Disable client') }}
+                    {{ $toggleModalWillActivate ? __('manage-clients.EnableClient') : __('manage-clients.DisableClient') }}
                 </flux:button>
             </div>
         </div>
@@ -297,11 +298,11 @@
         x-on:close="$wire.call('closeDeleteModal')">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ __('Delete client') }}
+                {{ __('manage-clients.DeleteClient') }}
             </flux:heading>
 
             <flux:text class="text-sm text-gray-700">
-                {{ __('Are you sure you want to delete :client? This action is irreversible.', ['client' => $toggleModalName]) }}
+                {{ __('manage-clients.ConfirmDeleteClient', ['client' => $toggleModalName]) }}
             </flux:text>
 
             <div class="flex justify-end gap-3 pt-4">
@@ -310,7 +311,7 @@
                         type="button"
                         variant="outline"
                         wire:click="closeDeleteModal">
-                        {{ __('Cancel') }}
+                        {{ __('manage-clients.Cancel') }}
                     </flux:button>
                 </flux:modal.close>
 
@@ -318,9 +319,11 @@
                     type="button"
                     variant="danger"
                     wire:click="confirmDelete">
-                    {{ __('Delete client') }}
+                    {{ __('manage-clients.deleteClient') }}
                 </flux:button>
             </div>
         </div>
     </flux:modal>
+
+<livewire:staff.assign-tests-to-client-modal />
 </div>

@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'clientsManager' => 'Cliëntenbeheer',
+    'SearchClients' => 'Zoek cliënten',
+    'SearchClientBy' => 'Zoek alle cliënten op naam of gebruikersnaam',
+    'SearchClientByAndActive' => 'Zoek actieve cliënten op naam of gebruikersnaam',
+    'addClient' => 'Cliënt toevoegen',
+    'HideInactive' => 'Verberg gedeactiveerde cliënten',
+    'ShowInactive' => 'Toon gedeactiveerde cliënten',
+    'NoInactiveFound' => 'Geen gedeactiveerde cliënten gevonden.',
+    'NoClientsFound' => 'Nog geen cliënten gevonden.',
+    'CreateClient' => 'Cliënt aanmaken',
+    'EditClient' => 'Cliënt bewerken',
+    'AddClient' => 'Cliënt toevoegen',
+    'ClientCanSignIn' => 'Cliënt kan inloggen',
+    'DeleteClient' => 'Cliënt verwijderen',
+    'EnableClient' => 'Cliënt inschakelen',
+    'DisableClient' => 'Cliënt uitschakelen',
+    'ConfirmEnableClient' => 'Weet je zeker dat je :client wilt inschakelen? Ze krijgen onmiddellijk weer toegang.',
+    'ConfirmDisableClient' => 'Weet je zeker dat je :client wilt uitschakelen? Ze verliezen toegang totdat ze opnieuw worden ingeschakeld.',
+    'Cancel' => 'Annuleren',
+    'SaveChanges' => 'Wijzigingen opslaan',
+    'assignTest' => 'Test toewijzen',
+    'viewResults' => 'Resultaten bekijken',
+    'noMentorAssigned' => 'Geen mentor toegewezen',
+    'deleteClient' => 'Cliënt verwijderen',
+    'ConfirmDeleteClient' => 'Weet je zeker dat je :client wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    'assignTestsToClient' => 'Tests toewijzen aan cliënt',
+    'selectTestsForClient' => 'Selecteer de tests die je wilt toewijzen aan <strong>:client</strong>.',
+    'selectClientFirst' => 'Selecteer eerst een cliënt om tests toe te wijzen.',
+    'assign' => 'Toewijzen',
+    'testsAssignedSuccess' => 'Tests succesvol toegewezen!',
+];

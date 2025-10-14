@@ -12,20 +12,20 @@
     <div class="flex flex-col gap-4 md:flex-row md:items-end-safe md:justify-between">
         <div class="flex-1">
             <flux:label class="block text-sm font-medium" for="client-search">
-                {{ __('Search clients') }}
+                {{ __('manage-clients.SearchClients') }}
             </flux:label>
             <flux:input
                 id="client-search"
                 type="search"
                 icon="magnifying-glass"
                 wire:model.live.debounce.300ms="search"
-                placeholder="{{ $showInactivated ? __('Search all clients by name or username') : __('Search active clients by name or username') }}" />
+                placeholder="{{ $showInactivated ? __('manage-clients.SearchClientBy') : __('manage-clients.SearchClientByAndActive') }}" />
         </div>
         <div class="flex-shrink-0 content-end">
             <flux:modal.trigger name="mentor-client-form">
 
                 <flux:button type="button" wire:click="startCreate" icon="user-plus" class="bg-color-mpi">
-                    {{ __('Add client') }}
+                    {{ __('manage-clients.AddClient') }}
                 </flux:button>
             </flux:modal.trigger>
         </div>
@@ -40,7 +40,7 @@
             wire:click="toggleShowInactivated"
             class="bg-color-mpi-500 text-amber-50">
 
-            {{ $showInactivated ? __('Hide inactivated clients') :  __('Show inactivated clients') }}
+            {{ $showInactivated ? __('manage-clients.HideInactive') :  __('manage-clients.ShowInactive') }}
         </flux:button>
     </div>
     @if ($showInactivated)
@@ -55,7 +55,7 @@
         x-on:close="$wire.call('closeFormModal')">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ $formModalMode === 'edit' ? __('Edit client') : __('Add client') }}
+                {{ $formModalMode === 'edit' ? __('manage-clients.EditClient') : __('manage-clients.AddClient') }}
             </flux:heading>
 
             <form wire:submit.prevent="save" class="space-y-6">
@@ -65,7 +65,7 @@
                             id="client-first-name"
                             type="text"
                             wire:model.defer="form.first_name"
-                            :label="__('First name')"
+                            :label="__('user.first_name')"
                             required
                             autofocus />
                         @error('form.first_name')
@@ -78,7 +78,8 @@
                             id="client-last-name"
                             type="text"
                             wire:model.defer="form.last_name"
-                            :label="__('Last name (optional)')" />
+                            required
+                            :label="__('user.last_name')" />
                         @error('form.last_name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -89,7 +90,7 @@
                             id="client-username"
                             type="text"
                             wire:model.defer="form.username"
-                            :label="__('Username')"
+                            :label="__('user.username')"
                             required />
                         @error('form.username')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -101,7 +102,7 @@
                             id="client-password"
                             type="password"
                             wire:model.defer="form.password"
-                            :label="$editingId ? __('New password (leave blank to keep current)') : __('Password')"
+                            :label="$editingId ? __('user.new_password_optional') : __('user.password')"
                             :required="!$editingId"
                             />
                         @error('form.password')
@@ -154,13 +155,13 @@
 
                     <div class="md:col-span-2">
                         <flux:label for="client-active" class="block text-sm font-medium">
-                            {{ __('Active') }}
+                            {{ __('user.account_status') }}
                         </flux:label>
                         <div class="mt-2">
                             <flux:checkbox
                                 id="client-active"
                                 wire:model.defer="form.active"
-                                :label="__('Client can sign in')" />
+                                :label="__('manage-clients.ClientCanSignIn')" />
                         </div>
                         @error('form.active')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -181,7 +182,7 @@
                     <flux:button
                         type="submit"
                         variant="primary">
-                        {{ $editingId ? __('Save changes') : __('Create client') }}
+                        {{ $editingId ? __('manage-clients.SaveChanges') : __('manage-clients.CreateClient') }}
                     </flux:button>
                 </div>
             </form>
@@ -223,4 +224,6 @@
             </div>
         </div>
     </flux:modal>
+
+<livewire:staff.assign-tests-to-client-modal />
 </div>

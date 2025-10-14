@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Faq;
 use App\Models\Role;
+use App\Models\OrganisationTest;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,13 +21,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $language = \App\Models\Language::create([
-            'language_code' => 'en',
-            'language_name' => 'English',
+            'language_code' => 'nl',
+            'language_name' => 'Dutch',
         ]);
 
         \App\Models\Language::create([
-            'language_code' => 'nl',
-            'language_name' => 'Dutch',
+            'language_code' => 'en',
+            'language_name' => 'English',
         ]);
 
         // Create roles
@@ -130,6 +131,27 @@ class DatabaseSeeder extends Seeder
        Faq::factory(5)->create();
 
        // Run the TestSeeder to populate test and question data
-       $this->call(TestSeeder::class);
+       $this->call(TestSeederOne::class);
+       $this->call(TestSeederTwo::class);
+
+       // TODO: no direct link to tests
+       OrganisationTest::create(
+        [
+            'organisation_id' => $organisation->organisation_id,
+            'test_id' => 1,
+        ]
+       );
+       OrganisationTest::create(
+        [
+            'organisation_id' => $organisation->organisation_id,
+            'test_id' => 2,
+        ]
+       );
+       OrganisationTest::create(
+        [
+            'organisation_id' => $organisation->organisation_id,
+            'test_id' => 3,
+        ]
+       );
     }
 }
