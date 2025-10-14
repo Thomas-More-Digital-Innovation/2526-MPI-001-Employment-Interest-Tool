@@ -27,6 +27,18 @@ class TestContentOverviewTest extends TestCase
         return $mentor;
     }
 
+    protected function createAdminUser(): User 
+    {
+        $adminRole = Role::factory()->create([
+            'role' => Role::ADMIN,
+        ]);
+
+        $admin = User::factory()->create();
+        $admin->roles()->attach($adminRole->role_id);
+
+        return $admin;
+    }
+
     public function test_redirects_to_picker_when_no_test_selected(): void
     {
         $mentor = $this->createMentorUser();
@@ -34,11 +46,16 @@ class TestContentOverviewTest extends TestCase
         Livewire::actingAs($mentor)
             ->test(TestContentOverview::class)
             ->assertRedirect(route('staff.test-picker'));
+
+        $admin = $this->createAdminUser();
+
+        Livewire::actingAs($admin)
+            ->test(TestContentOverview::class)
+            ->assertRedirect(route('staff.test-picker'));
     }
 
-    public function test_loads_test_content_when_test_selected(): void
+    private function loads_test_content_when_test_selected(User $user): void
     {
-        $mentor = $this->createMentorUser();
         $test = TestModel::factory()->create([
             'test_name' => 'Sample Staff Test',
         ]);
@@ -52,7 +69,7 @@ class TestContentOverviewTest extends TestCase
 
         session(['testId' => $test->test_id]);
 
-        Livewire::actingAs($mentor)
+        Livewire::actingAs($user)
             ->test(TestContentOverview::class)
             ->assertSet('testId', $test->test_id)
             ->assertSet('testName', $test->test_name)
@@ -62,6 +79,18 @@ class TestContentOverviewTest extends TestCase
             ->assertSee('First question?')
             ->assertSee('Second question?')
             ->assertSee('Sample Staff Test');
+    }
+
+    public function test_loads_test_content_when_test_selected_for_mentor(): void
+    {
+        $mentor = $this->createMentorUser();
+        $this->loads_test_content_when_test_selected($mentor);
+    }
+
+    public function test_loads_test_content_when_test_selected_for_admin(): void
+    {
+        $admin = $this->createAdminUser();
+        $this->loads_test_content_when_test_selected($admin);
     }
 
     public function test_redirects_to_picker_when_not_authenticated(): void
