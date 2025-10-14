@@ -3,7 +3,7 @@
         {{-- Base form for inputting question data --}}
         <form wire:submit.prevent class="space-y-4" wire:key="editor-{{ $selectedQuestion }}">
             {{-- Name of the whole test --}}
-            <flux:input wire:model.defer="test_name" placeholder="Test Name" label="Test Name" type="text" />
+            <flux:input wire:model.defer="test_name" placeholder="{{ __('testcreation.test_name_placeholder') }}" label="{{ __('testcreation.test_name_label') }}" type="text" />
             <div class="flex flex-col md:flex-row bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 rounded-2xl">
                 {{-- Image display area --}}
                 <div class="bg-zinc-300 min-h-[25vh] dark:bg-zinc-600 rounded-2xl flex-1 flex items-center justify-center m-4">
@@ -26,7 +26,7 @@
                              alt="Question Image"
                              class="rounded-2xl max-h-full max-w-full object-contain">
                     @else
-                        <span class="text-zinc-500 dark:text-zinc-400">No image uploaded</span>
+                        <span class="text-zinc-500 dark:text-zinc-400">{{ __('testcreation.no_image_uploaded') }}</span>
                     @endif
                 </div>
                 {{-- Where the selected question is shown --}}
@@ -36,25 +36,24 @@
                         <flux:input
                             class="mb-2"
                             wire:model.live.debounce.50ms="questions.{{ $selectedQuestion }}.title"
-                            placeholder="Title"
+                            placeholder="{{ __('testcreation.title_placeholder') }}"
                             :loading="false"
-                            label="Title"
+                            label="{{ __('testcreation.title_label') }}"
                             type="text"
                         />
                         {{-- Input for the description --}}
                         <flux:textarea
                             class="mb-2"
                             wire:model.live.debounce.300ms="questions.{{ $selectedQuestion }}.description"
-                            placeholder="Description"
-                            label="Image Description"
+                            placeholder="{{ __('testcreation.description_placeholder') }}"
+                            label="{{ __('testcreation.description_label') }}"
                         />
                         {{-- Selection of interest field --}}
                         <flux:select
-
-                            label="Interest Field"
+                            label="{{ __('testcreation.interest_field_label') }}"
                             wire:model.live="questions.{{ $selectedQuestion }}.interest"
                         >
-                            <flux:select.option value="-1">Choose interest field...</flux:select.option>
+                            <flux:select.option value="-1">{{ __('testcreation.choose_interest_field') }}</flux:select.option>
                             @foreach ($interestFields as $interestField)
                                 <flux:select.option value="{{ $interestField->interest_field_id }}">{{ $interestField->getName(app()->getLocale()) }}</flux:select.option>
                             @endforeach
@@ -75,16 +74,16 @@
                             class="flex items-center gap-3"
                         >
                             <!-- Record controls -->
-                            <button @click="start" x-show="canRecord && !isRecording" class="px-3 py-2 rounded bg-red-600 text-white">● Record</button>
-                            <button @click="stop" x-show="canRecord && isRecording" class="px-3 py-2 rounded bg-gray-800 text-white">Stop</button>
+                            <button @click="start" x-show="canRecord && !isRecording" class="px-3 py-2 rounded bg-red-600 text-white">● {{ __('testcreation.record') }}</button>
+                            <button @click="stop" x-show="canRecord && isRecording" class="px-3 py-2 rounded bg-gray-800 text-white">{{ __('testcreation.stop') }}</button>
 
                             <!-- Play/Pause -->
                             <button @click="togglePlay" x-show="hasAudio" class="px-3 py-2 rounded bg-blue-600 text-white">
-                                <span x-text="isPlaying ? 'Pause' : 'Play'"></span>
+                                <span x-text="isPlaying ? '{{ __('testcreation.pause') }}' : '{{ __('testcreation.play') }}'"></span>
                             </button>
 
                             <!-- Clear the sound (re-enables recording) -->
-                            <button @click="clearAll" x-show="hasAudio || !canRecord" class="px-3 py-2 rounded bg-gray-200">Clear</button>
+                            <button @click="clearAll" x-show="hasAudio || !canRecord" class="px-3 py-2 rounded bg-gray-200">{{ __('testcreation.clear') }}</button>
                             <!-- Status/Error label -->
                             <span class="text-sm text-gray-600" x-text="label"></span>
                             <!-- Hidden audio element for making playing audio possible -->
@@ -97,7 +96,7 @@
                                 wire:model="questions.{{ $selectedQuestion }}.uploaded_sound"
                                 accept=".mp3,audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm"
                                 class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                x-on:change="label = 'Uploading...';"
+                                x-on:change="label = '{{ __('testcreation.uploading') }}';"
                                 x-bind:disabled="!canRecord"
                             >
                             @error('questions.'.$selectedQuestion.'.uploaded_sound')
@@ -122,7 +121,7 @@
             </div>
             {{-- Submit button --}}
             <div>
-                <flux:button wire:click="uploadTest" variant="primary" color="rose">Submit</flux:button>
+                <flux:button wire:click="uploadTest" variant="primary" color="rose">{{ __('testcreation.submit') }}</flux:button>
             </div>
         </div>
     </main>
@@ -131,7 +130,7 @@
         <div class="flex-col mt-3 bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 pl-2 rounded-xl flex items-center justify-between mb-4">
             {{-- Header + Button to add questions --}}
             <div class="flex w-full justify-between p-2 items-center">
-                <flux:heading size="lg">Questions</flux:heading>
+                <flux:heading size="lg">{{ __('testcreation.questions') }}</flux:heading>
                 <flux:button type="button" wire:click.stop="createQuestion" variant="primary" color="green">+</flux:button>
             </div>
             {{-- Container to list + sort questions automatically, Basic-sortable is a selector for the sortable.js script --}}
@@ -161,7 +160,9 @@
                             </svg>
                         </div>
                         {{-- Button that assigns the clicked question as the selected one and displays the values on the main container, text is truncated and shows up on hover as a tooltip :-) --}}
-                        <flux:button variant="ghost" class="w-full justify-start text-left truncate whitespace-nowrap overflow-hidden" wire:click="selectQuestion({{ $index }})" title="{{ $question['title'] ?? 'Untitled' }}">{{ $question['title'] ? 'Question ' . ($index + 1) . ' - ' . $question['title'] : 'Question ' . ($index + 1) . ' - Undefined' }}</flux:button>
+                        <flux:button variant="ghost" class="w-full justify-start text-left truncate whitespace-nowrap overflow-hidden" wire:click="selectQuestion({{ $index }})" title="{{ $question['title'] ?? __('testcreation.untitled') }}">
+                            {{ $question['title'] ? __('testcreation.question_title', ['number' => $index + 1, 'title' => $question['title']]) : __('testcreation.question_undefined', ['number' => $index + 1]) }}
+                        </flux:button>
                         {{-- Button + svg of a trashcan that removes the question from the array :) --}}
                         <flux:button variant="ghost" wire:click="removeQuestion({{ $index }})">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>

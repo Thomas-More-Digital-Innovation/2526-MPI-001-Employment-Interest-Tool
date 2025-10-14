@@ -32,7 +32,7 @@ class TestCreation extends Component
     {
         // Fetch all interest fields from the database
         $this->interestFields = InterestField::all();
-        // retrieve from the session (possible) given data by TestEdit
+        // retrieve from the session (possible) given data by 
         $editId = session()->pull('edit_test_id');
         $editName = session()->pull('edit_test_name');
         $editQuestions = session()->pull('edit_questions');

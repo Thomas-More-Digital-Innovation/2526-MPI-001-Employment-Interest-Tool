@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'test_name_placeholder' => 'Test Name',
+    'test_name_label' => 'Test Name',
+    'no_image_uploaded' => 'No image uploaded',
+    'title_placeholder' => 'Title',
+    'title_label' => 'Title',
+    'description_placeholder' => 'Description',
+    'description_label' => 'Image Description',
+    'interest_field_label' => 'Interest Field',
+    'choose_interest_field' => 'Choose interest field...',
+    'record' => 'Record',
+    'stop' => 'Stop',
+    'play' => 'Play',
+    'pause' => 'Pause',
+    'clear' => 'Clear',
+    'uploading' => 'Uploading...',
+    'submit' => 'Submit',
+    'questions' => 'Questions',
+    'untitled' => 'Untitled',
+    'question_title' => 'Question :number - :title',
+    'question_undefined' => 'Question :number - Undefined',
+];
