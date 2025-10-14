@@ -24,11 +24,8 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli gd bcmath zip \
 
 WORKDIR /usr/share/nginx/html/
 
-# Copy the codebase, including the public folder
+# Copy the codebase
 COPY . .
-
-# Ensure the public folder and index.php are included
-RUN ls -la public && ls -la public/index.php
 
 # Run composer install for production and give permissions
 RUN sed 's_@php artisan package:discover_/bin/true_;' -i composer.json \
