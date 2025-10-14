@@ -30,12 +30,13 @@ class TestCreation extends Component
     // Runs on page start, sends needed information (interestfields from db + an array for the questions and an initial blank question)
     public function mount(): void
     {
+        // Fetch all interest fields from the database
         $this->interestFields = InterestField::all();
-
+        // retrieve from the session (possible) given data by TestEdit
         $editId = session()->pull('edit_test_id');
         $editName = session()->pull('edit_test_name');
         $editQuestions = session()->pull('edit_questions');
-
+        // If editing, load the test data into the component's state
         if ($editId !== null) {
             $this->test_id = $editId;
             $this->test_name = $editName ?? '';
@@ -230,47 +231,75 @@ class TestCreation extends Component
         $this->questions = array_values($items);
     }
 
+    public function clearSound(int $index): void
+    {
+        if (!isset($this->questions[$index])) return;
+
+        // optionally delete file from disk if it exists
+        $filename = $this->questions[$index]['sound_link'] ?? null;
+        if ($filename && Storage::disk('public')->exists($filename)) {
+            Storage::disk('public')->delete($filename);
+        }
+
+        // reset question audio state
+        $this->questions[$index]['sound_link'] = null;
+        $this->questions[$index]['has_audio']  = false;
+
+        // tell the front-end
+        $this->dispatch('sound-cleared', index: $index);
+    }
+
 
 
     public function uploadSound(int $index): void
     {
+        // Check if file was uploaded
         if (!isset($this->questions[$index]['uploaded_sound'])) {
             $this->addError("questions.$index.uploaded_sound", 'No file uploaded.');
             return;
         }
-
+        // Define the uploaded file and it's type
         /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile $uploadedFile */
         $uploadedFile = $this->questions[$index]['uploaded_sound'];
 
         try {
-            // validate like image, keep it simple but friendly to MediaRecorder
+            // Validate the uploaded file
             $this->validate([
                 "questions.$index.uploaded_sound" => "required|file|mimetypes:audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm,video/webm,audio/mp4,audio/x-m4a,audio/aac|max:5120",
             ]);
+            // Check if file is valid
+            if (!$uploadedFile->isValid()) {
+                throw new \RuntimeException('Invalid upload.');
+            }
+            // get file extension, default to webm if none
+            $extension = strtolower($uploadedFile->getClientOriginalExtension() ?: 'webm');
 
-            if ($uploadedFile->isValid()) {
-                $extension = strtolower($uploadedFile->getClientOriginalExtension() ?: 'webm');
+            // unique filename in public disk root
+            do {
+                // q0_ for question 0, q1_ for question 1, etc
+                $filename = uniqid('q'.$index.'_').'.'.$extension;
+                $exists = Storage::disk('public')->exists($filename);
+            } while ($exists);
 
-                // generate a unique filename in the *public disk root*, same as your image flow
-                do {
-                    $filename = uniqid().'.'.$extension;
-                    $exists = \Storage::disk('public')->exists($filename);
-                } while ($exists);
-
-                // store to public disk root
-                $path = $uploadedFile->storeAs('', $filename, 'public');
-
-                if ($path) {
-                    // store only filename in state, identical to image logic
-                    $this->questions[$index]['sound_link'] = $filename;
-                }
+            // Store the file in the public disk root
+            $path = $uploadedFile->storeAs('', $filename, 'public');
+            if (!$path) {
+                throw new \RuntimeException('Failed storing file.');
             }
 
-            // clear temp after processing
-            unset($this->questions[$index]['uploaded_sound']);
-        } catch (\Throwable $e) {
+            // Save only filename in question state
+            $this->questions[$index]['sound_link'] = $filename;
+            $this->questions[$index]['has_audio']  = true;
+
+            // notify front-end with absolute playback URL
+            $url = route('question.sound', ['filename' => $filename]);
+            $this->dispatch('sound-updated', index: $index, url: $url);
+
+            // clear temp
             unset($this->questions[$index]['uploaded_sound']);
 
+        } catch (\Throwable $e) {
+            unset($this->questions[$index]['uploaded_sound']);
             throw \Illuminate\Validation\ValidationException::withMessages([
                 "questions.$index.uploaded_sound" => 'Failed to upload the sound.',
             ]);
@@ -326,6 +355,12 @@ class TestCreation extends Component
 
     public function render()
     {
-        return view('livewire.roles.superadmin.test-creation');
+        // Pass the sound URL of the selected question to the view
+        $idx = $this->selectedQuestion;
+        $soundUrl = null;
+        if (isset($this->questions[$idx]['sound_link']) && $this->questions[$idx]['sound_link']) {
+            $soundUrl = route('question.sound', ['filename' => $this->questions[$idx]['sound_link']]);
+        }
+        return view('livewire.roles.superadmin.test-creation', compact('soundUrl'));
     }
 }
