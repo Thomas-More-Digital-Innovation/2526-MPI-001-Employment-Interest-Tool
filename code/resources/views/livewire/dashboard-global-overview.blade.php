@@ -27,9 +27,10 @@
     <div class="flex flex-wrap dark:bg-white bg-gray-500 dark:text-black text-white rounded-lg px-4 py-5">
         <h2 class="text-center w-full text-xl font-bold">{{__('pagesresearcher.timesIntrestfieldChosen')}}</h2>
         <div class="sm:w-full h-auto xl:w-3/4 xl:px-2 bg-white rounded-md">
+            {{-- Take only the first elements of the data--}}
             <livewire:chart
-                :labels="$mostChosenIntrestFields->pluck('interest_field_name')"
-                :data="$mostChosenIntrestFields->pluck('total_chosen')"
+                :labels="$mostChosenIntrestFields->pluck('interest_field_name')->take(10)"
+                :data="$mostChosenIntrestFields->pluck('total_chosen')->take(10)"
                 class="max-w-1"
             />
         </div>

@@ -1,8 +1,7 @@
 services:
   app:
     container_name: app
-    build:
-      dockerfile: Dockerfile
+    image: mpi-employment-interest-tool:latest
     restart: unless-stopped
     ports:
       - 9000:9000
@@ -17,24 +16,21 @@ services:
       DB_DATABASE: ${DB_DATABASE}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
-      HOST_UID: ${HOST_UID}
-      HOST_GID: ${HOST_GID}
     volumes:
       - storage:/usr/share/nginx/html/storage:rw
-      - ./public:/usr/share/nginx/html/public:rw
+      - build-assets:/usr/share/nginx/html/public:rw
   nginx:
     container_name: nginx
-    image: nginx:1-alpine
+    image: custom-nginx:latest
     ports:
       - 443:443
     depends_on:
       - app
     restart: unless-stopped
     volumes:
-      - ./nginx.conf:/etc/nginx/templates/default.conf.template
       - /etc/laravel/ssl:/etc/nginx/ssl:ro # SSL certs generated beforehand
       - storage:/usr/share/nginx/html/storage:rw
-      - ./public:/usr/share/nginx/html/public:ro
+      - build-assets:/usr/share/nginx/html/public:ro
   db:
     container_name: db
     image: mariadb:11
@@ -88,3 +84,4 @@ volumes:
   storage:
   db-data:
   redis-data:
+  build-assets:
