@@ -23,4 +23,13 @@ return [
     'untitled' => 'Zonder titel',
     'question_title' => 'Vraag :number - :title',
     'question_undefined' => 'Vraag :number - Niet gedefinieerd',
+    'audio_loaded' => 'Audio geladen',
+    'can_record' => 'Kan opnemen, geen geluidsbestand toegevoegd',
+    'record_cleared' => 'Uitgeschakeld. U kunt opnieuw opnemen of bladeren',
+    'audio_ready' => 'Klaar voor audio',
+    'recording' => 'Opname...',
+    'uploading' => 'Uploaden...',
+    'uploaded' => 'Geüpload',
+    'upload_failed' => 'Uploaden mislukt',
+    'clearing' => 'Verrekening...'
 ];
