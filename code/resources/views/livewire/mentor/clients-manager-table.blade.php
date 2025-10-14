@@ -6,12 +6,12 @@
     <x-table class="min-w-full divide-y divide-gray-800" border>
         <thead class="bg-gray-50 dark:bg-zinc-600">
             <tr class="text-left text-sm font-semibold text-gray-700 dark:text-gray-200">
-                <th class="px-4 py-3">{{ __('First name') }}</th>
-                <th class="px-4 py-3">{{ __('Last name') }}</th>
-                <th class="px-4 py-3">{{ __('Username') }}</th>
-                <th class="px-4 py-3">{{ __('Language') }}</th>
-                <th class="px-4 py-3">{{ __('Status') }}</th>
-                <th class="px-4 py-3 text-right">{{ __('Actions') }}</th>
+                <th class="px-4 py-3">{{ __('user.first_name') }}</th>
+                <th class="px-4 py-3">{{ __('user.last_name') }}</th>
+                <th class="px-4 py-3">{{ __('user.username') }}</th>
+                <th class="px-4 py-3">{{ __('user.language') }}</th>
+                <th class="px-4 py-3">{{ __('user.status') }}</th>
+                <th class="px-4 py-3 text-right">{{ __('user.actions') }}</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
@@ -23,7 +23,7 @@
                 <td class="px-4 py-3">{{ optional($client->language)->language_name }}</td>
                 <td class="px-4 py-3">
                     <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $client->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                        {{ $client->active ? __('Active') : __('Inactive') }}
+                        {{ $client->active ? __('user.active') : __('user.inactive') }}
                     </span>
                 </td>
                 <td class="px-4 py-3 text-right">
@@ -36,7 +36,7 @@
                             <flux:menu.item
                                 icon="pencil"
                                 wire:click="startEdit({{ $client->user_id }})">
-                                {{ __('Edit') }}
+                                {{ __('manage-clients.EditClient') }}
                             </flux:menu.item>
 
                             <flux:menu.separator />
@@ -44,43 +44,17 @@
                             <flux:menu.item
                                 icon="eye"
                                 wire:click="viewTests({{ $client->user_id }})">
-                                {{ __('View tests') }}
+                                {{ __('manage-clients.viewResults') }}
                             </flux:menu.item>
 
                             <flux:menu.item
                                 icon="plus-circle"
                                 wire:click="assignTests({{ $client->user_id }})">
-                                {{ __('Assign tests') }}
+                                {{ __('manage-clients.assignTest') }}
                             </flux:menu.item>
                         </flux:menu>
                     </flux:dropdown>
                 </td>
-{{--                In comment in case we need it back--}}
-                {{--                <td class="px-4 py-3">--}}
-{{--                    <div class="flex justify-end gap-2">--}}
-{{--                        <flux:modal.trigger name="">--}}
-{{--                            <flux:button--}}
-{{--                                type="button"--}}
-{{--                                variant="outline"--}}
-{{--                                size="sm"--}}
-{{--                                icon="eye"--}}
-{{--                                color="green"--}}
-{{--                                wire:click="viewTests({{ $client->user_id }})">--}}
-{{--                                {{ __('viewTests') }}--}}
-{{--                            </flux:button>--}}
-{{--                        </flux:modal.trigger>--}}
-{{--                        <flux:modal.trigger name="mentor-client-form">--}}
-{{--                            <flux:button--}}
-{{--                                type="button"--}}
-{{--                                variant="outline"--}}
-{{--                                size="sm"--}}
-{{--                                icon="pencil"--}}
-{{--                                wire:click="startEdit({{ $client->user_id }})">--}}
-{{--                                {{ __('Edit') }}--}}
-{{--                            </flux:button>--}}
-{{--                        </flux:modal.trigger>--}}
-{{--                    </div>--}}
-{{--                </td>--}}
             </tr>
             @empty
             <tr>
