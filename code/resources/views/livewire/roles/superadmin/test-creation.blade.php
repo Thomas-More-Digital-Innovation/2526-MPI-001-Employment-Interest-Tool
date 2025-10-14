@@ -121,7 +121,7 @@
             </div>
             {{-- Submit button --}}
             <div>
-                <flux:button wire:click="uploadTest" variant="primary" color="rose">{{ __('testcreation.submit') }}</flux:button>
+                <flux:button wire:click="uploadTest" variant="primary" color="rose">{{ __('Save') }}</flux:button>
             </div>
         </div>
     </main>
