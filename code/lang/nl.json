@@ -1,4 +1,5 @@
 {
+    "Tests": "Testen",
     "(and :count more error)": "(en :count andere foutmelding)",
     "(and :count more errors)": "(en :count andere foutmelding)|(en :count andere foutmeldingen)|(en :count andere foutmeldingen)",
     "A decryption key is required.": "Een decryptiesleutel is verplicht.",

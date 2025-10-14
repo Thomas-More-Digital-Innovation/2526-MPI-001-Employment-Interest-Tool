@@ -10,7 +10,7 @@
             <thead class="bg-gray-50 dark:bg-zinc-600">
                 <tr class="text-left text-sm font-semibold text-gray-700 dark:text-gray-200">
                     <th class="px-4 py-3">#</th>
-                    <th class="px-4 py-3">{{ __('Test name') }}</th>
+                    <th class="px-4 py-3">{{ __('client-tests.Test_name') }}</th>
                     <th class="px-4 py-3">{{ __('Status') }}</th>
                     <th class="px-4 py-3 text-right">{{ __('Actions') }}</th>
                 </tr>
@@ -23,9 +23,11 @@
                     <td class="px-4 py-3">{{ $attempt->test->test_name ?? data_get($attempt, 'attempt.test.name', '—') }}</td>
                     <td class="px-4 py-3">
                         @if($attempt->finished)
-                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-green-100 text-green-800">{{ __('Completed') }}</span>
+                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-green-100 text-green-800">
+                            {{ __('client-tests.Completed') }}</span>
                         @else
-                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800">{{ __('Pending') }}</span>
+                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800">
+                            {{ __('client-tests.Uncompleted') }}</span>
                         @endif
                     </td>
                     <td class="px-4 py-3">
@@ -36,7 +38,7 @@
                                 icon="eye"
                                 class="bg-color text-amber-50"
                                 wire:click="viewTestResults({{ $attempt->test_attempt_id }})">
-                                {{ __('View results') }}
+                                {{ __('client-tests.ViewResults') }}
                             </flux:button>
                         </div>
                     </td>
