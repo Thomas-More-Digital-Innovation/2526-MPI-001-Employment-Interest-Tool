@@ -4,7 +4,7 @@
             <h2>{{ $attempt->test->test_name }}</h2>
             <p>{{ __('user.attempted_at') }}: {{ $attempt->created_at->format('d M Y, H:i') }} 
                 @if($attempt->finished) <button disabled>Finished</button> 
-                @else <button wire:click="continueTest({{ $index }})">Continue</button> @endif</p>
+                @else <flux:button variant="primary" color="orange" :size="'xl'" wire:click="continueTest({{ $index }})">Continue</flux:button> @endif</p>
         </div>
     @endforeach
 </div>
