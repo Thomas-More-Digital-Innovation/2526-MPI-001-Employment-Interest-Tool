@@ -6,11 +6,13 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Collection;
-use Livewire\WithPagination;
 class TestContentOverview extends Component
 {
     public string $testName;
-    public $testContent; // Collection<int, Question>
+    /**
+     * @var Collection<int, Question>
+     */
+    public $testContent;
     public ?int $testId;
     public ?int $userId;
     public int $totalQuestions;
