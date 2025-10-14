@@ -29,7 +29,7 @@
                 <td class="px-4 py-3 text-right">
                     <flux:dropdown placement="bottom-end">
                         <flux.dropdown.trigger>
-                            <flux:button size="sm" variant="outline" icon="chevrons-up-down" />
+                            <flux:button size="sm" variant="outline" icon="chevrons-up-down"> Actions </flux:button>
                         </flux.dropdown.trigger>
 
                         <flux:menu>
