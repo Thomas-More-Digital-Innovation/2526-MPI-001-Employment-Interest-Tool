@@ -85,14 +85,23 @@ jobs:
             code/compose.test.prod.yml \
             mpi@mpissh2.stijnrombouts.be:~/compose.yml
 
-    # Extract the images on the vm
-    - name: Extract Docker images on VM
+    # Import the images on the vm
+    - name: Import Docker images on VM
       run: |
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             mpi@mpissh2.stijnrombouts.be \
-            "docker load -i ~/mpi-employment-interest-tool.tar && docker load -i ~/custom-nginx.tar"
+            "docker import \
+              --change 'ENTRYPOINT [\"/usr/local/bin/php-entrypoint\"]' \
+              --change 'CMD [\"php-fpm\"]' \
+              --change 'EXPOSE 9000' \
+              --change 'WORKDIR /usr/share/nginx/html/' \
+              ~/mpi-employment-interest-tool.tar mpi-employment-interest-tool:latest && \
+            docker import \
+              --change 'CMD [\"nginx\", \"-g\", \"daemon off;\"]' \
+              --change 'EXPOSE 443' \
+              ~/custom-nginx.tar custom-nginx:latest"
     
     # Start the compose on the vm
     - name: Start Docker Compose on VM
