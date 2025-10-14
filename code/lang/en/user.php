@@ -27,5 +27,6 @@ return [
     'profile_picture_preview' => 'Profile picture preview',
     'previous_attempts' => 'Previous attempts',
     'attempted_at' => 'Attempted at',
-    'return_to_dashboard' => 'Return to dashboard'
+    'return_to_dashboard' => 'Return to dashboard',
+    'view_results' => 'View results',
 ];
