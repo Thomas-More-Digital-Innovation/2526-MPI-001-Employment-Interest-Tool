@@ -185,7 +185,7 @@
                     hasAudio: false,
                     canRecord: true,
 
-                    label: __('testcreation.can_record'),
+                    label: @js(__('testcreation.can_record')),
 
                     
                     _stream: null,
@@ -196,7 +196,7 @@
                         // Logic for loading existing audio if available in the DB
                         if (this.existingUrl) {
                             this._setAudio(this.existingUrl);
-                            this.label = __('testcreation.audio_loaded');
+                            this.label = @js(__('testcreation.audio_loaded'));
                             this.hasAudio = true;
                             this.canRecord = false;
                         } else {
@@ -218,7 +218,7 @@
                             const { index, url } = e.detail || {};
                             if (index === this.qid && url) {
                                 this._setAudio(url);
-                                this.label = __('testcreation.audio_ready');
+                                this.label = @js(__('testcreation.audio_ready'));
                                 this.hasAudio = true;
                                 this.canRecord = false;
                             }
@@ -228,7 +228,7 @@
                             const { index } = e.detail || {};
                             if (index === this.qid) {
                                 this._clearAudioEl();
-                                this.label = __('testcreation.record_cleared');
+                                this.label = @js(__('testcreation.record_cleared'));
                                 this.hasAudio = false;
                                 this.canRecord = true;
                             }
@@ -250,7 +250,7 @@
                         this._rec.onstop = () => { this._onStopRecording(); };
                         this._rec.start();
                         this.isRecording = true;
-                        this.label = __('testcreation.recording');
+                        this.label = @js(__('testcreation.recording'));
                     },
                     // Stop recording
                     stop() {
@@ -272,17 +272,17 @@
                         const file = new File([blob], `rec_${Date.now()}.webm`, { type: 'audio/webm' });
                         
                         this.canRecord = false;
-                        this.label = __('testcreation.uploading');
+                        this.label = @js(__('testcreation.uploading'));
 
                         
                         this.$wire.upload(`questions.${this.qid}.uploaded_sound`, file,
                             () => {
                                 
-                                this.label = __('testcreation.uploaded');
+                                this.label = @js(__('testcreation.uploaded'));
                             },
                             (err) => {
                                 
-                                this.label = __('testcreation.upload_failed');
+                                this.label = @js(__('testcreation.upload_failed'));
                                 this.canRecord = true;
                                 this.hasAudio = false;
                                 this._clearAudioEl();
@@ -306,7 +306,7 @@
                     // Clear the audio, re-enable recording
                     async clearAll() {
                         
-                        this.label = __('testcreation.clearing');
+                        this.label = @js(__('testcreation.clearing'));
                         await this.$wire.call('clearSound', this.qid);
                         
                     },
