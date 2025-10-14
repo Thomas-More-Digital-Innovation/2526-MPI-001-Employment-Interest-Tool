@@ -1,8 +1,7 @@
 services:
   app:
     container_name: app
-    build:
-      dockerfile: Dockerfile
+    image: mpi-employment-interest-tool:latest
     restart: unless-stopped
     ports:
       - 9000:9000
@@ -23,9 +22,7 @@ services:
       - storage:/usr/share/nginx/html/storage:rw
   nginx:
     container_name: nginx
-    build:
-      context: .
-      dockerfile: code/Dockerfile.nginx
+    image: custom-nginx:latest
     ports:
       - 443:443
     depends_on:
