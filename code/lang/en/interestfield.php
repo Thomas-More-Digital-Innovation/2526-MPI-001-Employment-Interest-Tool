@@ -26,4 +26,6 @@ return [
     'select_valid_language' => 'Please select a valid language.',
     'language_not_found' => 'Language not found for the provided code.',
     'no_fields_found' => 'No interest fields found yet.',
+    'add_translation' => 'Add translation',
+    'select_language' => 'Select a language',
 ];
