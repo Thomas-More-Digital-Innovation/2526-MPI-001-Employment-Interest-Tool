@@ -24,7 +24,9 @@
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800">{{ __('Pending') }}</span>
                     @endif
                 </td>
-                <td class="px-4 py-3">{{ $attempt->created_at ? $attempt->created_at->format('d M Y, H:i') : '—' }}</td>
+                <td class="px-4 py-3">
+                    <time data-iso-datetime="{{ $attempt->created_at->toIsoString() }}">{{ $attempt->created_at->toIsoString() }}</time>
+                </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end gap-2">
                         <flux:button
@@ -48,3 +50,4 @@
         </tbody>
     </x-table>
 </div>
+@include('livewire._datetime-localize')
