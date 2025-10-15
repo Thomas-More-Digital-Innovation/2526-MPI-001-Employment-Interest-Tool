@@ -52,8 +52,8 @@ class TestDetails extends Component
             $fieldYesCount = [];
 
             foreach ($this->attempt->answers as $answer) {
-                $question = $answer->question ?? null;
-                $interest = $question && isset($question->interestField) ? $question->interestField : null;
+                $question = $answer->question;
+                $interest = $question->interestField;
 
                 $fieldId = $interest->interest_field_id;
 
