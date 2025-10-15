@@ -324,4 +324,6 @@
             </div>
         </div>
     </flux:modal>
+
+<livewire:staff.assign-tests-to-client-modal />
 </div>

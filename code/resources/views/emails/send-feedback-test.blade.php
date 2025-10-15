@@ -36,6 +36,13 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #F9F9F9;
+                color: black;
+            }
+        }
+
         table {
             border-collapse: separate;
             table-layout: fixed;
@@ -177,7 +184,7 @@
                                                     <table role="presentation" cellpadding="0" cellspacing="0" style="margin:auto;">
                                                         <tr>
                                                             <td width="154" style="overflow:hidden; background-color:#0057FF; text-align:center; line-height:40px; border-radius:8px;">
-                                                                <a href="{{$website}}" target="_blank" style="display:block; font-family:Inter,Arial,sans-serif; font-size:15px; font-weight:700; line-height:40px; color:#FFFFFF; text-decoration:none;">
+                                                                <a href="{{config('app.url')}}" target="_blank" style="display:block; font-family:Inter,Arial,sans-serif; font-size:15px; font-weight:700; line-height:40px; color:#FFFFFF; text-decoration:none;">
                                                                     Ga naar de website
                                                                 </a>
                                                             </td>
