@@ -17,8 +17,9 @@
 
         <!-- Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @fluxAppearance()
     </head>
-    <body class="">
+    <body class="light">
         @if (Route::has('login'))
             @auth
             @else
@@ -42,5 +43,6 @@
             @endauth
         @endif
         <x-faq pageHeight="min-h-screen"/>
+        @fluxScripts()
     </body>
 </html>

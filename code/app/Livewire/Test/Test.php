@@ -28,7 +28,7 @@ class Test extends Component
     public $imageDescription;
     public $audio;
 
-    public $questionNumber = 1;
+    public $questionNumber;
 
     public $totalQuestions;
 

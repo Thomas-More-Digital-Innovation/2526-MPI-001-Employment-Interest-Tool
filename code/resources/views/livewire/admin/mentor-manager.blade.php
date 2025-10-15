@@ -197,7 +197,7 @@
                     <flux:button
                         type="submit"
                         variant="primary">
-                        {{ $editingId ? __('Save changes') : __('manage-mentors.CreateMentor') }}
+                        {{ $editingId ? __('Save') : __('manage-mentors.CreateMentor') }}
                     </flux:button>
                 </div>
             </form>

@@ -28,4 +28,9 @@ return [
     'noMentorAssigned' => 'No mentor assigned',
     'deleteClient' => 'Delete client',
     'ConfirmDeleteClient' => 'Are you sure you want to delete :client? This action cannot be undone.',
+    'assignTestsToClient' => 'Assign Tests to Client',
+    'selectTestsForClient' => 'Select the tests you want to assign to <strong>:client</strong>.',
+    'selectClientFirst' => 'Select a client to assign tests.',
+    'assign' => 'Assign',
+    'testsAssignedSuccess' => 'Tests assigned successfully!',
 ];
