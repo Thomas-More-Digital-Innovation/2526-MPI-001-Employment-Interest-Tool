@@ -107,27 +107,27 @@
                                 <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="my-5">
+                            <label for="Upload-Image" class="px-4 py-2 border rounded-md shadow-sm text-sm text-gray-700 bg-white cursor-pointer hover:bg-gray-100">
+                                {{ __('actions.choose_file') }} {{ __('Image') }}
+                            </label>
+                            <input
+                                id="Upload-Image" 
+                                type="file"
+                                wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
+                                accept="image/*"
+                                class="hidden">
+                            @error('questions.'.$selectedQuestion.'.uploaded_image')
+                                <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                     </div>
                 </div>
             </div>
         </form>
-        {{-- Container for uploading images --}}
-        <div class="my-3 flex mt-4 items-center justify-between w-full gap-4" wire:key="upload-{{ $selectedQuestion }}">
-            <div class="flex-1">
-                <label for="Upload-Image" class="px-4 py-2 border rounded-md shadow-sm text-sm text-gray-700 bg-white cursor-pointer hover:bg-gray-100">
-                  {{ __('actions.choose_file') }} {{ __('Image') }}
-                </label>
-                <input
-                    id="Upload-Image" 
-                    type="file"
-                    wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
-                    accept="image/*"
-                    class="hidden">
-                @error('questions.'.$selectedQuestion.'.uploaded_image')
-                    <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
-                @enderror
-            </div>
+        {{-- Container for submitting the test --}}
+        <div class="my-3 flex mt-4 items-center justify-end w-full gap-4" wire:key="upload-{{ $selectedQuestion }}">
             {{-- Submit button --}}
             <div>
                 <flux:button wire:click="uploadTest" variant="primary" color="rose">{{ __('Save') }}</flux:button>
