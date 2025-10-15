@@ -25,7 +25,7 @@
                     @endif
                 </td>
                 <td class="px-4 py-3">
-                    <time data-iso-datetime="{{ $attempt->created_at->toIsoString() }}">{{ $attempt->created_at->toIsoString() }}</time>
+                    <x-localized-time :datetime="$attempt->created_at" />
                 </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end gap-2">
@@ -50,4 +50,3 @@
         </tbody>
     </x-table>
 </div>
-@include('livewire._datetime-localize')
