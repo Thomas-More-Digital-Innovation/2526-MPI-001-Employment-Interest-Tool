@@ -27,12 +27,12 @@ class ClientTests extends Component
         $this->index = 1;
     }
 
-    protected function loadViewingClient(): void
+    protected function loadViewingClient()
     {
         $this->viewingClient = null;
 
         if (!$this->viewingClientId) {
-            return;
+            return redirect()->route('mentor.clients-manager');
         }
 
         $this->viewingClient = User::find($this->viewingClientId);
@@ -66,7 +66,6 @@ class ClientTests extends Component
     public function viewTestResults(int $testAttemptId)
     {
         session()->flash('testAttempt', $testAttemptId);
-        session()->flash('testUser', $this->viewingClientId);
 
         return redirect()->route('mentor.test-details');
     }

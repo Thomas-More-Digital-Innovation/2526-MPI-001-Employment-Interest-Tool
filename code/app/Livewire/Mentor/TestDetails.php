@@ -28,29 +28,16 @@ class TestDetails extends Component
 
     public function mount()
     {
-        // Prefer query params, fallback to flashed/session values for compatibility
-        $this->testClientId = session('testUser');
         $this->testAttemptId = session('testAttempt');
 
-        $this->loadUser();
         $this->loadAttempt();
 
-    }
-
-    public function loadUser(): void
-    {
-        $this->clientInfo = null;
-
-
-        $this->clientInfo = User::find($this->testClientId);
-        $this->currentLocale = app()->getLocale();
     }
 
     public function loadAttempt(): void
     {
         $this->attempt = null;
 
-        // Use the model primary key (test_attempt_id) by using find() so Eloquent respects the model's primaryKey
         $this->attempt = TestAttempt::with(['test', 'answers.question.interestField', 'user'])
             ->find($this->testAttemptId);
 
@@ -67,9 +54,6 @@ class TestDetails extends Component
             foreach ($this->attempt->answers as $answer) {
                 $question = $answer->question ?? null;
                 $interest = $question && isset($question->interestField) ? $question->interestField : null;
-                if (! $interest) {
-                    continue;
-                }
 
                 $fieldId = $interest->interest_field_id;
 
@@ -93,20 +77,15 @@ class TestDetails extends Component
                 $interest = null;
                 foreach ($this->attempt->answers as $answer) {
                     $q = $answer->question ?? null;
-                    if ($q && isset($q->interestField) && $q->interestField->interest_field_id == $fieldId) {
                         $interest = $q->interestField;
                         break;
-                    }
+                    
                 }
 
                 $label = $interest ? $interest->getName($locale) : ('Field ' . $fieldId);
                 $this->graphLabels[] = $label;
                 $this->graphData[] = $yesCount;
             }
-        }
-        // If we didn't get clientInfo from the request/session but the attempt includes the user relation, use it.
-        if (! $this->clientInfo && $this->attempt && isset($this->attempt->user)) {
-            $this->clientInfo = $this->attempt->user;
         }
     }
 

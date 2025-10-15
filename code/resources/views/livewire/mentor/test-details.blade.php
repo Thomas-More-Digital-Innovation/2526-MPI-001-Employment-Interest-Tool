@@ -1,11 +1,10 @@
 <div>
     <div style="display:flex; gap:16px; margin-bottom:24px;">
         <div style="flex:1; border:1px solid #ddd; padding:16px; border-radius:8px;">
-            <h2 style="margin-top:0"><strong>Client information:</strong></h2>
+            <h2 style="margin-top:0"><strong>Client information</strong></h2>
                 <div class="space-y-2">
-                    <div><strong>{{ __('Full name') }}:</strong> {{ $clientInfo->first_name ?? '—' }}</div>
-                    <div><strong>{{ __('Lastname') }}:</strong> {{ $clientInfo->last_name ?? '—' }}</div>
-                    <div><strong>{{ __('Email') }}:</strong> {{ $clientInfo->email ?? '—' }}</div>
+                    <div><strong>{{ __('Full name') }}:</strong> {{ $attempt->user->first_name ?? '—' }}  {{ $attempt->user->last_name ?? '—' }}</div>
+                    <div><strong>{{ __('Email') }}:</strong> {{ $attempt->user->email ?? '—' }}</div>
                 </div>
         </div>
 
