@@ -12,20 +12,20 @@
     <div class="flex flex-col gap-4 md:flex-row md:items-end-safe md:justify-between">
         <div class="flex-1">
             <flux:label class="block text-sm font-medium" for="mentor-search">
-                {{__('manage-mentors.SearchMentors')}}
+                {{__('manage-researchers.searchResearcher')}}
             </flux:label>
             <flux:input
                 id="mentor-search"
                 type="search"
                 icon="magnifying-glass"
                 wire:model.live.debounce.300ms="search"
-                placeholder="{{ $showInactivated ? __('manage-mentors.SearchMentorBy') : __('manage-mentors.SearchMentorByAndActive') }}">
+                placeholder="{{ $showInactivated ? __('manage-researchers.SearchResearcherBy') : __('manage-researchers.SearchResearcherByAndActive') }}">
             </flux:input>
         </div>
         <div class="flex-shrink-0 content-end">
             <flux:modal.trigger name="admin-client-form">
                 <flux:button type="button" wire:click="startCreate" icon="user-plus" class="bg-color-mpi">
-                    {{ __('manage-mentors.addMentor') }}
+                    {{ __('manage-researchers.addResearcher') }}
                 </flux:button>
             </flux:modal.trigger>
         </div>
@@ -36,14 +36,14 @@
             <section class="space-y-3">
                 <div class="flex items-center justify-between gap-3">
                     <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                    {{ trans_choice('{0}No mentors|{1}:count mentor|[2,*]:count mentors', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
+                    {{ trans_choice('{0}No researcher|{1}:count researcher|[2,*]:count researchers', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
                 </span>
                 </div>
                 @include('livewire.admin.mentor-manager-table', ['records' => $group['clients']])
             </section>
         @empty
             <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
-                {{ __('manage-mentors.NoMentorsFound') }}
+                {{ __('manage-researchers.noResearchersFound') }}
             </div>
         @endforelse
     </div>
@@ -55,7 +55,7 @@
             wire:click="toggleShowInactivated"
             class="bg-color-mpi-500 text-amber-50">
 
-            {{ $showInactivated ? __('manage-mentors.HideInactive') :  __('manage-mentors.ShowInactive') }}
+            {{ $showInactivated ? __('manage-researchers.hideInactive') :  __('manage-researchers.showInactive') }}
         </flux:button>
     </div>
     @if ($showInactivated)
@@ -73,7 +73,7 @@
                     </section>
                 @empty
                     <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
-                        {{ __('manage-mentors.NoInactiveFound') }}
+                        {{ __('manage-researchers.noInactiveFound') }}
                     </div>
                 @endforelse
             </div>
@@ -86,7 +86,7 @@
         x-on:close="$wire.call('closeFormModal')">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ $formModalMode === 'edit' ? __('manage-mentors.EditMentor') : __('Add mentor') }}
+                {{ $formModalMode === 'edit' ? __('manage-researchers.editResearcher') : __('manage-researchers.addResearcher') }}
             </flux:heading>
 
             <form wire:submit.prevent="save" class="space-y-6">
@@ -166,7 +166,7 @@
                             <flux:checkbox
                                 id="client-active"
                                 wire:model.defer="form.active"
-                                :label="__('manage-mentors.MentorCanSignIn')" />
+                                :label="__('manage-researchers.researcherCanSignIn')" />
                         </div>
                         @error('form.active')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -197,7 +197,7 @@
                     <flux:button
                         type="submit"
                         variant="primary">
-                        {{ $editingId ? __('Save') : __('manage-mentors.CreateMentor') }}
+                        {{ $editingId ? __('Save') : __('manage-researchers.createResearcher') }}
                     </flux:button>
                 </div>
             </form>
@@ -245,11 +245,11 @@
         x-on:close="$wire.call('closeDeleteModal')">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ __('manage-mentors.DeleteMentor') }}
+                {{ __('manage-researchers.deleteResearcher') }}
             </flux:heading>
 
             <flux:text class="text-sm text-gray-700">
-                {{ __('Are you sure you want to delete :mentor? This action is irreversible.', ['client' => $toggleModalName]) }}
+                {{ __('Are you sure you want to delete :researcher? This action is irreversible.', ['client' => $toggleModalName]) }}
             </flux:text>
 
             <div class="flex justify-end gap-3 pt-4">
@@ -266,7 +266,7 @@
                     type="button"
                     variant="danger"
                     wire:click="confirmDelete">
-                    {{ __('manage-mentors.DeleteMentor') }}
+                    {{ __('manage-researchers.deleteResearcher') }}
                 </flux:button>
             </div>
         </div>
