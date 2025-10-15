@@ -119,6 +119,8 @@ class TestCreation extends Component
             ]);
         }
         $this->clearSession();
+        return redirect()->route('superadmin.test.manager')->with('success', 'Test saved successfully.');
+
     }
 
     // Runs on every update made, used to recalculate the status

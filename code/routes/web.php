@@ -145,7 +145,8 @@ Route::middleware(['auth'])->group(function () {
         Route::view('superadmin/system', 'roles.superadmin.system')->name('superadmin.system');
 
         Route::view('superadmin/test-creation', 'roles.superadmin.test-creation')->name('superadmin.test.create');
-        Route::view('superadmin/test-edit', 'roles.superadmin.test-edit')->name('superadmin.test.edit');
+        Route::view('superadmin/test-manager', 'roles.superadmin.test-manager')->name('superadmin.test.manager');
+        Route::view('superadmin/test-editing', 'roles.superadmin.test-editing')->name('superadmin.test.editing');
         Route::view('superadmin/interest-field-manager', view: 'roles.superadmin.interest-field-manager')->name('superadmin.interest-field-manager');
     });
 

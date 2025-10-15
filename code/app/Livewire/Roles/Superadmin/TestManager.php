@@ -4,13 +4,22 @@ namespace App\Livewire\Roles\Superadmin;
 
 use App\Models\Test;
 use Livewire\Component;
+use App\Models\Question;
 
-class TestEdit extends Component
+class TestManager extends Component
 {
 
     public $tests;
 
     public function mount() {
+        $this->tests = Test::all();
+    }
+
+    public function deleteTest(int $id)
+    {
+        $test = Test::findOrFail($id);
+        Question::where('test_id', $test->test_id)->delete();
+        $test->delete();
         $this->tests = Test::all();
     }
 
@@ -38,11 +47,11 @@ class TestEdit extends Component
             'edit_questions' => $questions,
         ]);
 
-        return redirect()->route('superadmin.test.create');
+        return redirect()->route('superadmin.test.editing');
     }
 
     public function render()
     {
-        return view('livewire.roles.superadmin.test-edit');
+        return view('livewire.roles.superadmin.test-manager');
     }
 }

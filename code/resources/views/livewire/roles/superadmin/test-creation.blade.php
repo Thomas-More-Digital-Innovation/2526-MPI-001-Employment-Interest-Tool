@@ -71,21 +71,21 @@
                             x-init="init()"
                             wire:key="recorder-{{ $selectedQuestion }}"
                             wire:ignore
-                            class="flex items-center gap-3"
+                            class="flex items-center mt-3 w-full"
                         >
                             <!-- Record controls -->
                             <button @click="start" x-show="canRecord && !isRecording" class="px-3 py-2 rounded bg-red-600 text-white">● {{ __('testcreation.record') }}</button>
                             <button @click="stop" x-show="canRecord && isRecording" class="px-3 py-2 rounded bg-gray-800 text-white">{{ __('testcreation.stop') }}</button>
 
                             <!-- Play/Pause -->
-                            <button @click="togglePlay" x-show="hasAudio" class="px-3 py-2 rounded bg-blue-600 text-white">
+                            <button @click="togglePlay" x-show="hasAudio" class="px-3 m-2 py-2 rounded bg-blue-600 text-white">
                                 <span x-text="isPlaying ? '{{ __('testcreation.pause') }}' : '{{ __('testcreation.play') }}'"></span>
                             </button>
 
                             <!-- Clear the sound (re-enables recording) -->
                             <button @click="clearAll" x-show="hasAudio || !canRecord" class="px-3 py-2 rounded bg-gray-200">{{ __('testcreation.clear') }}</button>
                             <!-- Status/Error label -->
-                            <span class="text-sm text-gray-600" x-text="label"></span>
+                            <span class="text-sm text-gray-600 dark:text-gray-300 ml-3" x-text="label"></span>
                             <!-- Hidden audio element for making playing audio possible -->
                             <audio x-ref="audio" preload="metadata"></audio>
                         </div>
@@ -150,7 +150,7 @@
                 ">
                 {{-- Accessing the array within the array --}}
                 @foreach ($questions as $index => $question)
-                    <li wire:key="question-{{ $index }}" class="cursor-grab w-full flex justify-between items-center bg-zinc-600 rounded my-2">
+                    <li wire:key="question-{{ $index }}" class="cursor-grab w-full flex justify-between items-center bg-zinc-200/60 dark:bg-zinc-600 rounded my-2">
                         {{-- Tally svg to indicate the bars are sortable --}}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 lucide lucide-tally2-icon lucide-tally-2"><path d="M4 4v16"/><path d="M9 4v16"/></svg>
                         {{-- Icon to indicate whether question is good to be submitted or not --}}
