@@ -91,11 +91,15 @@
                         </div>
                         {{-- Container for uploading audio --}}
                         <div class="mt-2">
+                            <label for="Audio-Uploader" class="px-4 py-2 border rounded-md shadow-sm text-sm text-gray-700 bg-white cursor-pointer hover:bg-gray-100">
+                                {{ __('actions.choose_file') }} {{ __('Sound') }}
+                            </label>
                             <input
+                                id="Audio-Uploader"
                                 type="file"
                                 wire:model="questions.{{ $selectedQuestion }}.uploaded_sound"
                                 accept=".mp3,audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm"
-                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                class="hidden"
                                 x-on:change="label = '{{ __('testcreation.uploading') }}';"
                                 x-bind:disabled="!canRecord"
                             >
@@ -111,10 +115,15 @@
         {{-- Container for uploading images --}}
         <div class="my-3 flex mt-4 items-center justify-between w-full gap-4" wire:key="upload-{{ $selectedQuestion }}">
             <div class="flex-1">
-                <input type="file"
-                   wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
-                   accept="image/*"
-                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <label for="Upload-Image" class="px-4 py-2 border rounded-md shadow-sm text-sm text-gray-700 bg-white cursor-pointer hover:bg-gray-100">
+                  {{ __('actions.choose_file') }} {{ __('Image') }}
+                </label>
+                <input
+                    id="Upload-Image" 
+                    type="file"
+                    wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
+                    accept="image/*"
+                    class="hidden">
                 @error('questions.'.$selectedQuestion.'.uploaded_image')
                     <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
                 @enderror
