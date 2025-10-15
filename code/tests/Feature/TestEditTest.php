@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
-use App\Livewire\Roles\Superadmin\TestEdit;
+use App\Livewire\Roles\Superadmin\TestManager;
 use App\Models\Test;
 use App\Models\Question;
 use App\Models\InterestField;
@@ -17,7 +17,7 @@ beforeEach(function () {
 test('mount loads tests list', function () {
     Test::factory()->count(3)->create();
 
-    Livewire::test(TestEdit::class)
+    Livewire::test(TestManager::class)
         ->assertSet('tests', fn ($val) => count($val) === 3);
 });
 
@@ -37,7 +37,7 @@ test('loadTest redirects and seeds session for TestCreation', function () {
         'sound_link'         => 's.webm',
     ]);
 
-    Livewire::test(TestEdit::class)
+    Livewire::test(TestManager::class)
         ->call('loadTest', $test->test_id)
         ->assertRedirect(route('superadmin.test.create'));
 
