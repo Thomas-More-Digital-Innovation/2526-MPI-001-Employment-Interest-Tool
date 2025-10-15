@@ -55,7 +55,7 @@ test('user can complete test', async ({ page }) => {
 /**
  * Answer all questions until test results page is reached
  */
-test('user completes entire test and reaches results page', async ({ page }) => {
+test('user completes entire test and reaches results page', async ({ page }, testInfo) => {
   test.setTimeout(600000); // 10 minutes timeout
 
   console.log('Starting complete test workflow');
@@ -73,17 +73,14 @@ test('user completes entire test and reaches results page', async ({ page }) => 
   const testButton = page.locator('a[href*="/test"], button:has-text("Start")').first();
 
   if (!(await testButton.isVisible({ timeout: 5000 }))) {
-    console.log('No test available - test cannot proceed');
-    console.log('Please assign a test to the user first');
-    return;
+    throw new Error('No test available on dashboard for the user; cannot proceed with full test flow');
   }
 
   await testButton.click();
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(5000);
 
   if (!page.url().includes('/test')) {
-    console.log('Could not access test page');
-    return;
+    throw new Error('Could not access test page');
   }
 
   console.log('On test page, starting to answer questions');
@@ -104,15 +101,14 @@ test('user completes entire test and reaches results page', async ({ page }) => 
 
     // Check if we're still on the test page
     if (!page.url().includes('/test')) {
-      console.log(`Unexpected page: ${page.url()}`);
-      break;
+      throw new Error(`Unexpected page: ${page.url()}`);
     }
 
     questionCount++;
     console.log(`Answering question ${questionCount}`);
 
-    // Wait for buttons to be enabled (they're disabled during loading)
-    await page.waitForTimeout(1500);
+    // // Wait for buttons to be enabled (they're disabled during loading)
+    // await page.waitForTimeout(1500);
 
     // Randomly choose like (green) or dislike (red)
     const random = Math.random();
@@ -120,20 +116,30 @@ test('user completes entire test and reaches results page', async ({ page }) => 
       ? page.locator('button.bg-green-400').first()
       : page.locator('button.bg-red-500').first();
 
-    // Check if button is visible and not disabled
-    if (await button.isVisible({ timeout: 5000 })) {
-      const isDisabled = await button.isDisabled();
-      if (!isDisabled) {
-        await button.click();
-        console.log(`Question ${questionCount}: Clicked ${random > 0.5 ? 'LIKE' : 'DISLIKE'}`);
-        await page.waitForTimeout(2000);
-      } else {
-        console.log(`Question ${questionCount}: Button disabled, waiting...`);
-        await page.waitForTimeout(1000);
-      }
-    } else {
-      console.log(`Question ${questionCount}: Button not visible`);
-      break;
+    // Wait up to 5s for the button to become enabled, then click
+    try {
+      // Use Playwright test expect (imported at top of file) to wait for enabled state
+      await expect(button).toBeEnabled({ timeout: 5000 });
+      await button.click();
+      console.log(`Question ${questionCount}: Clicked ${random > 0.5 ? 'LIKE' : 'DISLIKE'}`);
+
+      // Wait for the image to change (assuming there's an img element)
+      const img = page.locator('img').first();
+      const initialSrc = await img.getAttribute('src');
+      // Run the check inside the page context to avoid referencing the Node-side locator
+      await page.waitForFunction(
+        ({ sel, src }) => {
+          const el = document.querySelector(sel);
+          if (!el) return false;
+          return el.getAttribute('src') !== src;
+        },
+        { sel: 'img', src: initialSrc },
+        { timeout: 5000 }
+      );
+    } catch (err) {
+      // If waiting for enabled times out, log and wait a short time before retrying next loop
+      console.log(`Question ${questionCount}: Button did not become enabled within 5s; will wait and retry. (${err.message})`);
+      throw new Error(`Stalled on question ${questionCount}: ${err.message}`);
     }
   }
 
@@ -146,7 +152,6 @@ test('user completes entire test and reaches results page', async ({ page }) => 
 
     expect(page.url()).toContain('/test-result');
   } else {
-    console.log(`Test did not complete normally. Answered ${questionCount} questions`);
-    console.log(`Current URL: ${page.url()}`);
+    throw new Error(`Test did not complete normally. Answered ${questionCount} questions. Current URL: ${page.url()}`);
   }
 });

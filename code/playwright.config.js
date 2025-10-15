@@ -41,10 +41,10 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     // Screenshot on failure
-    screenshot: 'only-on-failure',
+    screenshot: 'off',
 
     // Record video on failure
-    video: 'retain-on-failure',
+    video: 'off',
 
     // Maximum time each action can take (30 seconds for slow actions)
     actionTimeout: 30 * 1000,

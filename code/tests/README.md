@@ -13,5 +13,8 @@
 #### Run the complete test with 10 workers
 `npx playwright test tests/playwright/test-taking-stress.spec.js --workers=10 --repeat-each=10 --grep="user completes entire test"`
 
+#### Run the complete test with visible browser
+`npx playwright test tests/playwright/test-taking-stress.spec.js --headed --grep="user completes entire test"`
+
 #### View test results
 `npx playwright show-report`
