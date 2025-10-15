@@ -55,7 +55,5 @@ class SendFeedbackTest extends Component
 
     public function closeModal() {
         $this->dispatch($this->onCloseEvent);
-
-//        return $this->redirect('goole');
     }
 }
