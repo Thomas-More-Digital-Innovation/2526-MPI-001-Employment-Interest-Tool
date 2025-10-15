@@ -39,7 +39,7 @@ test('loadTest redirects and seeds session for TestCreation', function () {
 
     Livewire::test(TestManager::class)
         ->call('loadTest', $test->test_id)
-        ->assertRedirect(route('superadmin.test.create'));
+        ->assertRedirect(route('superadmin.test.editing'));
 
     expect(session('edit_test_id'))->toBe($test->test_id);
     expect(session('edit_test_name'))->toBe('Demo');
