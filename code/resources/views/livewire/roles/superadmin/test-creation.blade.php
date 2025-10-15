@@ -83,7 +83,7 @@
                             </button>
 
                             <!-- Clear the sound (re-enables recording) -->
-                            <button @click="clearAll" x-show="hasAudio || !canRecord" class="px-3 py-2 rounded bg-gray-200">{{ __('testcreation.clear') }}</button>
+                            <button @click="clearAll" x-show="hasAudio || !canRecord" class="px-3 py-2 rounded text-black bg-gray-200">{{ __('testcreation.clear') }}</button>
                             <!-- Status/Error label -->
                             <span class="text-sm text-gray-600 dark:text-gray-300 ml-3" x-text="label"></span>
                             <!-- Hidden audio element for making playing audio possible -->
