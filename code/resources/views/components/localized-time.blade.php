@@ -32,10 +32,29 @@ $formatJson = json_encode($formatOptions);
             var el = document.getElementById({{ Illuminate\Support\Js::from($id) }});
             if(!el) return;
             var iso = {{ Illuminate\Support\Js::from($iso) }};
-            var opts = {{ Illuminate\Support\Js::from($formatOptions) }};
             var dt = new Date(iso);
             if (isNaN(dt.getTime())) return;
-            var formatted = new Intl.DateTimeFormat(undefined, opts).format(dt);
+
+            function pad(n){ return n < 10 ? '0' + n : String(n); }
+            var day = pad(dt.getDate());
+            var year = dt.getFullYear();
+            var hour = pad(dt.getHours());
+            var minute = pad(dt.getMinutes());
+
+            // Localized short month name using Intl (keeps locale-specific abbreviations)
+            var locale = (navigator && navigator.language) ? navigator.language : undefined;
+            var monthShort = null;
+            try {
+                monthShort = new Intl.DateTimeFormat(locale, { month: 'short' }).format(dt);
+            } catch (e) {
+                // Fallback to English short names
+                var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                monthShort = months[dt.getMonth()];
+                console.log('Error formatting month with Intl:', e);
+            }
+
+            // PHP format: d M Y, H:i => 02 Jan 2020, 14:05 (with localized month)
+            var formatted = day + ' ' + monthShort + ' ' + year + ', ' + hour + ':' + minute;
             el.textContent = formatted;
         }catch(e){
             console && console.error && console.error(e);
