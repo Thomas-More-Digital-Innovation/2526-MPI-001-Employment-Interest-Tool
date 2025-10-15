@@ -6,6 +6,7 @@ return [
     'first_name' => 'Voornaam',
     'last_name' => 'Achternaam',
     'username' => 'Gebruikersnaam',
+    'email' => 'E-mail',
     'vision_type' => 'Visie type',
     'language' => 'Taal',
     'profile' => 'Profiel',

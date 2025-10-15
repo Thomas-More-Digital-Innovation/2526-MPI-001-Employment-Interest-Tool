@@ -1,11 +1,10 @@
-<flux:modal name="assign-tests-to-client" title="{{ __('Assign Tests to Client') }}">
+<flux:modal name="assign-tests-to-client" title="{{ __('manage-clients.assignTestsToClient') }}">
     <div class="space-y-4">
         <p class="text-gray-700 pt-8">
             @if($client)
-                {{ __('Select the tests you want to assign to') }}
-                <strong>{{ $client->first_name }} {{ $client->last_name }}</strong>.
+                {!! __('manage-clients.selectTestsForClient', ['client' => $client->first_name . ' ' . $client->last_name]) !!}
             @else
-                {{ __('Select a client to assign tests.') }}
+                {{ __('manage-clients.selectClientFirst') }}
             @endif
         </p>
 
@@ -15,7 +14,7 @@
                     <input type="checkbox"
                            wire:model="selectedTests"
                            value="{{ $test->test_id }}"
-                           class="rounded border-gray-300 accent-green-400">
+                           class="rounded border-gray-300 accent-green-300">
                     <span>{{ $test->test_name }}</span>
                 </label>
             @endforeach
@@ -23,11 +22,11 @@
 
         <div class="flex justify-end space-x-2 mt-4">
             <flux:button variant="outline" wire:click="$dispatch('modal-close', { name: 'assign-tests-to-client' })">
-                {{ __('Cancel') }}
+                {{ __('manage-clients.Cancel') }}
             </flux:button>
 
             <flux:button variant="primary" wire:click="assign">
-                {{ __('Assign') }}
+                {{ __('manage-clients.assign') }}
             </flux:button>
         </div>
     </div>
