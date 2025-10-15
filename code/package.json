@@ -4,7 +4,12 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "clean": "prettier --write ."
+        "clean": "prettier --write .",
+        "test:playwright": "playwright test",
+        "test:playwright:ui": "playwright test --ui",
+        "test:playwright:headed": "playwright test --headed",
+        "test:playwright:stress": "playwright test --workers=10 --repeat-each=5",
+        "playwright:install": "playwright install"
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.11",
@@ -20,5 +25,8 @@
         "@rollup/rollup-linux-x64-gnu": "4.9.5",
         "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
         "lightningcss-linux-x64-gnu": "^1.29.1"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.56.0"
     }
 }
