@@ -90,3 +90,20 @@ select:focus[data-flux-control] {
     cursor: pointer;
   }
 }
+
+/*colorblindness*/
+body.normal {
+    filter: none;
+}
+
+body.protanopia {
+    filter: url('#protanopia');
+}
+
+body.deuteranopia {
+    filter: url('#deuteranopia');
+}
+
+body.tritanopia {
+    filter: url('#tritanopia');
+}

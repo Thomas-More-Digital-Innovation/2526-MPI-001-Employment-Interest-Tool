@@ -4,8 +4,8 @@
     @include('partials.head')
     
 </head>
-<body class="min-h-screen">
-
+<body class="min-h-screen {{ strtolower(auth()->user()->vision_type) ?? 'normal' }}">
+<livewire:svg-colorblindness/>
 {{ $slot }}
 
 @fluxScripts
