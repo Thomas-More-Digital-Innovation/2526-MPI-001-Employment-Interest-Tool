@@ -43,6 +43,5 @@
         @fluxScripts
         @livewireScripts
         @stack('scripts')
-</script>
     </body>
 </html>
