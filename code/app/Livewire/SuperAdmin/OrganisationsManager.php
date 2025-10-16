@@ -52,7 +52,7 @@ class OrganisationsManager extends BaseCrudComponent
 
     protected function baseQuery(): Builder
     {
-        return Organisation::query()->orderBy('name');
+        return Organisation::query()->where('active', true)->orderBy('name');
     }
 
     protected function applySearch(Builder $query): Builder
