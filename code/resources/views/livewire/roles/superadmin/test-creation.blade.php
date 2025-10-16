@@ -106,7 +106,7 @@
 
                                     <!-- Clear the sound (re-enables recording) -->
                                     <flux:button type="button" @click="clearAll" x-show="hasAudio || !canRecord"
-                                        icon="x-mark">
+                                        icon="trash">
                                         {{ __('testcreation.clear') }}
                                     </flux:button>
                                     <!-- Status/Error label -->
@@ -116,7 +116,7 @@
                                 </div>
                                 <span> {{ __('testcreation.or') }}</span>
                                 <div>
-                                    <flux:button type="button" icon="arrow-up-tray" 
+                                    <flux:button type="button" icon="speaker-wave"
                                         onclick="document.getElementById('Audio-Uploader').click()">
                                         {{ __('testcreation.choose_sound') }}
                                     </flux:button>
