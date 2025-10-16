@@ -201,6 +201,12 @@ class TestCreation extends Component
         // Validation if question exists, if it doesnt then return, better be safe than sorry :)
         if (!isset($this->questions[$index])) return;
 
+        // Clean up audio file if it exists for the deleted question
+        $filename = $this->questions[$index]['sound_link'] ?? null;
+        if ($filename && Storage::disk('public')->exists($filename)) {
+            Storage::disk('public')->delete($filename);
+        }
+
         // Removing the question from the array
         unset($this->questions[$index]);
         // resolve index issue (removing does not change indexes for the questions)

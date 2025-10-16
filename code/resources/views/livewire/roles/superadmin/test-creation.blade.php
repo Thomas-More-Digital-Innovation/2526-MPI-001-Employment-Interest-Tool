@@ -73,9 +73,11 @@
                             $soundName = $questions[$selectedQuestion]['sound_link'] ?? null;
                             // Generate the full URL to the sound file if the name is set exists
                             $soundUrl = $soundName ? route('question.sound', ['filename' => $soundName]) : null;
+                            // Create a unique key that includes both the question index and whether it has audio
+                            $recorderKey = "recorder-{$selectedQuestion}-" . ($soundUrl ? 'audio' : 'noaudio');
                         @endphp
                         <div x-data="recorder({ qid: {{ $selectedQuestion }}, existingUrl: @js($soundUrl) })" x-init="init()"
-                            wire:key="recorder-{{ $selectedQuestion }}" wire:ignore>
+                            wire:key="{{ $recorderKey }}" wire:ignore>
 
                             {{-- The container for the recorder, initialises the recorder in alpine --}}
                             <div class="flex items-center mt-3 w-full gap-2">
