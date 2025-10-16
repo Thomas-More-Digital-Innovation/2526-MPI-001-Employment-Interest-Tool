@@ -107,22 +107,7 @@ class OrganisationsManager extends BaseCrudComponent
         return [
             'name' => $record->name,
             'active' => (bool) $record->active,
-            // Be tolerant: expire_date can be a Carbon/DateTime or a string from the DB.
-            'expire_date' => (function ($val) {
-                if (empty($val)) {
-                    return null;
-                }
-
-                if ($val instanceof \DateTimeInterface) {
-                    return $val->format('Y-m-d');
-                }
-
-                try {
-                    return Carbon::parse($val)->format('Y-m-d');
-                } catch (\Throwable $e) {
-                    return null;
-                }
-            })($record->expire_date),
+            'expire_date' => $record->expire_date ? $record->expire_date->format('Y-m-d') : null,
         ];
     }
 
@@ -169,7 +154,7 @@ class OrganisationsManager extends BaseCrudComponent
     public function requestToggle(int $id): void
     {
         $this->editingId = $id;
-        $this->dispatch('modal-open', name: 'organisation-toggle-confirm');
+        $this->dispatch('modal-open', name: 'organisation-deactivate-confirm');
     }
 
     public function confirmToggle(): void
@@ -186,7 +171,7 @@ class OrganisationsManager extends BaseCrudComponent
 
         $this->dispatch('crud-record-updated', id: $org->organisation_id, active: $org->active);
         $this->resetFormState();
-        $this->dispatch('modal-close', name: 'organisation-toggle-confirm');
+        $this->dispatch('modal-close', name: 'organisation-deactivate-confirm');
     }
 
     /** Admin management **/
