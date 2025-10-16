@@ -18,12 +18,12 @@ class TestImageController extends Controller
     public function show(string $filename)
     {
         $disk = Storage::disk('public');
-
+        
         if (!$disk->exists($filename)) {
             abort(404);
         }
 
-        // // Cache the image file contents on server side for 1 hour (3600 seconds)
+        // Cache the image file contents on server side for 1 hour (3600 seconds)
         $imageData = Cache::remember("question_image_{$filename}", 3600, function () use ($disk, $filename) {
             return [
                 'content' => $disk->get($filename),
@@ -33,9 +33,5 @@ class TestImageController extends Controller
 
         return response($imageData['content'])
             ->header('Content-Type', $imageData['mimeType']);
-
-        // // Return the image file directly
-        // $path = $disk->path($filename);
-        // return response()->file($path);
     }
 }
