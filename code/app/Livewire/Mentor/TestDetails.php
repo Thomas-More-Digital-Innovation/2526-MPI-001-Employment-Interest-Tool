@@ -71,17 +71,8 @@ class TestDetails extends Component
             // Sort by count descending
             arsort($fieldYesCount);
 
-            // Convert map to ordered labels and data
             foreach ($fieldYesCount as $fieldId => $yesCount) {
-                // find the InterestField instance from one of the answers to get the name
-                $interest = null;
-                foreach ($this->attempt->answers as $answer) {
-                    $q = $answer->question ?? null;
-                        $interest = $q->interestField;
-                        break;
-                    
-                }
-
+                $interest = InterestField::find($fieldId);
                 $label = $interest ? $interest->getName($locale) : ('Field ' . $fieldId);
                 $this->graphLabels[] = $label;
                 $this->graphData[] = $yesCount;

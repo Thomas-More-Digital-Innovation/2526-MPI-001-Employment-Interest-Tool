@@ -79,6 +79,8 @@ Route::middleware(['auth'])->group(function () {
         Route::view('admin/feedback', 'roles.admin.feedback')->name('admin.feedback');
         Route::view(uri: 'admin/admin-clients-manager', view: 'roles.admin.admin-clients-manager')->name('admin.admin-clients-manager');
         Route::view(uri:'admin/manage-mentors', view:'roles.admin.manage-mentors')->name('admin.manage-mentors');
+        Route::view('admin/client-tests', ('roles.admin.client-tests'))->name('admin.client-tests');
+        Route::view('admin/test-details', ('roles.admin.test-details'))->name('admin.test-details');
     });
 
     Route::middleware(['role:Mentor'])->group(function () {
@@ -100,6 +102,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:Mentor,Admin,SuperAdmin'])->group(function () {
         Route::view('staff/test-picker', view: 'roles.staff.test-picker')->name('staff.test-picker');
         Route::view('staff/test-content-overview', 'roles.staff.test-content-overview')->name('roles.staff.test-content-overview');
+
     });
 
 
