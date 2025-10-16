@@ -21,6 +21,7 @@ return [
     'delete_success' => 'Interest field deleted successfully.',
     'delete_error' => 'Interest field cannot be deleted as it is used by a question.',
     'delete_heading' => 'Confirm Deletion',
+    'cannot_delete_used' => 'This interest field cannot be deleted because it is used in one or more questions.',
     'default' => 'Default',
     'translation_removed_success' => 'Translation removed successfully.',
     'select_valid_language' => 'Please select a valid language.',
