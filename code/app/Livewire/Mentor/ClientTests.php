@@ -71,8 +71,12 @@ class ClientTests extends Component
     public function viewTestResults(int $testAttemptId)
     {
         session()->flash('testAttempt', $testAttemptId);
-
+        
+        if(Auth::user()->isMentor())
         return redirect()->route('mentor.test-details');
+
+        if(Auth::user()->isAdmin())
+        return redirect()->route('admin.test-details');
     }
     public function render()
     {

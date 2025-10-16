@@ -168,7 +168,10 @@ class ClientsManager extends BaseCrudComponent
     public function viewTests(int $clientId)
     {
         session()->flash('viewingClient', $clientId);
+        if(Auth::user()->isMentor())
         return redirect()->route('mentor.client-tests');
+        if(Auth::user()->isAdmin())
+        return redirect()->route('admin.client-tests');
     }
 
     /**
