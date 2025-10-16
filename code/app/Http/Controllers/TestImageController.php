@@ -23,15 +23,19 @@ class TestImageController extends Controller
             abort(404);
         }
 
-        // Cache the image file contents on server side for 1 hour (3600 seconds)
-        $imageData = Cache::remember("question_image_{$filename}", 3600, function () use ($disk, $filename) {
-            return [
-                'content' => $disk->get($filename),
-                'mimeType' => $disk->mimeType($filename)
-            ];
-        });
+        // // Cache the image file contents on server side for 1 hour (3600 seconds)
+        // $imageData = Cache::remember("question_image_{$filename}", 3600, function () use ($disk, $filename) {
+        //     return [
+        //         'content' => $disk->get($filename),
+        //         'mimeType' => $disk->mimeType($filename)
+        //     ];
+        // });
 
-        return response($imageData['content'])
-            ->header('Content-Type', $imageData['mimeType']);
+        // return response($imageData['content'])
+        //     ->header('Content-Type', $imageData['mimeType']);
+
+        // Return the image file directly
+        $path = $disk->path($filename);
+        return response()->file($path);
     }
 }
