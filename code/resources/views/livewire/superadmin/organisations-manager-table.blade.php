@@ -16,7 +16,7 @@
                     @if ($record->expire_date)
                         @php $expiry = \Carbon\Carbon::parse($record->expire_date); @endphp
                         <div class="flex items-center gap-2">
-                            <div>{{ $expiry->format('Y-m-d') }}</div>
+                            <div>{{ $expiry->format('d/m/Y') }}</div>
                             @if ($expiry->isPast())
                                 <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold bg-red-100 text-red-800">{{ __('organisations.expired') }}</span>
                             @endif
@@ -25,7 +25,11 @@
                         <div class="text-sm text-gray-500">{{ __('organisations.no_expiry') }}</div>
                     @endif
                 </td>
-                <td class="px-4 py-3">{{ $record->active ? __('organisations.active') : __('organisations.inactivate') }}</td>
+                <td class="px-4 py-3">
+                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $record->active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                        {{ $record->active ? __('user.active') : __('user.inactive') }}
+                    </span>
+                </td>
                 <td class="px-4 py-3 text-right">
                     <flux:dropdown placement="bottom-end">
                         <flux.dropdown.trigger>

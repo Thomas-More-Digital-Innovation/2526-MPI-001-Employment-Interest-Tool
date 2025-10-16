@@ -5,9 +5,13 @@
     class="space-y-6">
 
     @if (session('status'))
-    <div class="rounded-md bg-green-50 p-4 text-green-800">
-        {{ session('status') }}
-    </div>
+        @php
+            $statusType = session('status')['type'] ?? 'success';
+            $statusMessage = session('status')['message'] ?? '';
+        @endphp
+        <div class="rounded-md p-4 text-sm {{ $statusType === 'success' ? 'bg-green-50 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-50 text-red-800 dark:bg-red-900 dark:text-red-200' }}">
+            {{ $statusMessage }}
+        </div>
     @endif
 
     <div class="flex flex-col gap-4 md:flex-row md:items-end-safe md:justify-between">
@@ -31,7 +35,34 @@
         </div>
     </div>
 
+    {{-- main table --}}
     @include('livewire.superadmin.organisations-manager-table', ['records' => $records])
+
+    {{-- show/hide inactive --}}
+    <div class="mt-4">
+        <div class="flex flex-wrap items-center gap-3">
+            <flux:button
+                type="button"
+                icon="{{ $showInactivated ? 'eye-slash' : 'eye' }}"
+                wire:click="toggleShowInactivated"
+                class="bg-color-mpi-500 text-amber-50">
+
+                {{ $showInactivated ? __('organisations.hide_inactive') :  __('organisations.show_inactive') }}
+            </flux:button>
+        </div>
+
+        @if ($showInactivated)
+            <div class="mt-4">
+                @if ($this->inactivatedRecords->count() === 0)
+                    <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
+                        {{ __('organisations.no_inactive_found') }}
+                    </div>
+                @else
+                    @include('livewire.superadmin.organisations-manager-table', ['records' => $this->inactivatedRecords])
+                @endif
+            </div>
+        @endif
+    </div>
 
     <flux:modal
         name="organisation-form"
@@ -62,7 +93,8 @@
                             id="org-expire"
                             type="date"
                             wire:model.defer="form.expire_date"
-                            :label="__('organisations.expire_date')" />
+                            :label="__('organisations.expire_date')"
+                            placeholder="DD/MM/YYYY" />
                         @error('form.expire_date')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

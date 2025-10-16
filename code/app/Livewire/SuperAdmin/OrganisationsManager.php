@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -54,6 +55,48 @@ class OrganisationsManager extends BaseCrudComponent
         return Organisation::query()->orderBy('name');
     }
 
+    protected function applySearch(Builder $query): Builder
+    {
+        $term = trim($this->search);
+        if ($term === '') {
+            return $query;
+        }
+
+        return $query->where(function (Builder $q) use ($term) {
+            $q->where('name', 'like', "%{$term}%");
+        });
+    }
+
+    /**
+     * Whether inactive organisations are visible in the list.
+     */
+    public bool $showInactivated = false;
+
+    /**
+     * Toggle the visibility of inactive organisations.
+     */
+    public function toggleShowInactivated(): void
+    {
+        $this->showInactivated = ! $this->showInactivated;
+        $this->resetPage();
+    }
+
+    /**
+     * Query for inactive organisations.
+     */
+    protected function inactivatedQuery(): Builder
+    {
+        return Organisation::query()->where('active', false)->orderBy('name');
+    }
+
+    /**
+     * Paginated inactive records with search applied.
+     */
+    public function getInactivatedRecordsProperty()
+    {
+        return $this->applySearch($this->inactivatedQuery())->paginate($this->perPage());
+    }
+
     protected function findRecord(int $id)
     {
         return Organisation::where('organisation_id', $id)->firstOrFail();
@@ -64,7 +107,22 @@ class OrganisationsManager extends BaseCrudComponent
         return [
             'name' => $record->name,
             'active' => (bool) $record->active,
-            'expire_date' => $record->expire_date ? $record->expire_date->format('Y-m-d') : null,
+            // Be tolerant: expire_date can be a Carbon/DateTime or a string from the DB.
+            'expire_date' => (function ($val) {
+                if (empty($val)) {
+                    return null;
+                }
+
+                if ($val instanceof \DateTimeInterface) {
+                    return $val->format('Y-m-d');
+                }
+
+                try {
+                    return Carbon::parse($val)->format('Y-m-d');
+                } catch (\Throwable $e) {
+                    return null;
+                }
+            })($record->expire_date),
         ];
     }
 
