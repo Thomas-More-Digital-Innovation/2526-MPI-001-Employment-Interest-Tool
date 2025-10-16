@@ -106,7 +106,7 @@
                                 {{ __('actions.choose_file') }} {{ __('Image') }}
                             </label>
                             <input
-                                id="Upload-Image" 
+                                id="Upload-Image"
                                 type="file"
                                 wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
                                 accept="image/*"
@@ -190,7 +190,7 @@
 
                     label: @js(__('testcreation.can_record')),
 
-                    
+
                     _stream: null,
                     _rec: null,
                     _chunks: [],
@@ -207,7 +207,7 @@
                             this.canRecord = true;
                         }
 
-                        
+
                         document.addEventListener('livewire:load', () => this._wireEvents());
                         this._wireEvents();
                     },
@@ -265,26 +265,26 @@
                     // Listener, after recording is stopped, save everything in a blob and upload it
                     _onStopRecording() {
                         const blob = new Blob(this._chunks, { type: 'audio/webm' });
-                        
+
                         const localUrl = URL.createObjectURL(blob);
                         this._setAudio(localUrl);
                         this.hasAudio = true;
                         this.isPlaying = false;
 
-                        
+
                         const file = new File([blob], `rec_${Date.now()}.webm`, { type: 'audio/webm' });
-                        
+
                         this.canRecord = false;
                         this.label = @js(__('testcreation.uploading'));
 
-                        
+
                         this.$wire.upload(`questions.${this.qid}.uploaded_sound`, file,
                             () => {
-                                
+
                                 this.label = @js(__('testcreation.uploaded'));
                             },
                             (err) => {
-                                
+
                                 this.label = @js(__('testcreation.upload_failed'));
                                 this.canRecord = true;
                                 this.hasAudio = false;
@@ -308,10 +308,10 @@
                     },
                     // Clear the audio, re-enable recording
                     async clearAll() {
-                        
+
                         this.label = @js(__('testcreation.clearing'));
                         await this.$wire.call('clearSound', this.qid);
-                        
+
                     },
                     // Set the audio element's source to the given URL (if gbiven)
                     _setAudio(url) {
