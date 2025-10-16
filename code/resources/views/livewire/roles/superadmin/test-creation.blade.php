@@ -114,11 +114,11 @@
                                     <!-- Hidden audio element for making playing audio possible -->
                                     <audio x-ref="audio" preload="metadata"></audio>
                                 </div>
-                                <span> {{ __('or') }}</span>
+                                <span> {{ __('testcreation.or') }}</span>
                                 <div>
                                     <flux:button type="button" icon="arrow-up-tray" 
                                         onclick="document.getElementById('Audio-Uploader').click()">
-                                        {{ __('actions.choose_file') }} {{ __('Sound') }}
+                                        {{ __('testcreation.choose_sound') }}
                                     </flux:button>
                                     <input id="Audio-Uploader" type="file"
                                         wire:model="questions.{{ $selectedQuestion }}.uploaded_sound"
@@ -134,9 +134,9 @@
                             {{-- Container for uploading media --}}
 
                             <div class="my-5">
-                                <flux:button type="button" icon="photo" 
+                                <flux:button type="button" icon="photo"
                                     onclick="document.getElementById('Upload-Image-2').click()">
-                                    {{ __('actions.choose_file') }} {{ __('Image') }}
+                                    {{ __('testcreation.choose_image') }}
                                 </flux:button>
                                 <input id="Upload-Image-2" type="file"
                                     wire:model="questions.{{ $selectedQuestion }}.uploaded_image" accept="image/*"

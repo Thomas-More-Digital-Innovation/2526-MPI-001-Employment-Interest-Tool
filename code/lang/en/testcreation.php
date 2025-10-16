@@ -14,6 +14,8 @@ return [
     'description_label' => 'Image Description',
     'interest_field_label' => 'Interest Field',
     'choose_interest_field' => 'Choose interest field...',
+    'choose_image' => 'Choose Image',
+    'choose_sound' => 'Choose Sound',
     'record' => 'Record',
     'stop' => 'Stop',
     'play' => 'Play',
@@ -33,5 +35,6 @@ return [
     'uploading' => 'Uploading...',
     'uploaded' => 'Uploaded',
     'upload_failed' => 'Upload Failed',
-    'clearing' => 'Clearing...'
+    'clearing' => 'Clearing...',
+    'or' => 'or',
 ];

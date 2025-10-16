@@ -14,6 +14,8 @@ return [
     'description_label' => 'Beschrijving van de afbeelding',
     'interest_field_label' => 'Interessegebied',
     'choose_interest_field' => 'Selecteer interessegebied...',
+    'choose_image' => 'Kies afbeelding',
+    'choose_sound' => 'Kies geluid',
     'record' => 'Opnemen',
     'stop' => 'Stop',
     'play' => 'Afspelen',
@@ -33,5 +35,6 @@ return [
     'uploading' => 'Uploaden...',
     'uploaded' => 'Geüpload',
     'upload_failed' => 'Uploaden mislukt',
-    'clearing' => 'Verrekening...'
+    'clearing' => 'Verrekening...',
+    'or' => 'of',
 ];
