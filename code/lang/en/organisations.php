@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'manager' => 'Organisations',
+    'search' => 'Search organisations',
+    'search_placeholder' => 'Search by name',
+    'add' => 'Add organisation',
+    'name' => 'Name',
+    'status' => 'Status',
+    'expire_date' => 'Expiry date',
+    'active' => 'Active',
+    'actions' => 'Actions',
+
+    'manage_admins' => 'Manage organisation admins',
+    'create_admin' => 'Create admin',
+    'remove_admin' => 'Remove',
+    'no_admins' => 'No admins for this organisation',
+    'sidebar' => 'Manage organisations',
+    'edit' => 'Edit',
+    'activate' => 'Activate',
+    'inactivate' => 'Inactivate',
+    'toggle_confirm' => 'Are you sure you want to deactivate this organisation?',
+    'cancel' => 'Cancel',
+    'confirm' => 'Confirm',
+    'save_changes' => 'Save changes',
+    'create_organisation' => 'Create organisation',
+    'no_organisations' => 'No organisations found',
+    'no_expiry' => 'No expiry date',
+    'expired' => 'Expired',
+    'actions' => 'Actions',
+];

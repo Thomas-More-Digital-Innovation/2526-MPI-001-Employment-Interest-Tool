@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'manager' => 'Organisaties',
+    'search' => 'Zoek organisaties',
+    'search_placeholder' => 'Zoeken op naam',
+    'add' => 'Organisatie toevoegen',
+    'name' => 'Naam',
+    'status' => 'Status',
+    'expire_date' => 'Vervaldatum',
+    'active' => 'Actief',
+    'actions' => 'Acties',
+
+    'manage_admins' => 'Beheer organisatiebeheerders',
+    'create_admin' => 'Maak beheerder aan',
+    'remove_admin' => 'Verwijderen',
+    'no_admins' => 'Geen beheerders voor deze organisatie',
+    'sidebar' => 'Beheer organisaties',
+    'edit' => 'Bewerken',
+    'activate' => 'Activeren',
+    'inactivate' => 'Deactiveren',
+    'deactivate_confirm' => 'Weet je zeker dat je deze organisatie wilt deactiveren?',
+    'cancel' => 'Annuleren',
+    'confirm' => 'Bevestigen',
+    'save_changes' => 'Wijzigingen opslaan',
+    'create_organisation' => 'Organisatie aanmaken',
+    'no_organisations' => 'Geen organisaties gevonden',
+    'no_expiry' => 'Geen vervaldatum',
+    'expired' => 'Verlopen',
+    'actions' => 'Acties',
+];

@@ -8,5 +8,6 @@
         <flux:navlist.item icon="users" :href="route('superadmin.system')" :current="request()->routeIs('superadmin.system')" wire:navigate>{{ __('SuperAdmin System') }}</flux:navlist.item>
         <flux:navlist.item icon="users" :href="route('superadmin.interest-field-manager')" :current="request()->routeIs('superadmin.interest-field-manager')" wire:navigate>{{ __('Interest Field Manager') }}</flux:navlist.item>
         <flux:navlist.item icon="users" :href="route('superadmin.manage-researchers')" :current="request()->routeIs('superadmin.manage-researchers')" wire:navigate>{{ __('manage-researchers.manage_researchers') }}</flux:navlist.item>
+        <flux:navlist.item icon="building" :href="route('superadmin.organisations-manager')" :current="request()->routeIs('superadmin.organisations-manager')" wire:navigate>{{ __('organisations.sidebar') }}</flux:navlist.item>
     </flux:navlist.group>
 </flux:navlist>
