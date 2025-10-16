@@ -32,7 +32,6 @@
                             class="mb-2"
                             wire:model.live.debounce.50ms="questions.{{ $selectedQuestion }}.title"
                             placeholder="{{ __('testcreation.title_placeholder') }}"
-                            :loading="false"
                             label="{{ __('testcreation.title_label') }}"
                             type="text"
                         />
@@ -69,16 +68,16 @@
                             class="flex items-center mt-3 w-full"
                         >
                             <!-- Record controls -->
-                            <button @click="start" x-show="canRecord && !isRecording" class="px-3 py-2 rounded bg-red-600 text-white">● {{ __('testcreation.record') }}</button>
-                            <button @click="stop" x-show="canRecord && isRecording" class="px-3 py-2 rounded bg-gray-800 text-white">{{ __('testcreation.stop') }}</button>
+                            <button type="button" @click="start" x-show="canRecord && !isRecording" class="px-3 py-2 rounded bg-red-600 text-white">● {{ __('testcreation.record') }}</button>
+                            <button type="button" @click="stop" x-show="canRecord && isRecording" class="px-3 py-2 rounded bg-gray-800 text-white">{{ __('testcreation.stop') }}</button>
 
                             <!-- Play/Pause -->
-                            <button @click="togglePlay" x-show="hasAudio" class="px-3 m-2 py-2 rounded bg-blue-600 text-white">
+                            <button type="button" @click="togglePlay" x-show="hasAudio" class="px-3 m-2 py-2 rounded bg-blue-600 text-white">
                                 <span x-text="isPlaying ? '{{ __('testcreation.pause') }}' : '{{ __('testcreation.play') }}'"></span>
                             </button>
 
                             <!-- Clear the sound (re-enables recording) -->
-                            <button @click="clearAll" x-show="hasAudio || !canRecord" class="px-3 py-2 rounded text-black bg-gray-200">{{ __('testcreation.clear') }}</button>
+                            <button type="button" @click="clearAll" x-show="hasAudio || !canRecord" class="px-3 py-2 rounded text-black bg-gray-200">{{ __('testcreation.clear') }}</button>
                             <!-- Status/Error label -->
                             <span class="text-sm text-gray-600 dark:text-gray-300 ml-3" x-text="label"></span>
                             <!-- Hidden audio element for making playing audio possible -->
