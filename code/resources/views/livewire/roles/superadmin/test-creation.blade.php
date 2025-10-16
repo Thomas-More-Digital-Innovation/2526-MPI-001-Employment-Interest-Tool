@@ -80,7 +80,7 @@
                             wire:key="{{ $recorderKey }}" wire:ignore>
 
                             {{-- The container for the recorder, initialises the recorder in alpine --}}
-                            <div class="flex items-center mt-3 w-full gap-2">
+                            <div class="flex items-center mt-3 w-full gap-2 inline-flex flex-wrap">
                                 <div>
                                     <!-- Record controls -->
                                     <flux:button type="button" @click="start" x-show="canRecord && !isRecording"
