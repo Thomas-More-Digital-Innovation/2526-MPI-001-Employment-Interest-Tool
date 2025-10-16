@@ -153,7 +153,8 @@
                 ">
                 {{-- Accessing the array within the array --}}
                 @foreach ($questions as $index => $question)
-                    <li wire:key="question-{{ $index }}" class="cursor-grab w-full flex justify-between items-center bg-zinc-200/60 dark:bg-zinc-600 rounded my-2">
+                    {{-- If selectedQuestion is $index, apply the active:bg-zinc-300 dark:active:bg-zinc-500 classes --}}
+                    <li wire:key="question-{{ $index }}" wire:click="selectQuestion({{ $index }})" class="cursor-grab w-full flex justify-between items-center rounded my-2 active:bg-zinc-300 dark:active:bg-zinc-500 {{ $selectedQuestion === $index ? 'bg-zinc-300 dark:bg-zinc-500' : '' }}">
                         {{-- Tally svg to indicate the bars are sortable --}}
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 lucide lucide-tally2-icon lucide-tally-2"><path d="M4 4v16"/><path d="M9 4v16"/></svg>
                         {{-- Icon to indicate whether question is good to be submitted or not --}}
@@ -163,13 +164,11 @@
                             </svg>
                         </div>
                         {{-- Button that assigns the clicked question as the selected one and displays the values on the main container, text is truncated and shows up on hover as a tooltip :-) --}}
-                        <flux:button variant="ghost" class="w-full justify-start text-left truncate whitespace-nowrap overflow-hidden" wire:click="selectQuestion({{ $index }})" title="{{ $question['title'] ?? __('testcreation.untitled') }}">
+                        <span class="w-full justify-start text-left truncate whitespace-nowrap overflow-hidden">
                             {{ $question['title'] ? __('testcreation.question_title', ['number' => $index + 1, 'title' => $question['title']]) : __('testcreation.question_undefined', ['number' => $index + 1]) }}
-                        </flux:button>
+                        </span>
                         {{-- Button + svg of a trashcan that removes the question from the array :) --}}
-                        <flux:button variant="ghost" wire:click="removeQuestion({{ $index }})">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                        </flux:button>
+                        <flux:button variant="ghost" icon="trash" wire:click="removeQuestion({{ $index }})"/>
                     </li>
                 @endforeach
             </ul>
