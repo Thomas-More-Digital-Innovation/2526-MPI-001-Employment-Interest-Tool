@@ -156,12 +156,10 @@
                     {{-- If selectedQuestion is $index, apply the active:bg-zinc-300 dark:active:bg-zinc-500 classes --}}
                     <li wire:key="question-{{ $index }}" wire:click="selectQuestion({{ $index }})" class="cursor-grab w-full flex justify-between items-center rounded my-2 active:bg-zinc-300 dark:active:bg-zinc-500 {{ $selectedQuestion === $index ? 'bg-zinc-300 dark:bg-zinc-500' : '' }}">
                         {{-- Tally svg to indicate the bars are sortable --}}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 lucide lucide-tally2-icon lucide-tally-2"><path d="M4 4v16"/><path d="M9 4v16"/></svg>
+                        <flux:icon.chevron-up-down class="mr-1"/>
                         {{-- Icon to indicate whether question is good to be submitted or not --}}
-                        <div class="flex items-center justify-center w-1/12">
-                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
-                                <circle r="6" cx="7" cy="7" fill="{{ $question['circleFill'] ?? 'red' }}" />
-                            </svg>
+                        <div class="flex items-center justify-center w-1/12 mr-2">
+                            <div class="w-4 h-4 rounded-full" style="background: {{ $question['circleFill'] ?? 'red' }}"></div>
                         </div>
                         {{-- Button that assigns the clicked question as the selected one and displays the values on the main container, text is truncated and shows up on hover as a tooltip :-) --}}
                         <span class="w-full justify-start text-left truncate whitespace-nowrap overflow-hidden">
