@@ -10,7 +10,12 @@
             @else
                 <flux:input wire:model="email" :label="ucfirst(__('user.email'))" type="email" required />
             @endif
-            <flux:checkbox wire:model="is_sound_on" :label="$is_sound_on ? __('user.sound_on') : __('user.sound_off')" type="checkbox" required autofocus/>
+            <div x-data="{ soundOn: @entangle('is_sound_on') }" class="flex items-center space-x-3">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <flux:checkbox wire:model="is_sound_on" :label="''" type="checkbox" required autofocus class="!p-0" />
+                    <span class="select-none" x-text="soundOn ? @js(__('user.sound_on')) : @js(__('user.sound_off'))"></span>
+                </label>
+            </div>
             {{-- Dropdown with type of vision--}}
             <flux:select wire:model="vision_type" :label="__('user.vision_type')" required>
                  <option value="Normal">{{ __('user.vision_type_normal') }}</option>

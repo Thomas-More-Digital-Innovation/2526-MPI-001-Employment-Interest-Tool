@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'manager' => 'Interest Field Manager',
+    'manager' => 'Manage Interest Fields',
     'search' => 'Search by name or description',
     'add' => 'Add Interest Field',
     'edit' => 'Edit Interest Field',

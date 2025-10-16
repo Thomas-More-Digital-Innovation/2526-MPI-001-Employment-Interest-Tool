@@ -114,7 +114,8 @@
     "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
     "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:": "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:",
     "IM Used": "IM Used",
-    "Image": "Image",
+    "Image": "image",
+    "Sound": "sound",
     "Impersonate": "Impersonate",
     "Impersonation": "Impersonation",
     "Import": "Import",
@@ -158,6 +159,7 @@
     "New password": "New password",
     "No": "No",
     "No Content": "No Content",
+    "No Results Found": "No Results Found",
     "Non-Authoritative Information": "Non-Authoritative Information",
     "Not Acceptable": "Not Acceptable",
     "Not Extended": "Not Extended",
@@ -222,6 +224,7 @@
     "See Other": "See Other",
     "Select": "Select",
     "Select All": "Select All",
+    "Selected": "Selected",
     "Send": "Send",
     "Server Error": "Server Error",
     "Service Unavailable": "Service Unavailable",
@@ -307,5 +310,6 @@
     "Enter your username and password below to log in": "Enter your username and password below to log in",
     "Stop Test": "Stop Test",
     "Are you sure you want to stop the test?": "Are you sure you want to stop the test?",
-    "Your progress will be lost if you stop now.": "Your progress will be lost if you stop now."
+    "Your progress will be lost if you stop now.": "Your progress will be lost if you stop now.",
+    "InteresseTest": "InterestTest"
 }
