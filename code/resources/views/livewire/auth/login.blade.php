@@ -5,6 +5,13 @@
     <style>
         .login-form [data-flux-label]{
             color: white !important;
+            font-size: 1.1rem !important;
+            font-weight: 600;
+        }
+        .login-form [data-flux-link] {
+            color: white !important;
+            font-size: 1.1rem !important;
+            font-weight: 600;
         }
     </style>
 
@@ -12,6 +19,7 @@
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <form method="POST" wire:submit="login" class="flex flex-col gap-6 login-form">
+
         <!-- Username -->
         <flux:input
             wire:model="username"
@@ -21,7 +29,7 @@
             autofocus
             autocomplete="username"
             class="[&>input]:placeholder-gray-400 [&>input]:bg-white [&>input]:text-black"
-            size="4xl"
+            size="3xl"
             :placeholder="__('Username')"
         />
 
@@ -34,7 +42,7 @@
                 required
                 autocomplete="current-password"
                 class="[&>input]:placeholder-gray-400 [&>input]:bg-white [&>input]:text-black"
-                size="4xl"
+                size="3xl"
                 :placeholder="__('Password')"
                 viewable
             />
@@ -47,7 +55,7 @@
         </div>
 
         <div class="flex items-center justify-end">
-            <flux:button variant="primary" size="3xl" type="submit" class="w-full" data-test="login-button">
+            <flux:button variant="primary" size="2xl" type="submit" class="w-full" data-test="login-button">
                 {{ __('Log in') }}
             </flux:button>
         </div>

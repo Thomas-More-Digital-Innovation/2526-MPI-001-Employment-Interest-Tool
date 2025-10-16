@@ -84,3 +84,7 @@ select:focus[data-flux-control] {
     cursor: pointer;
   }
 }
+
+html {
+    scroll-behavior: smooth;
+}
