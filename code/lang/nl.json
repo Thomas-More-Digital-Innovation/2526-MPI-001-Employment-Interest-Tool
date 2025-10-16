@@ -308,5 +308,6 @@
     "Enter your username and password below to log in": "Vul je gebruikersnaam en wachtwoord in om in te loggen",
     "Stop Test": "Test stoppen",
     "Are you sure you want to stop the test?": "Weet je zeker dat je de test wilt stoppen?",
-    "Your progress will be lost if you stop now.": "Je voortgang gaat verloren als je nu stopt."
+    "Your progress will be lost if you stop now.": "Je voortgang gaat verloren als je nu stopt.",
+    "InteresseTest": "InteresseTest"
 }
