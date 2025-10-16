@@ -54,7 +54,7 @@
             type="button"
             icon="{{ $showInactivated ? 'eye-slash' : 'eye' }}"
             wire:click="toggleShowInactivated"
-            class="bg-color-mpi-500 text-amber-50">
+            class="bg-color-mpi">
 
             {{ $showInactivated ? __('manage-researchers.hideInactive') :  __('manage-researchers.showInactive') }}
         </flux:button>
