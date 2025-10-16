@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'create_test' => 'Create Test',
+    'test_manager' => 'Manage Tests',
     'test_name_placeholder' => 'Test Name',
     'test_name_label' => 'Test Name',
     'no_image_uploaded' => 'No image uploaded',

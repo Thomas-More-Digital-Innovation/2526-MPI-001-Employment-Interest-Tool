@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'create_test' => 'Maak Test',
+    'test_manager' => 'Beheer Testen',
     'test_name_placeholder' => 'Naam van de test',
     'test_name_label' => 'Testnaam',
     'no_image_uploaded' => 'Geen afbeelding geüpload',
