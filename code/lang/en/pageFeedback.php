@@ -15,6 +15,6 @@ return [
     'ChooseCategory' => 'Choose a category',
     'ErrorCategory' => 'You have to choose a category!',
     'ErrorFeedbackMessage' => 'You have to fill in a message!',
-    'MessageSend' => 'The message is send!',
+    'MessageSend' => 'The message is sent!',
     'MessageNotSend' =>'The message isn\'t sent!'
 ];
