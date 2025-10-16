@@ -58,13 +58,14 @@
             @endif
 
             <livewire:test.send-feedback-test
+                    wire:key="feedback-{{ $questionNumber }}"
                     :class="'size-6 md:size-16'"
                     :clientName="$clientName"
                     :questionNumber="$questionNumber"
                     :test="$testName"
+                    :question="$title"
                     :mail-mentor="$mailMentor"
-                    :website="route('dashboard')"
-                    :onCloseEvent=" App\Livewire\Test\Test::UNCLEAR_CLOSED_EVENT "
+                    :onCloseEvent="App\Livewire\Test\Test::UNCLEAR_CLOSED_EVENT"
             />
 
             <button wire:click="next" class="text-6xl"><flux:icon.arrow-right class="size-12 md:size-32" /></button>

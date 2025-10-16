@@ -5,10 +5,15 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('livewire:navigated', function () {
-        {{-- CTX draw the graph bars --}}
-        const ctx = document.getElementById('interestChart').getContext('2d');
-        const chart = new Chart(ctx, {
+    function createChart() {
+        const canvas = document.getElementById('interestChart');
+        if (!canvas) return;
+
+        if (window.myChart) {
+            window.myChart.destroy();
+        }
+
+        window.myChart = new Chart(canvas, {
             type: 'bar',
             data: {
                 labels: @json($labels),
@@ -33,6 +38,9 @@
                 }
             }
         });
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', setTimeout(createChart, 100));
+    document.addEventListener('livewire:navigated', createChart);
 </script>
 @endpush

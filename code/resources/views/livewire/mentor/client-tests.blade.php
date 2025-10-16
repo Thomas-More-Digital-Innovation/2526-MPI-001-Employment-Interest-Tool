@@ -7,14 +7,15 @@
                 <th class="px-4 py-3">#</th>
                 <th class="px-4 py-3">{{ __('Test name') }}</th>
                 <th class="px-4 py-3">{{ __('Status') }}</th>
+                <th class="px-4 py-3">{{ __('user.attempted_at') }}</th>
                 <th class="px-4 py-3 text-right">{{ __('Actions') }}</th>
             </tr>
         </thead>
 
         <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
-            @forelse ($attempts as $attempt)
-            <tr wire:key="test-row-{{ $index}}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
-                <td class="px-4 py-3">{{ $index++}}</td>
+            @forelse ($attempts as $index => $attempt)
+                        <tr wire:key="test-row-{{ $attempt->test_attempt_id ?? $index}}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
+                            <td class="px-4 py-3">{{ $index + 1 }}</td>
                 <td class="px-4 py-3">{{ $attempt->test->test_name ?? data_get($attempt, 'attempt.test.name', '—') }}</td>
                 <td class="px-4 py-3">
                     @if($attempt->finished)
@@ -22,6 +23,9 @@
                     @else
                         <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800">{{ __('Pending') }}</span>
                     @endif
+                </td>
+                <td class="px-4 py-3">
+                    <x-localized-time :datetime="$attempt->created_at" />
                 </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end gap-2">

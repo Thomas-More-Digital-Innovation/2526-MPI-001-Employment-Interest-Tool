@@ -6,6 +6,7 @@ return [
     'first_name' => 'First name',
     'last_name' => 'Last name',
     'username' => 'Username',
+    'email' => 'Email',
     'vision_type' => 'Vision type',
     'language' => 'Language',
     'profile' => 'Profile',

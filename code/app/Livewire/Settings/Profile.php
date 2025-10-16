@@ -18,6 +18,8 @@ class Profile extends Component
 
     public string $username = '';
 
+    public string $email = '';
+
     public bool $is_sound_on = false;
 
     public string $vision_type = '';
@@ -59,6 +61,7 @@ class Profile extends Component
         $user = Auth::user();
         $this->first_name = $user->first_name;
         $this->last_name = $user->last_name;
+        $this->email = $user->email;
         $this->is_sound_on = $user->is_sound_on;
         $this->vision_type = $user->vision_type;
         $this->language_id = $user->language_id;
@@ -72,13 +75,19 @@ class Profile extends Component
     {
         $user = Auth::user();
 
-        $validated = $this->validate([
+        $rules = [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'is_sound_on' => ['boolean'],
             'vision_type' => ['required', 'string', 'max:255'],
             'language_id' => ['required', 'exists:language,language_id'],
-        ]);
+        ];
+
+        if (!$user->isClient()) {
+            $rules['email'] = ['required', 'email', 'unique:users,email,' . $user->user_id . ',user_id'];
+        }
+
+        $validated = $this->validate($rules);
 
         // Compare with the value from the database before saving
         $languageChanged = $validated['language_id'] != $user->language_id;
@@ -121,6 +130,7 @@ class Profile extends Component
         $this->dispatch('profile-updated',
             first_name: $user->first_name,
             last_name: $user->last_name,
+            email: $user->email,
             is_sound_on: $user->is_sound_on,
             language_id: $user->language_id,
             vision_type: $user->vision_type,
