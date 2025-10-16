@@ -216,6 +216,9 @@ class TestCreation extends Component
     }
     // When dropping an item, reorder the questions in the list
     public function reorderQuestions(int $oldIndex, int $newIndex): void {
+        // Track which question is currently selected
+        $wasSelectedItem = $this->selectedQuestion === $oldIndex;
+        
         // First we take the array and declare it locally (looks weird if done directly on $this->questions)
         $items = $this->questions;
         // We use this function to "cut off" the item we picked up
@@ -231,6 +234,18 @@ class TestCreation extends Component
 
         // return the sorted array to the page :)
         $this->questions = array_values($items);
+        
+        // Update selectedQuestion to follow the moved item
+        if ($wasSelectedItem) {
+            // If the dragged item was selected, follow it to its new position
+            $this->selectedQuestion = $newIndex;
+        } else if ($this->selectedQuestion > $oldIndex && $this->selectedQuestion <= $newIndex) {
+            // If selected item was shifted down (item moved from above to below it)
+            $this->selectedQuestion--;
+        } else if ($this->selectedQuestion < $oldIndex && $this->selectedQuestion >= $newIndex) {
+            // If selected item was shifted up (item moved from below to above it)
+            $this->selectedQuestion++;
+        }
     }
 
     public function clearSound(int $index): void

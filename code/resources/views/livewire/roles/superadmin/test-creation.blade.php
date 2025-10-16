@@ -139,6 +139,17 @@
                 $el._sortableBound = true;
                 new Sortable($el, {
                     animation: 150,
+                    dragClass: 'opacity-0',
+                    onMove(e) {
+                        // Update visual indexes during drag
+                        requestAnimationFrame(() => {
+                            const items = $el.querySelectorAll('li span');
+                            items.forEach((span, idx) => {
+                                const text = span.textContent;
+                                span.textContent = text.replace(/\d+/, idx + 1);
+                            });
+                        });
+                    },
                     onEnd(e) {
                         if (e.oldIndex === e.newIndex) return;
                         $wire.reorderQuestions(e.oldIndex, e.newIndex);
