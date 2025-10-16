@@ -26,7 +26,15 @@
                              alt="Question Image"
                              class="rounded-2xl max-h-full max-w-full object-contain">
                     @else
-                        <span class="text-zinc-500 dark:text-zinc-400">{{ __('testcreation.no_image_uploaded') }}</span>
+                        <label for="Upload-Image" class="cursor-pointer text-zinc-500 dark:text-zinc-400">
+                            {{ __('testcreation.no_image_uploaded') }}
+                        </label>
+                        <input
+                            id="Upload-Image"
+                            type="file"
+                            wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
+                            accept="image/*"
+                            class="hidden">
                     @endif
                 </div>
                 {{-- Where the selected question is shown --}}
