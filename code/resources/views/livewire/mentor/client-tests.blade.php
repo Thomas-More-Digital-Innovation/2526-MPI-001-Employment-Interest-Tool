@@ -12,6 +12,7 @@
                     <th class="px-4 py-3">#</th>
                     <th class="px-4 py-3">{{ __('client-tests.Test_name') }}</th>
                     <th class="px-4 py-3">{{ __('Status') }}</th>
+                    <th class="px-4 py-3">{{ __('user.attempted_at') }}</th>
                     <th class="px-4 py-3 text-right">{{ __('Actions') }}</th>
                 </tr>
             </thead>
@@ -29,6 +30,9 @@
                             <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800">
                             {{ __('client-tests.Uncompleted') }}</span>
                         @endif
+                    </td>
+                    <td class="px-4 py-3">
+                        <x-localized-time :datetime="$attempt->created_at" />
                     </td>
                     <td class="px-4 py-3">
                         <div class="flex justify-end gap-2">
