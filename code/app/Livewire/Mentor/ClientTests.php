@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Mentor;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\TestAttempt;
@@ -31,8 +32,12 @@ class ClientTests extends Component
     {
         $this->viewingClient = null;
 
-        if (!$this->viewingClientId) {
+        if (!$this->viewingClientId && Auth::user()->isMentor()) {
             return redirect()->route('mentor.clients-manager');
+        }
+
+        if (!$this->viewingClientId && Auth::user()->isAdmin()) {
+            return redirect()->route('admin.admin-clients-manager');
         }
 
         $this->viewingClient = User::find($this->viewingClientId);
@@ -66,8 +71,12 @@ class ClientTests extends Component
     public function viewTestResults(int $testAttemptId)
     {
         session()->flash('testAttempt', $testAttemptId);
-
+        
+        if(Auth::user()->isMentor())
         return redirect()->route('mentor.test-details');
+
+        if(Auth::user()->isAdmin())
+        return redirect()->route('admin.test-details');
     }
     public function render()
     {
