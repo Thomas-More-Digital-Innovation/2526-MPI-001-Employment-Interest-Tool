@@ -6,37 +6,24 @@
             <flux:input wire:model.defer="test_name" placeholder="{{ __('testcreation.test_name_placeholder') }}" label="{{ __('testcreation.test_name_label') }}" type="text" />
             <div class="flex flex-col md:flex-row bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 rounded-2xl">
                 {{-- Image display area --}}
-                <div class="bg-zinc-300 min-h-[25vh] dark:bg-zinc-600 rounded-2xl flex-1 flex items-center justify-center m-4">
-                    {{-- If an image has been uploaded, show a preview of the uploaded image --}}
-                    {{-- Else if an image exists in the database, show that image --}}
-                    {{-- Else show a placeholder text --}}
-                    @if (isset($questions[$selectedQuestion]['uploaded_image']))
-                        {{-- Check if the uploaded_image is a temporary uploaded file --}}
-                        {{-- If so, use temporaryUrl() to show the preview --}}
-                        {{-- Else, show a loading text --}}
-                        @if (is_object($questions[$selectedQuestion]['uploaded_image']) && method_exists($questions[$selectedQuestion]['uploaded_image'], 'temporaryUrl'))
-                            <img src="{{ $questions[$selectedQuestion]['uploaded_image']->temporaryUrl() }}"
-                                 alt="Image Preview"
-                                 class="rounded-2xl max-h-full max-w-full object-contain">
-                        @else
-                            <span class="text-blue-500">Preview loading...</span>
-                        @endif
-                    @elseif (isset($questions[$selectedQuestion]['media_link']) && !empty($questions[$selectedQuestion]['media_link']))
+                @php
+                    $imgSet = isset($questions[$selectedQuestion]['uploaded_image']) || (isset($questions[$selectedQuestion]['media_link']) && !empty($questions[$selectedQuestion]['media_link']));
+                @endphp
+                <label for="Upload-Image" class="min-h-[25vh] rounded-2xl flex-1 flex items-center justify-center m-4 cursor-pointer {{ $imgSet ? '' : 'bg-zinc-300 dark:bg-zinc-600' }}">
+                    @if ($imgSet)
                         <img src="{{ route('question.image', ['filename' => $questions[$selectedQuestion]['media_link']]) }}"
-                             alt="Question Image"
-                             class="rounded-2xl max-h-full max-w-full object-contain">
+                                alt="Question Image"
+                                class="rounded-2xl max-h-full max-w-full object-contain">
                     @else
-                        <label for="Upload-Image" class="cursor-pointer text-zinc-500 dark:text-zinc-400">
-                            {{ __('testcreation.no_image_uploaded') }}
-                        </label>
-                        <input
-                            id="Upload-Image"
-                            type="file"
-                            wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
-                            accept="image/*"
-                            class="hidden">
+                        <span class="text-zinc-500 dark:text-zinc-400">{{ __('testcreation.no_image_uploaded') }}</span>
                     @endif
-                </div>
+                </label>
+                <input
+                    id="Upload-Image"
+                    type="file"
+                    wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
+                    accept="image/*"
+                    class="hidden">
                 {{-- Where the selected question is shown --}}
                 <div class="flex-1 flex-col m-4 p-2">
                     <div class="mb-5">
