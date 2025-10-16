@@ -26,4 +26,6 @@ return [
     'select_valid_language' => 'Selecteer een geldige taal.',
     'language_not_found' => 'Taal niet gevonden voor de opgegeven code.',
     'no_fields_found' => 'Nog geen interessegebieden gevonden.',
+    'add_translation' => 'Vertaling toevoegen',
+    'select_language' => 'Selecteer een taal',
 ];

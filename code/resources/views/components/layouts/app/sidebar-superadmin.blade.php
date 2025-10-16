@@ -10,6 +10,6 @@
         <flux:navlist.item icon="users" :href="route('superadmin.test.create')" :current="request()->routeIs('superadmin.test.create')" wire:navigate>{{ __('Test Creation') }}</flux:navlist.item>
         <flux:navlist.item icon="users" :href="route('superadmin.test.manager')" :current="request()->routeIs('superadmin.test.manager')" wire:navigate>{{ __('Test Manage') }}</flux:navlist.item>
         <flux:navlist.item icon="users" :href="route('superadmin.interest-field-manager')" :current="request()->routeIs('superadmin.interest-field-manager')" wire:navigate>{{ __('Interest Field Manager') }}</flux:navlist.item>
-
+        <flux:navlist.item icon="users" :href="route('superadmin.manage-researchers')" :current="request()->routeIs('superadmin.manage-researchers')" wire:navigate>{{ __('manage-researchers.manage_researchers') }}</flux:navlist.item>
     </flux:navlist.group>
 </flux:navlist>
