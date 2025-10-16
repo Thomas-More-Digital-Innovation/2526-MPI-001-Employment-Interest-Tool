@@ -161,17 +161,17 @@
         </div>
     </main>
     {{-- Sidebar --}}
-    <aside class="w-full md:w-1/4 p-3">
+    <aside class="w-full md:w-1/4 p-3 md:self-start md:sticky md:top-4">
         <div
-            class="flex-col mt-3 bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 pl-2 rounded-xl flex items-center justify-between mb-4">
+            class="flex flex-col mt-3 bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 pl-2 rounded-xl mb-4 max-h-[85vh]">
             {{-- Header + Button to add questions --}}
-            <div class="flex w-full justify-between p-2 items-center">
+            <div class="flex w-full justify-between p-2 items-center flex-shrink-0">
                 <flux:heading size="lg">{{ __('testcreation.questions') }}</flux:heading>
                 <flux:button type="button" wire:click.stop="createQuestion" variant="primary" color="green">+
                 </flux:button>
             </div>
             {{-- Container to list + sort questions automatically, Basic-sortable is a selector for the sortable.js script --}}
-            <ul id="Basic-sortable" class="w-full px-2" x-data x-init="if (!$el._sortableBound) {
+            <ul id="Basic-sortable" class="w-full px-2 overflow-y-auto flex-1 min-h-0" x-data x-init="if (!$el._sortableBound) {
                 $el._sortableBound = true;
                 new Sortable($el, {
                     animation: 150,
