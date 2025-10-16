@@ -163,7 +163,7 @@
     {{-- Sidebar --}}
     <aside class="w-full md:w-1/4 p-3 md:self-start">
         <div
-            class="flex flex-col mt-3 bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 pl-2 rounded-xl mb-4 max-h-[85vh]">
+            class="flex flex-col mt-3 bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 pl-2 rounded-xl mb-4 md:max-h-[85vh]">
             {{-- Header + Button to add questions --}}
             <div class="flex w-full justify-between p-2 items-center flex-shrink-0">
                 <flux:heading size="lg">{{ __('testcreation.questions') }}</flux:heading>
