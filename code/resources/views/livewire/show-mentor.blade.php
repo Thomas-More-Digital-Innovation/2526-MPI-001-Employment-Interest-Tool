@@ -1,5 +1,5 @@
 <div class="flex flex-col items-center justify-center py-10">
-    <div class="w-80 h-80 rounded-full overflow-hidden ring-4 ring-zinc-300 shadow-lg">
+    <div class="w-[50vw] h-[50vw] md:w-[30vw] md:h-[30vw] rounded-full overflow-hidden ring-4 ring-zinc-300 shadow-lg">
         <img
             src="{{ $mentor->profile_picture_url}}"
             alt="{{ $mentor->username }}"
