@@ -44,15 +44,22 @@
                             <div class="flex items-center gap-2 mt-1">
                                 @php
                                     $selectedInterestId = $questions[$selectedQuestion]['interest'] ?? -1;
-                                    $selectedInterest = $interestFields->firstWhere('interest_field_id', $selectedInterestId);
+                                    $selectedInterest = $interestFields->firstWhere(
+                                        'interest_field_id',
+                                        $selectedInterestId,
+                                    );
                                 @endphp
-                                <div class="flex-1 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800">
-                                    @if($selectedInterest)
-                                        <span>{{ $selectedInterest->getName(app()->getLocale()) }}</span>
-                                    @else
-                                        <span class="text-zinc-400">{{ __('testcreation.choose_interest_field') }}</span>
-                                    @endif
-                                </div>
+                                <flux:modal.trigger name="interest-field-modal">
+                                    <div
+                                        class="flex-1 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 cursor-pointer hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors">
+                                        @if ($selectedInterest)
+                                            <span>{{ $selectedInterest->getName(app()->getLocale()) }}</span>
+                                        @else
+                                            <span
+                                                class="text-zinc-400">{{ __('testcreation.choose_interest_field') }}</span>
+                                        @endif
+                                    </div>
+                                </flux:modal.trigger>
                                 <flux:modal.trigger name="interest-field-modal">
                                     <flux:button type="button">
                                         {{ __('actions.choose') }}
@@ -68,53 +75,68 @@
                             $soundUrl = $soundName ? route('question.sound', ['filename' => $soundName]) : null;
                         @endphp
                         <div x-data="recorder({ qid: {{ $selectedQuestion }}, existingUrl: @js($soundUrl) })" x-init="init()"
-                                wire:key="recorder-{{ $selectedQuestion }}" wire:ignore>
+                            wire:key="recorder-{{ $selectedQuestion }}" wire:ignore>
 
                             {{-- The container for the recorder, initialises the recorder in alpine --}}
-                            <div class="flex items-center mt-3 w-full">
-                                <!-- Record controls -->
-                                <button type="button" @click="start" x-show="canRecord && !isRecording"
-                                    class="px-3 py-2 my-2 rounded bg-red-600 text-white"><flux:icon.microphone class="inline-block" />
-                                    {{ __('testcreation.record') }}</button>
-                                <button type="button" @click="stop" x-show="canRecord && isRecording"
-                                    class="px-3 py-2 rounded bg-gray-800 text-white">{{ __('testcreation.stop') }}</button>
+                            <div class="flex items-center mt-3 w-full gap-2">
+                                <div>
+                                    <!-- Record controls -->
+                                    <flux:button type="button" @click="start" x-show="canRecord && !isRecording"
+                                        variant="primary" color="red" icon="microphone">
+                                        {{ __('testcreation.record') }}
+                                    </flux:button>
 
-                                <!-- Play/Pause -->
-                                <button type="button" @click="togglePlay" x-show="hasAudio"
-                                    class="px-3 m-2 py-2 rounded bg-blue-600 text-white">
-                                    <span
-                                        x-text="isPlaying ? '{{ __('testcreation.pause') }}' : '{{ __('testcreation.play') }}'"></span>
-                                </button>
+                                    <flux:button type="button" @click="stop" x-show="canRecord && isRecording"
+                                        variant="primary" icon="stop">
+                                        {{ __('testcreation.stop') }}
+                                    </flux:button>
 
-                                <!-- Clear the sound (re-enables recording) -->
-                                <button type="button" @click="clearAll" x-show="hasAudio || !canRecord"
-                                    class="px-3 py-2 rounded text-black bg-gray-200">{{ __('testcreation.clear') }}</button>
-                                <!-- Status/Error label -->
-                                <span class="text-sm text-gray-600 dark:text-gray-300 ml-3" x-text="label"></span>
-                                <!-- Hidden audio element for making playing audio possible -->
-                                <audio x-ref="audio" preload="metadata"></audio>
+                                    <!-- Play/Pause -->
+                                    <flux:button type="button" @click="togglePlay" x-show="hasAudio && !isPlaying"
+                                        variant="primary" color="blue" icon="play">
+                                        {{ __('testcreation.play') }}
+                                    </flux:button>
+
+                                    <flux:button type="button" @click="togglePlay" x-show="hasAudio && isPlaying"
+                                        variant="primary" color="blue" icon="pause">
+                                        {{ __('testcreation.pause') }}
+                                    </flux:button>
+
+                                    <!-- Clear the sound (re-enables recording) -->
+                                    <flux:button type="button" @click="clearAll" x-show="hasAudio || !canRecord"
+                                        icon="x-mark">
+                                        {{ __('testcreation.clear') }}
+                                    </flux:button>
+                                    <!-- Status/Error label -->
+                                    {{-- <span class="text-sm text-gray-600 dark:text-gray-300 ml-3" x-text="label"></span> --}}
+                                    <!-- Hidden audio element for making playing audio possible -->
+                                    <audio x-ref="audio" preload="metadata"></audio>
+                                </div>
+                                <span> {{ __('or') }}</span>
+                                <div>
+                                    <flux:button type="button" icon="arrow-up-tray" 
+                                        onclick="document.getElementById('Audio-Uploader').click()">
+                                        {{ __('actions.choose_file') }} {{ __('Sound') }}
+                                    </flux:button>
+                                    <input id="Audio-Uploader" type="file"
+                                        wire:model="questions.{{ $selectedQuestion }}.uploaded_sound"
+                                        accept=".mp3,audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm"
+                                        class="hidden" x-on:change="label = '{{ __('testcreation.uploading') }}';"
+                                        {{-- x-bind:disabled="!canRecord"> --}} />
+                                    @error('questions.' . $selectedQuestion . '.uploaded_sound')
+                                        <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
+
                             {{-- Container for uploading media --}}
-                            <div class="mt-2">
-                                <label for="Audio-Uploader"
-                                    class="px-4 py-2 border rounded-md shadow-sm text-sm text-gray-700 bg-white cursor-pointer hover:bg-gray-100">
-                                    {{ __('actions.choose_file') }} {{ __('Sound') }}
-                                </label>
-                                <input id="Audio-Uploader" type="file"
-                                    wire:model="questions.{{ $selectedQuestion }}.uploaded_sound"
-                                    accept=".mp3,audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm" class="hidden"
-                                    x-on:change="label = '{{ __('testcreation.uploading') }}';"
-                                    {{-- x-bind:disabled="!canRecord"> --}} />
-                                @error('questions.' . $selectedQuestion . '.uploaded_sound')
-                                    <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
-                                @enderror
-                            </div>
+
                             <div class="my-5">
-                                <label for="Upload-Image"
-                                    class="px-4 py-2 border rounded-md shadow-sm text-sm text-gray-700 bg-white cursor-pointer hover:bg-gray-100">
+                                <flux:button type="button" icon="photo" 
+                                    onclick="document.getElementById('Upload-Image-2').click()">
                                     {{ __('actions.choose_file') }} {{ __('Image') }}
-                                </label>
-                                <input id="Upload-Image" type="file"
+                                </flux:button>
+                                <input id="Upload-Image-2" type="file"
                                     wire:model="questions.{{ $selectedQuestion }}.uploaded_image" accept="image/*"
                                     class="hidden">
                                 @error('questions.' . $selectedQuestion . '.uploaded_image')
@@ -197,23 +219,20 @@
     <flux:modal name="interest-field-modal" class="max-w-4xl">
         <div class="space-y-4">
             <flux:heading size="lg">{{ __('testcreation.choose_interest_field') }}</flux:heading>
-            
+
             {{-- Search bar --}}
-            <flux:input 
-                wire:model.live.debounce.200ms="interestFieldSearch" 
-                placeholder="{{ __('actions.search') }}..."
-                icon="magnifying-glass"
-                clearable>
+            <flux:input wire:model.live.debounce.200ms="interestFieldSearch"
+                placeholder="{{ __('actions.search') }}..." icon="magnifying-glass" clearable>
             </flux:input>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto p-2">
                 @forelse ($this->filteredInterestFields as $interestField)
                     @php
-                        $isSelected = ($questions[$selectedQuestion]['interest'] ?? -1) == $interestField->interest_field_id;
+                        $isSelected =
+                            ($questions[$selectedQuestion]['interest'] ?? -1) == $interestField->interest_field_id;
                     @endphp
                     <flux:modal.close>
-                        <button
-                            type="button"
+                        <button type="button"
                             wire:click="$set('questions.{{ $selectedQuestion }}.interest', {{ $interestField->interest_field_id }})"
                             class="w-full p-4 border-2 rounded-lg text-left transition-all hover:border-blue-500 hover:shadow-lg
                                    {{ $isSelected ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-zinc-300 dark:border-zinc-600' }}">
