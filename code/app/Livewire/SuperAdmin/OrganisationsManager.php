@@ -67,6 +67,12 @@ class OrganisationsManager extends BaseCrudComponent
         });
     }
 
+    public function startEdit(int $recordId): void
+    {
+        parent::startEdit($recordId);
+        $this->dispatch('modal-open', name: 'organisation-form');
+    }
+
     /**
      * Whether inactive organisations are visible in the list.
      */
