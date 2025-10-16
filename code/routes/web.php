@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
         } elseif ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif ($user->isMentor()) {
-            return redirect()->route('mentor.dashboard');
+            return redirect()->route('mentor.clients-manager');
         } elseif ($user->isResearcher()) {
             return redirect()->route('researcher.dashboard');
         } elseif ($user->isClient()) {
@@ -82,8 +82,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['role:Mentor'])->group(function () {
-        Route::view('mentor/dashboard', 'roles.mentor.dashboard')->name('mentor.dashboard');
-        Route::view('mentor/example', 'roles.mentor.example')->name('mentor.example');
         Route::view('mentor/clients-manager', 'roles.mentor.clients-manager')->name('mentor.clients-manager');
         Route::view('mentor/client-tests', ('roles.mentor.client-tests'))->name('mentor.client-tests');
         Route::view('mentor/test-details', ('roles.mentor.test-details'))->name('mentor.test-details');
