@@ -22,7 +22,7 @@
                             @endif
                         </div>
                     @else
-                        <div class="text-sm text-gray-500">{{ __('organisations.no_expiry') }}</div>
+                        <div class="text-sm">{{ __('organisations.no_expiry') }}</div>
                     @endif
                 </td>
                 <td class="px-4 py-3">
