@@ -1,6 +1,6 @@
 <div class="text-black">
     @foreach ($tests as $test)
-        <div wire:click="startTest({{ $test->test_id }})" class="cursor-pointer flex justify-center gap-12 items-center p-2 text-md bg-zinc-400/20 border-zinc-300 dark:bg-zinc-600/40 rounded-2xl border m-2 dark:border-zinc-500">
+        <div wire:click="startTest({{ $test->test_id }})" class="cursor-pointer flex justify-between md:justify-center gap-12 items-center p-2 text-md bg-zinc-400/20 border-zinc-300 dark:bg-zinc-600/40 rounded-2xl border m-2 dark:border-zinc-500">
             {{-- Check if the test is assigned to the user --}}
             <h2 class="text-lg md:text-4xl text-black dark:text-white">{{ $test->test_name }}</h2>
             <flux:button variant="primary" color="green" size="4xl" class="ease-in-out duration-200 rounded! hover:rounded-3xl! px-5 py-3 text-white">
