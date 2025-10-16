@@ -13,7 +13,7 @@
 
     <div class="flex flex-wrap gap-3 justify-center">
         @forelse ($testContent as $questionNumber => $question)
-        <div class="w-80 rounded-2xl bg-zinc-600">
+        <div class="w-80 rounded-2xl bg-mpi text-white">
             <img src="{{ $question->getImageUrl($currentLocale) }}" class="w-full h-64 object-cover rounded-t-2xl" alt="{{ $question->getImageDescription($currentLocale) }}">
             <div class="p-2">
                 <div class="flex justify-between">
@@ -31,7 +31,7 @@
                         audio.load();
                         audio.play();
                         ">
-                        <flux:icon.speaker-wave class="size-6" />
+                        <flux:icon.speaker-wave class="size-6 text-white" />
                     </button>
                     @endif
                 </div>

@@ -57,6 +57,12 @@
 
     .bg-color-mpi {
         background-color: var(--color-mpi);
+        color: white;
+    }
+
+    .bg-color-mpi:hover {
+        background-color: white;
+        color: black;
     }
 }
 
