@@ -38,16 +38,28 @@
                             wire:model.live.debounce.300ms="questions.{{ $selectedQuestion }}.description"
                             placeholder="{{ __('testcreation.description_placeholder') }}"
                             label="{{ __('testcreation.description_label') }}" />
-                        {{-- Selection of interest field --}}
-                        <flux:select label="{{ __('testcreation.interest_field_label') }}"
-                            wire:model.live="questions.{{ $selectedQuestion }}.interest">
-                            <flux:select.option value="-1">{{ __('testcreation.choose_interest_field') }}
-                            </flux:select.option>
-                            @foreach ($interestFields as $interestField)
-                                <flux:select.option value="{{ $interestField->interest_field_id }}">
-                                    {{ $interestField->getName(app()->getLocale()) }}</flux:select.option>
-                            @endforeach
-                        </flux:select>
+                        {{-- Selection of interest field via modal --}}
+                        <div class="mb-2">
+                            <flux:label>{{ __('testcreation.interest_field_label') }}</flux:label>
+                            <div class="flex items-center gap-2 mt-1">
+                                @php
+                                    $selectedInterestId = $questions[$selectedQuestion]['interest'] ?? -1;
+                                    $selectedInterest = $interestFields->firstWhere('interest_field_id', $selectedInterestId);
+                                @endphp
+                                <div class="flex-1 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800">
+                                    @if($selectedInterest)
+                                        <span>{{ $selectedInterest->getName(app()->getLocale()) }}</span>
+                                    @else
+                                        <span class="text-zinc-400">{{ __('testcreation.choose_interest_field') }}</span>
+                                    @endif
+                                </div>
+                                <flux:modal.trigger name="interest-field-modal">
+                                    <flux:button type="button">
+                                        {{ __('actions.choose') }}
+                                    </flux:button>
+                                </flux:modal.trigger>
+                            </div>
+                        </div>
                         {{-- audio box --}}
                         @php
                             // Retrieve the sound name (the filename stored in DB)
@@ -62,7 +74,7 @@
                             <div class="flex items-center mt-3 w-full">
                                 <!-- Record controls -->
                                 <button type="button" @click="start" x-show="canRecord && !isRecording"
-                                    class="px-3 py-2 rounded bg-red-600 text-white">●
+                                    class="px-3 py-2 my-2 rounded bg-red-600 text-white"><flux:icon.microphone class="inline-block" />
                                     {{ __('testcreation.record') }}</button>
                                 <button type="button" @click="stop" x-show="canRecord && isRecording"
                                     class="px-3 py-2 rounded bg-gray-800 text-white">{{ __('testcreation.stop') }}</button>
@@ -180,6 +192,54 @@
             </ul>
         </div>
     </aside>
+
+    {{-- Interest Field Selection Modal --}}
+    <flux:modal name="interest-field-modal" class="max-w-4xl">
+        <div class="space-y-4">
+            <flux:heading size="lg">{{ __('testcreation.choose_interest_field') }}</flux:heading>
+            
+            {{-- Search bar --}}
+            <flux:input 
+                wire:model.live.debounce.200ms="interestFieldSearch" 
+                placeholder="{{ __('actions.search') }}..."
+                icon="magnifying-glass"
+                clearable>
+            </flux:input>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto p-2">
+                @forelse ($this->filteredInterestFields as $interestField)
+                    @php
+                        $isSelected = ($questions[$selectedQuestion]['interest'] ?? -1) == $interestField->interest_field_id;
+                    @endphp
+                    <flux:modal.close>
+                        <button
+                            type="button"
+                            wire:click="$set('questions.{{ $selectedQuestion }}.interest', {{ $interestField->interest_field_id }})"
+                            class="w-full p-4 border-2 rounded-lg text-left transition-all hover:border-blue-500 hover:shadow-lg
+                                   {{ $isSelected ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-zinc-300 dark:border-zinc-600' }}">
+                            <div class="font-semibold text-lg mb-1">
+                                {{ $interestField->getName(app()->getLocale()) }}
+                            </div>
+
+                        </button>
+                    </flux:modal.close>
+                @empty
+                    <div class="col-span-full text-center py-8 text-zinc-500 dark:text-zinc-400">
+                        {{ __('actions.no_results_found') }}
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="flex justify-end gap-2 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                <flux:modal.close>
+                    <flux:button variant="ghost">
+                        {{ __('actions.close') }}
+                    </flux:button>
+                </flux:modal.close>
+            </div>
+        </div>
+    </flux:modal>
+
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
         <script>

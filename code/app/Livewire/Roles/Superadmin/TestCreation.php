@@ -22,6 +22,8 @@ class TestCreation extends Component
     public string $test_name = '';
     // Variable for the selected question, defaulted to 0 to avoid problems
     public int $selectedQuestion = 0;
+    // Search term for filtering interest fields in modal
+    public string $interestFieldSearch = '';
 
     // Array where the questions are stored temporarily
     /** @var array<int,array{question_number:int,title:string,description:string,interest:int|string|null,circleFill:string}> */
@@ -368,6 +370,22 @@ class TestCreation extends Component
                 'questions.'.$index.'.uploaded_image' => 'Failed to upload the image.',
             ]);
         }
+    }
+
+    // Get filtered interest fields based on search term
+    public function getFilteredInterestFieldsProperty()
+    {
+        if (empty($this->interestFieldSearch)) {
+            return $this->interestFields;
+        }
+
+        $search = strtolower($this->interestFieldSearch);
+        $locale = app()->getLocale();
+
+        return $this->interestFields->filter(function ($field) use ($search, $locale) {
+            $name = strtolower($field->getName($locale));
+            return str_contains($name, $search);
+        });
     }
 
     public function render()
