@@ -69,7 +69,6 @@ Route::middleware(['auth'])->group(function () {
     // Role-based routes
     Route::middleware(['role:SuperAdmin'])->group(function () {
         Route::view('superadmin/dashboard', 'roles.superadmin.dashboard')->name('superadmin.dashboard');
-        Route::view('superadmin/system', 'roles.superadmin.system')->name('superadmin.system');
         Route::view('superadmin/manage-researchers', 'roles.superadmin.manage-researchers')->name('superadmin.manage-researchers');
         Route::view('superadmin/interest-field-manager', view: 'roles.superadmin.interest-field-manager')->name('superadmin.interest-field-manager');
     });
