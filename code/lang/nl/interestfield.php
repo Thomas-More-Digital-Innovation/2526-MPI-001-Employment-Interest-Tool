@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'manager' => 'Interessegebied Beheerder',
+    'manager' => 'Beheer Interessegebieden',
     'search' => 'Zoeken op naam of beschrijving',
     'add' => 'Voeg Interessegebied toe',
     'edit' => 'Bewerk Interessegebied',

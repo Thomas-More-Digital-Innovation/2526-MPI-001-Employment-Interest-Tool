@@ -62,6 +62,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/picture/{filename}', [App\Http\Controllers\ProfilePictureController::class, 'show'])->name('profile.picture');
 
     Route::get('/question/image/{filename}', [App\Http\Controllers\TestImageController::class, 'show'])->name('question.image');
+    Route::get('/question/sound/{filename}', function ($filename) {
+        $disk = \Illuminate\Support\Facades\Storage::disk('public');
+        if (!$disk->exists($filename)) {
+            abort(404);
+        }
+        $path = $disk->path($filename);
+        return response()->file($path);
+    })->name('question.sound');
 
     // Route to view Test Results
     Route::get('/test-results', TestResults::class)->name('client.test-result');
@@ -69,6 +77,11 @@ Route::middleware(['auth'])->group(function () {
     // Role-based routes
     Route::middleware(['role:SuperAdmin'])->group(function () {
         Route::view('superadmin/dashboard', 'roles.superadmin.dashboard')->name('superadmin.dashboard');
+        Route::view('superadmin/system', 'roles.superadmin.system')->name('superadmin.system');
+
+        Route::view('superadmin/test-creation', 'roles.superadmin.test-creation')->name('superadmin.test.create');
+        Route::view('superadmin/test-manager', 'roles.superadmin.test-manager')->name('superadmin.test.manager');
+        Route::view('superadmin/test-editing', 'roles.superadmin.test-editing')->name('superadmin.test.editing');
         Route::view('superadmin/manage-researchers', 'roles.superadmin.manage-researchers')->name('superadmin.manage-researchers');
         Route::view('superadmin/interest-field-manager', view: 'roles.superadmin.interest-field-manager')->name('superadmin.interest-field-manager');
     });
