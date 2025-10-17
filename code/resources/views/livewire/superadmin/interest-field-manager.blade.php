@@ -111,6 +111,11 @@
         </x-table>
     </div>
 
+    <!-- Pagination -->
+    <div class="mt-4">
+        {{ $records->links() }}
+    </div>
+
     @if ($showInactivated)
     <div class="mt-6">
         <h2 class="text-lg font-medium mb-3">{{ __('interestfield.inactive_heading') }}</h2>
@@ -185,10 +190,11 @@
     </div>
     @endif
 
-    <!-- Pagination -->
+    @if ($showInactivated)
     <div class="mt-4">
-        {{ $records->links() }}
+        {{ $this->inactiveRecords->links() }}
     </div>
+    @endif
 
     <!-- Add Interest Field Modal -->
     <flux:modal

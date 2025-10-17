@@ -83,13 +83,18 @@ class InterestFieldManager extends BaseCrudComponent
         // If we edited and it changed from active->inactive, show inactive list.
         if ($wasActive !== null && $wasActive !== $isActiveNow) {
             $this->showInactivated = ! $isActiveNow; // if now inactive, show inactive table
-            $this->resetPage();
+            // reset the paginator for the visible table
+            if ($this->showInactivated) {
+                $this->resetPage('inactivePage');
+            } else {
+                $this->resetPage('activePage');
+            }
         }
 
         // If we created a new inactive record, ensure inactive list is visible so user sees it.
         if ($wasActive === null && ! $isActiveNow) {
             $this->showInactivated = true;
-            $this->resetPage();
+            $this->resetPage('inactivePage');
         }
 
         $this->resetFormState();
@@ -176,17 +181,45 @@ class InterestFieldManager extends BaseCrudComponent
     {
         $interestField = InterestField::where('interest_field_id', $this->editingId)->first();
 
-        if ($interestField && ! $interestField->questions()->exists()) {
-            $interestField->delete();
-            session()->flash('status', [
-                'message' => __('interestfield.delete_success'),
-                'type' => 'success',
-            ]);
-        } else {
+        if (! $interestField) {
             session()->flash('status', [
                 'message' => __('interestfield.delete_error'),
                 'type' => 'error',
             ]);
+
+            $this->resetFormState();
+            $this->dispatch('modal-close', name: 'delete-interest-field-confirmation');
+
+            return;
+        }
+
+        // If the interest field is active, mark it inactive instead of deleting
+        if ($interestField->active) {
+            $interestField->active = false;
+            $interestField->save();
+
+            // Ensure UI shows inactive list so user sees it moved
+            $this->showInactivated = true;
+            $this->resetPage('inactivePage');
+
+            session()->flash('status', [
+                'message' => __('interestfield.deactivated_success'),
+                'type' => 'success',
+            ]);
+        } else {
+            // If not active and not used in questions, delete permanently
+            if (! $interestField->questions()->exists()) {
+                $interestField->delete();
+                session()->flash('status', [
+                    'message' => __('interestfield.delete_success'),
+                    'type' => 'success',
+                ]);
+            } else {
+                session()->flash('status', [
+                    'message' => __('interestfield.delete_error'),
+                    'type' => 'error',
+                ]);
+            }
         }
 
         $this->resetFormState();
@@ -264,18 +297,24 @@ class InterestFieldManager extends BaseCrudComponent
 
     public function getRecordsProperty()
     {
-        return $this->baseQuery()->paginate(10);
+        return $this->baseQuery()->paginate(10, ['*'], 'activePage');
     }
 
     public function getInactiveRecordsProperty()
     {
-        return $this->inactivatedQuery()->paginate(10);
+        return $this->inactivatedQuery()->paginate(10, ['*'], 'inactivePage');
     }
 
     public function toggleShowInactivated(): void
     {
         $this->showInactivated = ! $this->showInactivated;
-        $this->resetPage();
+
+        // Reset the paginator for the table that is now visible
+        if ($this->showInactivated) {
+            $this->resetPage('inactivePage');
+        } else {
+            $this->resetPage('activePage');
+        }
     }
 
     public function removeTranslation(string $languageCode): void
