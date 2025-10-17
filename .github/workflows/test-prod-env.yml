@@ -69,24 +69,6 @@ jobs:
             if [ -f /etc/laravel/mail ]; then cat /etc/laravel/mail >> .env.test.prod; else echo 'ERROR: /etc/laravel/mail not found on server' >&2; exit 2; fi && \
             cp .env.test.prod .env"
 
-    # Stop the compose on the vm
-    - name: Stop Docker Compose on VM
-      run: |
-        ssh -o StrictHostKeyChecking=no \
-            -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
-            -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
-            "docker compose down"
-
-    # copy the compose.test.prod.yml to the vm
-    - name: Copy Docker Compose file to VM
-      run: |
-        scp -o StrictHostKeyChecking=no \
-            -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
-            -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            code/compose.test.prod.yml \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/compose.yml
-
     # Import the images on the vm
     - name: Import Docker images on VM
       run: |
@@ -104,6 +86,24 @@ jobs:
               --change 'CMD [\"nginx\", \"-g\", \"daemon off;\"]' \
               --change 'EXPOSE 443' \
               ~/custom-nginx.tar custom-nginx:latest"
+    
+    # Stop the compose on the vm
+    - name: Stop Docker Compose on VM
+      run: |
+        ssh -o StrictHostKeyChecking=no \
+            -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
+            -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            "docker compose down"
+    
+     # Copy the compose.test.prod.yml to the vm
+    - name: Copy Docker Compose file to VM
+      run: |
+        scp -o StrictHostKeyChecking=no \
+            -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
+            -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
+            code/compose.test.prod.yml \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/compose.yml
     
     # Start the compose on the vm
     - name: Start Docker Compose on VM
