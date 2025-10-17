@@ -37,4 +37,5 @@ return [
     'upload_failed' => 'Upload Failed',
     'clearing' => 'Clearing...',
     'or' => 'or',
+    'media_link_placeholder' => 'Enter youtube or vimeo link',
 ];
