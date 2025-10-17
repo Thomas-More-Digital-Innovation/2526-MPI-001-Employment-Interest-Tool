@@ -128,30 +128,59 @@ class DatabaseSeeder extends Seeder
         ]);
         $client->roles()->attach($clientRole);
 
-       Faq::factory(5)->create();
+        Faq::factory()->create(
+            [
+                'question' => 'Wat is de intrestetest?',
+                'answer' => 'De interesse test is een hulpmiddel om de interesses en voorkeuren van een persoon in kaart te brengen.'
+            ]
+        );
+        Faq::factory()->create(
+            [
+                'question' => 'Voor wie is de test bedoeld?',
+                'answer' => 'De test is hoofdzakelijk bedoeld voor personen met een intellectuele beperking.'
+            ]
+        );
+        Faq::factory()->create(
+            [
+                'question' => 'Waarom zou ik deze test doen?',
+                'answer' => 'De test helpt bij het identificeren van carrièremogelijkheden.'
+            ]
+        );
+        Faq::factory()->create(
+            [
+                'question' => 'Hoe kan ik mij registreren als organisatie?',
+                'answer' => 'Neem contact op met Raf.Hensbergen@mpi-oosterlo.be voor een overleg voor een registratie.'
+            ]
+        );
+        Faq::factory()->create(
+            [
+                'question' => 'Hoe kan ik mij registreren als gebruiker?',
+                'answer' => 'Vraag je mentor of begeleider om een account voor jou aan te maken.'
+            ]
+        );
 
-       // Run the TestSeeder to populate test and question data
-       $this->call(TestSeederOne::class);
-       $this->call(TestSeederTwo::class);
+        // Run the TestSeeder to populate test and question data
+        $this->call(TestSeederOne::class);
+        $this->call(TestSeederTwo::class);
 
-       // TODO: no direct link to tests
-       OrganisationTest::create(
-        [
-            'organisation_id' => $organisation->organisation_id,
-            'test_id' => 1,
-        ]
-       );
-       OrganisationTest::create(
-        [
-            'organisation_id' => $organisation->organisation_id,
-            'test_id' => 2,
-        ]
-       );
-       OrganisationTest::create(
-        [
-            'organisation_id' => $organisation->organisation_id,
-            'test_id' => 3,
-        ]
-       );
+        // TODO: no direct link to tests
+        OrganisationTest::create(
+            [
+                'organisation_id' => $organisation->organisation_id,
+                'test_id' => 1,
+            ]
+        );
+        OrganisationTest::create(
+            [
+                'organisation_id' => $organisation->organisation_id,
+                'test_id' => 2,
+            ]
+        );
+        OrganisationTest::create(
+            [
+                'organisation_id' => $organisation->organisation_id,
+                'test_id' => 3,
+            ]
+        );
     }
 }
