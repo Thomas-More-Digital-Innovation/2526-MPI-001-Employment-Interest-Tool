@@ -177,6 +177,37 @@ class InterestFieldManager extends BaseCrudComponent
         $this->dispatch('modal-open', name: 'delete-interest-field-confirmation');
     }
 
+    /**
+     * Deactivate an active interest field immediately without confirmation modal.
+     */
+    public function deactivateInterestField(int $id): void
+    {
+        $interestField = InterestField::where('interest_field_id', $id)->first();
+
+        if (! $interestField) {
+            session()->flash('status', [
+                'message' => __('interestfield.delete_error'),
+                'type' => 'error',
+            ]);
+
+            return;
+        }
+
+        if ($interestField->active) {
+            $interestField->active = false;
+            $interestField->save();
+
+            // Ensure UI shows inactive list so user sees it moved
+            $this->showInactivated = true;
+            $this->resetPage('inactivePage');
+
+            session()->flash('status', [
+                'message' => __('interestfield.deactivated_success'),
+                'type' => 'success',
+            ]);
+        }
+    }
+
     public function deleteInterestField(): void
     {
         $interestField = InterestField::where('interest_field_id', $this->editingId)->first();

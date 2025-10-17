@@ -93,7 +93,7 @@
                                     variant="danger"
                                     size="sm"
                                     icon="trash"
-                                    wire:click="confirmDelete({{ $interestField->interest_field_id }})">
+                                    wire:click="deactivateInterestField({{ $interestField->interest_field_id }})">
                                     {{ __('Delete') }}
                                 </flux:button>
                             @endif
