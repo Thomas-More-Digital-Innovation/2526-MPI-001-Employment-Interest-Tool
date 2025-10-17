@@ -84,6 +84,8 @@ Route::middleware(['auth'])->group(function () {
         Route::view('superadmin/test-editing', 'roles.superadmin.test-editing')->name('superadmin.test.editing');
         Route::view('superadmin/manage-researchers', 'roles.superadmin.manage-researchers')->name('superadmin.manage-researchers');
         Route::view('superadmin/interest-field-manager', view: 'roles.superadmin.interest-field-manager')->name('superadmin.interest-field-manager');
+        Route::view('superadmin/organisations-manager', view: 'roles.superadmin.organisations-manager')->name('superadmin.organisations-manager');
+        Route::view('superadmin/admins-manager', view: 'roles.superadmin.admins-manager')->name('superadmin.admins-manager');
     });
 
     Route::middleware(['role:Admin'])->group(function () {
