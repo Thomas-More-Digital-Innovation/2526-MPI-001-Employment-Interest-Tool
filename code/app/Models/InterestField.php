@@ -16,6 +16,11 @@ class InterestField extends Model
     protected $fillable = [
         'name',
         'description',
+        'active',
+    ];
+
+    protected $casts = [
+        'active' => 'boolean',
     ];
 
     // Relationships

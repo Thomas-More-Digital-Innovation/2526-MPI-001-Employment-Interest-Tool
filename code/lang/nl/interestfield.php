@@ -22,6 +22,7 @@ return [
     'delete_success' => 'Interessegebied succesvol verwijderd.',
     'delete_error' => 'Interessegebied kan niet worden verwijderd omdat het wordt gebruikt door een vraag.',
     'delete_heading' => 'Bevestig Verwijdering',
+    'deactivated_success' => 'Interessegebied succesvol gedeactiveerd.',
     'cannot_delete_used' => 'Dit interessegebied kan niet worden verwijderd omdat het wordt gebruikt in een of meerdere vragen.',
     'default' => 'Standaard',
     'translation_removed_success' => 'Vertaling succesvol verwijderd.',
@@ -30,4 +31,9 @@ return [
     'no_fields_found' => 'Nog geen interessegebieden gevonden.',
     'add_translation' => 'Vertaling toevoegen',
     'select_language' => 'Selecteer een taal',
+    'active_label' => 'Actief',
+    'inactive_label' => 'Inactief',
+    'inactive_heading' => 'Inactieve Interessegebieden',
+    'show_inactive' => 'Toon Inactieve Interessegebieden',
+    'hide_inactive' => 'Verberg Inactieve Interessegebieden',
 ];
