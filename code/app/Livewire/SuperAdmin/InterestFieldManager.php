@@ -156,14 +156,25 @@ class InterestFieldManager extends BaseCrudComponent
 
     protected function applySearch(Builder $query): Builder
     {
-        if (empty($this->search)) {
+        $term = trim((string) $this->search);
+
+        if ($term === '') {
             return $query;
         }
 
-        return $query->where(function ($q) {
-            $q->where('name', 'like', '%'.$this->search.'%')
-                ->orWhere('description', 'like', '%'.$this->search.'%');
+        // Search in the base interest_field columns
+        $query->where(function (Builder $q) use ($term) {
+            $q->where('name', 'like', '%'.$term.'%')
+                ->orWhere('description', 'like', '%'.$term.'%');
         });
+
+        // Also search in translations (any language)
+        $query->orWhereHas('interestFieldTranslations', function (Builder $q) use ($term) {
+            $q->where('name', 'like', '%'.$term.'%')
+              ->orWhere('description', 'like', '%'.$term.'%');
+        });
+
+        return $query;
     }
 
     public function closeFormModal(): void
@@ -318,6 +329,16 @@ class InterestFieldManager extends BaseCrudComponent
             ->toArray();
     }
 
+    /**
+     * Reset both paginators when the search term updates so results reflect the
+     * new filter immediately for both the active and inactive lists.
+     */
+    public function updatingSearch(): void
+    {
+        $this->resetPage('activePage');
+        $this->resetPage('inactivePage');
+    }
+
     public function updatedNewTranslationLanguage($value): void
     {
         // Ensure newTranslationLanguage is always a valid string
@@ -328,12 +349,12 @@ class InterestFieldManager extends BaseCrudComponent
 
     public function getRecordsProperty()
     {
-        return $this->baseQuery()->paginate(10, ['*'], 'activePage');
+        return $this->applySearch($this->baseQuery())->paginate(10, ['*'], 'activePage');
     }
 
     public function getInactiveRecordsProperty()
     {
-        return $this->inactivatedQuery()->paginate(10, ['*'], 'inactivePage');
+        return $this->applySearch($this->inactivatedQuery())->paginate(10, ['*'], 'inactivePage');
     }
 
     public function toggleShowInactivated(): void
