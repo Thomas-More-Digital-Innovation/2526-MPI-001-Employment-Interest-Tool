@@ -29,4 +29,10 @@ return [
     'no_fields_found' => 'No interest fields found yet.',
     'add_translation' => 'Add translation',
     'select_language' => 'Select a language',
+    'active_label' => 'Active',
+    'inactive_label' => 'Inactive',
+    'inactive_heading' => 'Inactive Interest Fields',
+    'show_inactive' => 'Show Inactive Interest Fields',
+    'hide_inactive' => 'Hide Inactive Interest Fields',
+
 ];

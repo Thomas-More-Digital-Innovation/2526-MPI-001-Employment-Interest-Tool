@@ -14,6 +14,7 @@ class InterestFieldFactory extends Factory
         return [
             'name' => $this->faker->words(2, true),
             'description' => $this->faker->sentence(),
+            'active' => true,
         ];
     }
 

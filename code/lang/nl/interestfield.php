@@ -29,4 +29,9 @@ return [
     'no_fields_found' => 'Nog geen interessegebieden gevonden.',
     'add_translation' => 'Vertaling toevoegen',
     'select_language' => 'Selecteer een taal',
+    'active_label' => 'Actief',
+    'inactive_label' => 'Inactief',
+    'inactive_heading' => 'Inactieve Interessegebieden',
+    'show_inactive' => 'Toon Inactieve Interessegebieden',
+    'hide_inactive' => 'Verberg Inactieve Interessegebieden',
 ];
