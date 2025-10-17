@@ -4,7 +4,10 @@
     <div class="grid grid-cols-2 md:grid-cols-4 grid-rows-[auto_1fr] md:grid-rows-1 gap-2 h-full mt-2">
         <!-- Image + Title -->
         <div class="col-span-2 md:col-span-2 row-start-1 md:order-2 flex flex-col content-center h-full">
-            <img src="{{ $image }}" alt="{{ $imageDescription }}" class="object-contain rounded-md h-full">
+            <x-question-image 
+                :image-url="$image" 
+                :alt="$imageDescription" 
+                class="object-contain rounded-md h-full" />
             <h2
                 class="text-4xl md:text-5xl font-semibold mt-2 text-center h-full break-words overflow-hidden max-w-full">
                 {{ $title }}</h2>

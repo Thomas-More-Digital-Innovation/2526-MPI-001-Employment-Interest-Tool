@@ -17,6 +17,11 @@ class TestImageController extends Controller
      */
     public function show(string $filename)
     {
+        // If the filename is an HTTPS URL, redirect to it
+        if (str_starts_with($filename, 'https')) {
+            return redirect($filename);
+        }
+        
         $disk = Storage::disk('public');
         
         if (!$disk->exists($filename)) {

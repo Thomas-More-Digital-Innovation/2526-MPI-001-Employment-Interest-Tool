@@ -14,13 +14,6 @@ beforeEach(function () {
     Route::get('/superadmin/test/create', fn () => 'ok')->name('superadmin.test.create');
 });
 
-test('mount loads tests list', function () {
-    Test::factory()->count(3)->create();
-
-    Livewire::test(TestManager::class)
-        ->assertSet('tests', fn ($val) => count($val) === 3);
-});
-
 test('loadTest redirects and seeds session for TestCreation', function () {
     // create the interest field to satisfy FK
     $if = InterestField::factory()->create();

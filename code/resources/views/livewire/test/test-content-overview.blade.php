@@ -14,7 +14,12 @@
     <div class="flex flex-wrap gap-3 justify-center">
         @forelse ($testContent as $questionNumber => $question)
         <div class="w-80 rounded-2xl bg-mpi text-white">
-            <img src="{{ $question->getImageUrl($currentLocale) }}" class="w-full h-64 object-cover rounded-t-2xl" alt="{{ $question->getImageDescription($currentLocale) }}">
+            <div class="w-full h-64 rounded-t-2xl overflow-hidden">
+                <x-question-image 
+                    :image-url="$question->getImageUrl($currentLocale)" 
+                    :alt="$question->getImageDescription($currentLocale)"
+                    class="w-full h-full object-cover rounded-t-2xl" />
+            </div>
             <div class="p-2">
                 <div class="flex justify-between">
                     <p class="font-bold">{{ $questionNumber + 1 }}.</p>
