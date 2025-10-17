@@ -35,11 +35,11 @@
                 <a href="#FAQ" class="text-1xl text-black"><span class="flex items-center flex-col pt-8 ">
                         {{ __('general.FAQ') }}
                         <flux:icon icon="chevron-down" class="size-8! text-black"></flux:icon>
-                    </span>
-                    <div class="flex justify-between items-center pt-4">
-                        <img src="LogoMPI.svg" class="h-8 w-1/4" alt="MPI-Osterloo Logo">
-                        <img src="TMLogo.svg" class="h-14 w-1/4" alt="Thomas More Logo">
-                    </div>
+                    </span></a>
+                <div class="flex justify-between items-center pt-4">
+                    <img src="LogoMPI.svg" class="h-8 w-1/4" alt="MPI-Osterloo Logo">
+                    <img src="TMLogo.svg" class="h-14 w-1/4" alt="Thomas More Logo">
+                </div>
             </div>
         </div>
         <div class="w-full xl:w-1/2 flex items-center justify-center bg-neutral-800 ">
@@ -48,7 +48,7 @@
             </div>
         </div>
     </section>
-    <div id="FAQ" >
+    <div id="FAQ">
         <x-faq pageHeight="min-h-screen" />
         <flux:button icon="arrow-up-circle" size="xl" class="sticky  bg-mpi! text-white! bottom-5 left-2 z-50" href="#top"></flux:button>
     </div>
