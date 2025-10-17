@@ -116,8 +116,12 @@ class InterestFieldManagerTest extends TestCase
             ->call('confirmDelete', $interest->interest_field_id)
             ->call('deleteInterestField');
 
-        $this->assertDatabaseMissing('interest_field', [
+        // Interest fields are soft-deactivated when 'deleted' via the UI: they are
+        // marked inactive rather than removed. Assert the record still exists
+        // and has active = false.
+        $this->assertDatabaseHas('interest_field', [
             'interest_field_id' => $interest->interest_field_id,
+            'active' => false,
         ]);
     }
 }
