@@ -107,7 +107,3 @@ body.deuteranopia {
 body.tritanopia {
     filter: url('#tritanopia');
 }
-
-* {
-    scroll-behavior: smooth;
-}

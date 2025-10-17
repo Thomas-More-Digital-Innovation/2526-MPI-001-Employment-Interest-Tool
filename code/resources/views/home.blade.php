@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
 <head>
     <meta charset="utf-8">
@@ -20,7 +20,7 @@
     @fluxAppearance
 </head>
 
-<body class="">
+<body>
     <div class="absolute top-4 right-4 z-50">
         <x-language-selector />
     </div>
