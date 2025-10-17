@@ -167,8 +167,12 @@
                 {{ __('organisations.confirm') }}
             </flux:heading>
 
-            <flux:text class="text-sm text-gray-700">
-                {{ __('organisations.deactivate_confirm') }}
+            <flux:text class="text-sm">
+                @if ($confirmingOrgIsActive === true)
+                    {{ __('organisations.deactivate_confirm') }}
+                @else
+                    {{ __('organisations.activate_confirm') }}
+                @endif
             </flux:text>
 
             <div class="flex justify-end gap-3 border-t border-gray-200 pt-4">
