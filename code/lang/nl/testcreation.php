@@ -37,4 +37,5 @@ return [
     'upload_failed' => 'Uploaden mislukt',
     'clearing' => 'Verrekening...',
     'or' => 'of',
+    'media_link_placeholder' => 'Voer youtube of vimeo link in',
 ];

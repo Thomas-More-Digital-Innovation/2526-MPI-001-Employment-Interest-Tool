@@ -107,6 +107,11 @@ class Question extends Model
             return null;
         }
 
+        // Check if it's already a full URL
+        if (filter_var($filename, FILTER_VALIDATE_URL)) {
+            return $filename;
+        }
+
         return route('question.image', ['filename' => $filename]);
     }
 }
