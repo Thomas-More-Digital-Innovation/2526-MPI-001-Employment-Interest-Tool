@@ -31,4 +31,5 @@ return [
     'no_expiry' => 'No expiry date',
     'expired' => 'Expired',
     'actions' => 'Actions',
+    'tests' => 'Tests'
 ];

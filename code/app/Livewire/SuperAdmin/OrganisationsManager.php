@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use App\Models\Test;
 
 class OrganisationsManager extends BaseCrudComponent
 {
@@ -27,6 +28,13 @@ class OrganisationsManager extends BaseCrudComponent
     public string $newAdminLastName = '';
     public string $newAdminPassword = '';
 
+    /**
+     * Available tests that can be enabled for an organisation.
+     * Populated from the DB and exposed to the view.
+     * @var \Illuminate\Database\Eloquent\Collection|array
+     */
+    public $availableTests = [];
+
     protected function view(): string
     {
         return 'livewire.superadmin.organisations-manager';
@@ -39,6 +47,17 @@ class OrganisationsManager extends BaseCrudComponent
         if (!isset($this->adminRole)) {
             $this->adminRole = Role::where('role', Role::ADMIN)->firstOrFail();
         }
+
+        // Load available tests once when initializing the component
+        $this->loadAvailableTests();
+    }
+
+    /**
+     * Load active tests from the database and cache them on the component.
+     */
+    protected function loadAvailableTests(): void
+    {
+        $this->availableTests = Test::query()->where('active', true)->orderBy('test_name')->get();
     }
 
     protected function defaultFormState(): array
@@ -47,6 +66,8 @@ class OrganisationsManager extends BaseCrudComponent
             'name' => '',
             'active' => true,
             'expire_date' => null,
+            // tests keyed by test_id => bool
+            'tests' => [],
         ];
     }
 
@@ -69,8 +90,25 @@ class OrganisationsManager extends BaseCrudComponent
 
     public function startEdit(int $recordId): void
     {
+        // ensure we have the list of available tests before transforming the record
+        $this->loadAvailableTests();
         parent::startEdit($recordId);
+
+        // dispatch modal open for the UI
         $this->dispatch('modal-open', name: 'organisation-form');
+    }
+
+    public function startCreate(): void
+    {
+        // ensure tests are loaded and form contains test keys
+        $this->loadAvailableTests();
+        parent::startCreate();
+
+        // initialize test flags to false for all available tests
+        $this->form['tests'] = [];
+        foreach ($this->availableTests as $t) {
+            $this->form['tests'][$t->test_id] = false;
+        }
     }
 
     /**
@@ -110,10 +148,24 @@ class OrganisationsManager extends BaseCrudComponent
 
     public function transformRecordToForm($record): array
     {
+        // Ensure available tests are loaded - if not, load them here as a fallback.
+        if (empty($this->availableTests)) {
+            $this->loadAvailableTests();
+        }
+
+        // Build tests mapping keyed by test_id => bool (enabled for this organisation)
+    // Avoid ambiguous column name by prefixing with the table name (as used elsewhere in the codebase)
+    $enabledTestIds = $record->tests()->pluck('test.test_id')->all();
+        $testsMap = [];
+        foreach ($this->availableTests as $t) {
+            $testsMap[$t->test_id] = in_array($t->test_id, $enabledTestIds, true);
+        }
+
         return [
             'name' => $record->name,
             'active' => (bool) $record->active,
             'expire_date' => $record->expire_date ? $record->expire_date->format('Y-m-d') : null,
+            'tests' => $testsMap,
         ];
     }
 
@@ -125,6 +177,8 @@ class OrganisationsManager extends BaseCrudComponent
             'form.name' => ['required', 'string', 'max:255', Rule::unique('organisation', 'name')->ignore($orgId, 'organisation_id')],
             'form.active' => ['boolean'],
             'form.expire_date' => ['nullable', 'date'],
+            'form.tests' => ['nullable', 'array'],
+            'form.tests.*' => ['boolean'],
         ];
     }
 
@@ -143,12 +197,29 @@ class OrganisationsManager extends BaseCrudComponent
             ]);
             session()->flash('status', ['message' => __('Organisation updated.'), 'type' => 'success']);
         } else {
-            Organisation::create([
+            $org = Organisation::create([
                 'name' => $this->form['name'],
                 'active' => (bool) $this->form['active'],
                 'expire_date' => $this->form['expire_date'] ?: null,
             ]);
             session()->flash('status', ['message' => __('Organisation created.'), 'type' => 'success']);
+        }
+
+        // Sync organisation tests. Determine the organisation model instance.
+        // $org should already be set above for either branch; if not, fetch it safely
+        if (! isset($org)) {
+            $org = $this->editingId ? $this->findRecord($this->editingId) : Organisation::where('name', $this->form['name'])->orderBy('organisation_id', 'desc')->first();
+        }
+
+        if ($org) {
+            $tests = $this->form['tests'] ?? [];
+            // convert to array of test ids where value truthy
+            $selected = array_keys(array_filter($tests));
+
+            // Filter selected IDs against actual tests (only active tests) to avoid syncing arbitrary ids
+            $valid = Test::query()->whereIn('test_id', $selected)->where('active', true)->pluck('test_id')->toArray();
+
+            $org->tests()->sync($valid);
         }
 
         $this->resetFormState();

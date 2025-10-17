@@ -114,6 +114,27 @@
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    {{-- Tests checkboxes (only when editing an existing organisation) --}}
+                    @if ($editingId)
+                        <div class="md:col-span-2">
+                            <flux:label class="block text-sm font-medium">{{ __('organisations.tests') }}</flux:label>
+                            <div class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                @foreach($availableTests as $test)
+                                    <label class="inline-flex items-center gap-2">
+                                        <input type="checkbox" wire:model.defer="form.tests.{{ $test->test_id }}" class="rounded" />
+                                        <span class="text-sm">{{ $test->test_name }}</span>
+                                    </label>
+                                @endforeach
+                                @if(count($availableTests) === 0)
+                                    <div class="text-sm text-gray-500">{{ __('organisations.no_tests') }}</div>
+                                @endif
+                            </div>
+                            @error('form.tests')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
                 </div>
 
                 <div class="flex flex-col gap-3 border-t border-gray-200 pt-4 md:flex-row md:items-center md:justify-end">
