@@ -5,9 +5,7 @@
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
             <flux:input wire:model="first_name" :label="ucfirst(__('user.first_name'))" type="text" required autofocus autocomplete="first_name" />
             <flux:input wire:model="last_name" :label="ucfirst(__('user.last_name'))" type="text" required autofocus autocomplete="last_name" />
-            @if(auth()->user()->isClient())
-                <flux:input wire:model="email" :label="ucfirst(__('user.email'))" type="email" readonly />
-            @else
+            @if(!auth()->user()->isClient())
                 <flux:input wire:model="email" :label="ucfirst(__('user.email'))" type="email" required />
             @endif
             <div x-data="{ soundOn: @entangle('is_sound_on') }" class="flex items-center space-x-3">
