@@ -1,10 +1,10 @@
 <div class="space-y-6">
-    <div class="dark:bg-white bg-mpi overflow-hidden shadow rounded-lg">
+    <div class="bg-white dark:bg-zinc-400/10 overflow-hidden shadow rounded-lg">
         <div class="px-4 py-5 sm:px-6">
-            <h2 class="text-2xl font-bold tracking-tight dark:text-black text-white">{{ __('pagesresearcher.dashboard_researcher') }}</h2>
+            <h2 class="text-2xl font-bold tracking-tight">{{ __('pagesresearcher.dashboard_researcher') }}</h2>
         </div>
     </div>
-    <div class="flex flex-wrap dark:bg-white bg-mpi dark:text-black text-white rounded-lg px-4 py-5">
+    <div class="flex flex-wrap bg-white dark:bg-zinc-400/10 shadow rounded-lg px-4 py-5">
         <div class="w-1/2 px-2">
             <h2 class="text-xl font-bold">{{__('pagesresearcher.totalOfUsers')}}</h2>
             <p>{{$totalUsers}}</p>
@@ -14,7 +14,7 @@
             <p>{{$totalTests}}</p>
         </div>
     </div>
-    <div class="flex flex-wrap dark:bg-white bg-mpi dark:text-black text-white rounded-lg px-4 py-5">
+    <div class="flex flex-wrap bg-white dark:bg-zinc-400/10 shadow rounded-lg px-4 py-5">
         <div class="w-1/2 px-2">
             <h2 class="text-xl font-bold">{{__('pagesresearcher.Organisations')}}</h2>
             <p>{{$totalOrganisations}}</p>
@@ -24,7 +24,7 @@
             <p>{{$completionScore}}</p>
         </div>
     </div>
-    <div class="flex flex-wrap dark:bg-white  bg-mpi dark:text-black text-white rounded-lg px-4 py-5">
+    <div class="flex flex-wrap bg-white dark:bg-zinc-400/10 shadow rounded-lg px-4 py-5">
         <h2 class="text-center w-full text-xl font-bold">{{__('pagesresearcher.timesIntrestfieldChosen')}}</h2>
         <div class="sm:w-full h-auto xl:w-3/4 xl:px-2 bg-white rounded-md">
             {{-- If more then 10 elements than give 5 best and 5 less--}}
