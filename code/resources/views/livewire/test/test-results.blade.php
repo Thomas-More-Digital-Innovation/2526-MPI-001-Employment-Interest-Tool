@@ -26,12 +26,12 @@
                 </x-text>
 
                 @if($firstUrl)
-                    <img
-                        src="{{ $firstUrl }}"
+                    <x-question-image 
+                        :imageUrl="$firstUrl"
                         alt="Main Field Image"
                         class="rounded-lg mt-3"
                         style="width:400px;height:auto;object-fit:cover;"
-                    >
+                    />
                 @endif
             </div>
         @endif
@@ -46,12 +46,12 @@
                 </x-text>
 
                 @if($secondUrl)
-                    <img
-                        src="{{ $secondUrl }}"
+                    <x-question-image 
+                        :imageUrl="$secondUrl"
                         alt="Second Field Image"
                         class="rounded-lg mt-3"
                         style="width:350px;height:auto;object-fit:cover;"
-                    >
+                    />
                 @endif
             </div>
         @endif
@@ -66,12 +66,12 @@
                 </x-text>
 
                 @if($lastUrl)
-                    <img
-                        src="{{ $lastUrl }}"
+                    <x-question-image 
+                        :imageUrl="$lastUrl"
                         alt="Last Field Image"
                         class="rounded-lg mt-3"
                         style="width:300px;height:auto;object-fit:cover;"
-                    >
+                    />
                 @endif
             </div>
         @endif
