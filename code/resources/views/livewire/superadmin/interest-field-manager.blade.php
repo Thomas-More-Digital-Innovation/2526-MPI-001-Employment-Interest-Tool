@@ -32,13 +32,22 @@
                     {{ __('interestfield.add') }}
                 </flux:button>
             </flux:modal.trigger>
-            <flux:button
-                type="button"
-                icon="{{ $showInactivated ? 'eye-slash' : 'eye' }}"
-                wire:click="toggleShowInactivated"
-                class="ml-2 bg-color-mpi">
-                {{ $showInactivated ? __('interestfield.hide_inactive') :  __('interestfield.show_inactive') }}
-            </flux:button>
+            @if ($search !== '')
+                <flux:button
+                    type="button"
+                    icon="{{ $showInactivated ? 'eye-slash' : 'eye' }}"
+                    class="ml-2 bg-color-mpi opacity-50 cursor-not-allowed">
+                    {{ $showInactivated ? __('interestfield.hide_inactive') :  __('interestfield.show_inactive') }}
+                </flux:button>
+            @else
+                <flux:button
+                    type="button"
+                    icon="{{ $showInactivated ? 'eye-slash' : 'eye' }}"
+                    wire:click="toggleShowInactivated"
+                    class="ml-2 bg-color-mpi">
+                    {{ $showInactivated ? __('interestfield.hide_inactive') :  __('interestfield.show_inactive') }}
+                </flux:button>
+            @endif
         </div>
     </div>
 
@@ -116,7 +125,7 @@
         {{ $records->links() }}
     </div>
 
-    @if ($showInactivated)
+    @if ($showInactivated && $search === '')
     <div class="mt-6">
         <h2 class="text-lg font-medium mb-3">{{ __('interestfield.inactive_heading') }}</h2>
         <div class="overflow-x-auto rounded-lg shadow-sm">
