@@ -66,21 +66,19 @@
         <div class="bg-red-400 py-2" :style="`width: ${progress}%`"></div>
     </div>
     <!-- Stop Test Confirmation Modal -->
-    <flux:modal name="stop-test-confirmation" class="min-w-[22rem] space-y-6">
+    <flux:modal name="stop-test-confirmation" class="  flex flex-col space-y-6">
         <div>
-            <flux:heading size="lg">{{ __('Stop Test') }}</flux:heading>
-            <flux:subheading>
-                <p>{{ __('Are you sure you want to stop the test?') }}</p>
-                <p class="mt-2">{{ __('Your progress will be lost if you stop now.') }}</p>
-            </flux:subheading>
+            <p class="text-4xl">{{ __('Stop Test') }}</p>
+            <p class="text-2xl mt-2">{{ __('Are you sure you want to stop the test?') }}</p>
+
         </div>
 
         <div class="flex gap-2 justify-end">
             <flux:modal.close>
-                <flux:button variant="ghost">{{ __('Cancel') }}</flux:button>
+                <flux:button size="2xl" variant="ghost">{{ __('Cancel') }}</flux:button>
             </flux:modal.close>
             <flux:modal.close>
-                <flux:button variant="danger" wire:click="close">{{ __('Stop') }}</flux:button>
+                <flux:button size="2xl" variant="danger" wire:click="close">{{ __('Stop') }}</flux:button>
             </flux:modal.close>
         </div>
     </flux:modal>
