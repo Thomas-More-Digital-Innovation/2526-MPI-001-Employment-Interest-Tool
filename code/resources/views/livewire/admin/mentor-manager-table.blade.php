@@ -52,7 +52,7 @@
     </x-table>
 
     @if (method_exists($records, 'links'))
-        <div class="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-zinc-600 px-4 py-3">
+        <div class="pt-4 pb-2 px-2 dark:bg-zinc-900 dark:text-gray-50">
             {{ $records->links() }}
         </div>
     @endif
