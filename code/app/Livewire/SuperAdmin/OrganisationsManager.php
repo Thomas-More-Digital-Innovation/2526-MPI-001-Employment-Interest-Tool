@@ -251,15 +251,6 @@ class OrganisationsManager extends BaseCrudComponent
         $this->dispatch('modal-close', name: 'organisation-deactivate-confirm');
     }
 
-    /** Admin management **/
-    public function openManageAdmins(int $organisationId): void
-    {
-        $this->managingOrganisationId = $organisationId;
-        $this->manageAdminsVisible = true;
-        $this->loadOrganisationAdmins();
-        $this->dispatch('modal-open', name: 'manage-organisation-admins');
-    }
-
     protected function loadOrganisationAdmins(): void
     {
         if (! $this->managingOrganisationId) {
@@ -346,13 +337,5 @@ class OrganisationsManager extends BaseCrudComponent
             'newAdminUsername' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
             'newAdminPassword' => ['required', 'string', Password::defaults()],
         ]);
-    }
-
-    public function closeManageAdmins(): void
-    {
-        $this->manageAdminsVisible = false;
-        $this->managingOrganisationId = null;
-        $this->organisationAdmins = [];
-        $this->dispatch('modal-close', name: 'manage-organisation-admins');
     }
 }

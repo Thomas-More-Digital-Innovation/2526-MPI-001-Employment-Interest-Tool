@@ -190,7 +190,4 @@
             </div>
         </div>
     </flux:modal>
-
-    @include('livewire.superadmin.manage-organisation-admins')
-
 </div>
