@@ -14,7 +14,7 @@
         <textarea wire:model="message" class="w-full border p-2 rounded dark:text-black text-white border-white dark:border-black" rows="5"></textarea>
         <p class="dark:text-red-500 text-red-300 {{$ErrorFeedbackMessage}}">{{__('pageFeedback.ErrorFeedbackMessage')}}</p>
 
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">{{__('actions.send')}}</button>
+        <button type="submit" class="bg-mpi-500 text-white px-4 py-2 rounded">{{__('actions.send')}}</button>
          @if($SendStatus != '')
             <p x-data="{ show: false }"
                x-init="show = true;

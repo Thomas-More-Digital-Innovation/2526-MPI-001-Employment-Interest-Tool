@@ -57,6 +57,12 @@
 
     .bg-color-mpi {
         background-color: var(--color-mpi);
+        color: white;
+    }
+
+    .bg-color-mpi:hover {
+        background-color: white;
+        color: black;
     }
 }
 
@@ -83,4 +89,21 @@ select:focus[data-flux-control] {
   [role="button"]:not([disabled]) {
     cursor: pointer;
   }
+}
+
+/*colorblindness*/
+body.normal {
+    filter: none;
+}
+
+body.protanopia {
+    filter: url('#protanopia');
+}
+
+body.deuteranopia {
+    filter: url('#deuteranopia');
+}
+
+body.tritanopia {
+    filter: url('#tritanopia');
 }

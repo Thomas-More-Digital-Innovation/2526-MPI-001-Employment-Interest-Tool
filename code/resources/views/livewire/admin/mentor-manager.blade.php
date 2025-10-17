@@ -53,7 +53,7 @@
             type="button"
             icon="{{ $showInactivated ? 'eye-slash' : 'eye' }}"
             wire:click="toggleShowInactivated"
-            class="bg-color-mpi-500 text-amber-50">
+            class="bg-color-mpi text-amber-50">
 
             {{ $showInactivated ? __('manage-mentors.HideInactive') :  __('manage-mentors.ShowInactive') }}
         </flux:button>
@@ -197,7 +197,7 @@
                     <flux:button
                         type="submit"
                         variant="primary">
-                        {{ $editingId ? __('Save changes') : __('manage-mentors.CreateMentor') }}
+                        {{ $editingId ? __('Save') : __('manage-mentors.CreateMentor') }}
                     </flux:button>
                 </div>
             </form>

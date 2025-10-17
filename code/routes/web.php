@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
         } elseif ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif ($user->isMentor()) {
-            return redirect()->route('mentor.dashboard');
+            return redirect()->route('mentor.clients-manager');
         } elseif ($user->isResearcher()) {
             return redirect()->route('researcher.dashboard');
         } elseif ($user->isClient()) {
@@ -59,72 +59,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 
-    Route::get('/profile/picture/{filename}', function ($filename) {
-        $disk = \Illuminate\Support\Facades\Storage::disk('profile_pictures');
-        $user = Auth::user();
-        switch (true) {
-            case $user->isClient(): // Client can only view the profile picture of their mentor
-            $mentor = User::find($user->mentor_id);
-            if (
-                !$mentor ||
-                $filename !== $mentor->getRawProfilePictureName()
-            ) {
-                abort(403);
-            }
-            break;
-            case $user->isMentor(): // Mentor can only view their own profile picture
-            case $user->isResearcher(): // Researcher can only view their own profile picture
-            if ($filename !== $user->getRawProfilePictureName()) {
-                abort(403);
-            }
-            break;
-            case $user->isAdmin(): // Admins can view their own profile picture and  all of the profile pictures of the mentors in their organisation
-            if ($filename === $user->getRawProfilePictureName()) {
-                break;
-            }
-            $mentor = User::where('organisation_id', $user->organisation_id)
-                ->where('profile_picture_url', $filename)
-                ->whereHas('roles', function ($q) {
-                    $q->where('role', Role::MENTOR);
-                })
-                ->first();
-            if (!$mentor || $filename !== $mentor->getRawProfilePictureName()) {
-                abort(403);
-            }
-            break;
-            case $user->isSuperAdmin(): // Superadmins can view their own profile picture and can view the profile pictures of all the admins
-            if ($filename === $user->getRawProfilePictureName()) {
-                break;
-            }
-            $admin = User::where('organisation_id', $user->organisation_id)
-                ->where('profile_picture_url', $filename)
-                ->whereHas('roles', function ($q) {
-                    $q->where('role', Role::ADMIN);
-                })
-                ->first();
-            if (!$admin || $filename !== $admin->getRawProfilePictureName()) {
-                abort(403);
-            }
-            break;
-            default:
-            abort(403);
-        }
+    Route::get('/profile/picture/{filename}', [App\Http\Controllers\ProfilePictureController::class, 'show'])->name('profile.picture');
 
-        if (!$disk->exists($filename)) {
-            abort(404);
-        }
-        $path = $disk->path($filename);
-        return response()->file($path);
-    })->name('profile.picture');
-
-    Route::get('/question/image/{filename}', function ($filename) {
+    Route::get('/question/image/{filename}', [App\Http\Controllers\TestImageController::class, 'show'])->name('question.image');
+    Route::get('/question/sound/{filename}', function ($filename) {
         $disk = \Illuminate\Support\Facades\Storage::disk('public');
         if (!$disk->exists($filename)) {
             abort(404);
         }
         $path = $disk->path($filename);
         return response()->file($path);
-    })->name('question.image');
+    })->name('question.sound');
 
     // Route to view Test Results
     Route::get('/test-results', TestResults::class)->name('client.test-result');
@@ -133,6 +78,11 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:SuperAdmin'])->group(function () {
         Route::view('superadmin/dashboard', 'roles.superadmin.dashboard')->name('superadmin.dashboard');
         Route::view('superadmin/system', 'roles.superadmin.system')->name('superadmin.system');
+
+        Route::view('superadmin/test-creation', 'roles.superadmin.test-creation')->name('superadmin.test.create');
+        Route::view('superadmin/test-manager', 'roles.superadmin.test-manager')->name('superadmin.test.manager');
+        Route::view('superadmin/test-editing', 'roles.superadmin.test-editing')->name('superadmin.test.editing');
+        Route::view('superadmin/manage-researchers', 'roles.superadmin.manage-researchers')->name('superadmin.manage-researchers');
         Route::view('superadmin/interest-field-manager', view: 'roles.superadmin.interest-field-manager')->name('superadmin.interest-field-manager');
     });
 
@@ -141,11 +91,11 @@ Route::middleware(['auth'])->group(function () {
         Route::view('admin/feedback', 'roles.admin.feedback')->name('admin.feedback');
         Route::view(uri: 'admin/admin-clients-manager', view: 'roles.admin.admin-clients-manager')->name('admin.admin-clients-manager');
         Route::view(uri:'admin/manage-mentors', view:'roles.admin.manage-mentors')->name('admin.manage-mentors');
+        Route::view('admin/client-tests', ('roles.admin.client-tests'))->name('admin.client-tests');
+        Route::view('admin/test-details', ('roles.admin.test-details'))->name('admin.test-details');
     });
 
     Route::middleware(['role:Mentor'])->group(function () {
-        Route::view('mentor/dashboard', 'roles.mentor.dashboard')->name('mentor.dashboard');
-        Route::view('mentor/example', 'roles.mentor.example')->name('mentor.example');
         Route::view('mentor/clients-manager', 'roles.mentor.clients-manager')->name('mentor.clients-manager');
         Route::view('mentor/client-tests', ('roles.mentor.client-tests'))->name('mentor.client-tests');
         Route::view('mentor/test-details', ('roles.mentor.test-details'))->name('mentor.test-details');
@@ -164,6 +114,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:Mentor,Admin,SuperAdmin'])->group(function () {
         Route::view('staff/test-picker', view: 'roles.staff.test-picker')->name('staff.test-picker');
         Route::view('staff/test-content-overview', 'roles.staff.test-content-overview')->name('roles.staff.test-content-overview');
+
     });
 
 

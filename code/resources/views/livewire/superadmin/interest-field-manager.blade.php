@@ -61,14 +61,29 @@
                                     {{ __('Edit') }}
                                 </flux:button>
                             </flux:modal.trigger>
-                            <flux:button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                icon="trash"
-                                wire:click="confirmDelete({{ $interestField->interest_field_id }})">
-                                {{ __('Delete') }}
-                            </flux:button>
+
+                            @if ($interestField->questions()->exists())
+                                <flux:tooltip content="{{ __('interestfield.cannot_delete_used') }}">
+                                    <flux:button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        icon="trash"
+                                        class="cursor-not-allowed text-gray-400! text:color-gray-600"
+                                        >
+                                        {{ __('Delete') }}
+                                    </flux:button>
+                                </flux:tooltip>
+                            @else
+                                <flux:button
+                                    type="button"
+                                    variant="danger"
+                                    size="sm"
+                                    icon="trash"
+                                    wire:click="confirmDelete({{ $interestField->interest_field_id }})">
+                                    {{ __('Delete') }}
+                                </flux:button>
+                            @endif
                         </div>
                     </td>
                 </tr>

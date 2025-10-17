@@ -28,6 +28,8 @@
         "lightningcss-linux-x64-gnu": "^1.29.1"
     },
     "devDependencies": {
+        "livewire-sortable": "^1.0.0",
+        "sortablejs": "^1.15.6",
         "@playwright/test": "^1.56.0"
-    }
+    },
 }

@@ -78,9 +78,9 @@
     </div>
 
     <div class="mt-8 flex justify-center">
-        <x-btn variant="primary-user" href="{{ route('dashboard') }}">
-            {{ __('Doorgaan') }}
-        </x-btn>
+        <flux:button variant="primary" href="{{ route('dashboard') }}" color="green" size="4xl" class="ease-in-out duration-200 rounded! hover:rounded-3xl! px-5 py-3 text-white">
+            {{ __('testresults.continue') }}
+        </flux:button>
     </div>
 
 </div>

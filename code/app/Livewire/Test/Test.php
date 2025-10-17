@@ -27,8 +27,9 @@ class Test extends Component
     public $image;
     public $imageDescription;
     public $audio;
+    public $autoPlay;
 
-    public $questionNumber = 1;
+    public $questionNumber;
 
     public $totalQuestions;
 
@@ -53,6 +54,7 @@ class Test extends Component
         $this->totalQuestions = Question::where('test_id', $this->testId)->count();
         $this->testName = \App\Models\Test::where('test_id', $this->testId)->value('test_name');
         $this->clientName = User::where('user_id', '=', $this->userId)->value('first_name');
+        $this->autoPlay = User::where('user_id', '=', $this->userId)->value('is_sound_on');
 
         $mentorId = User::where('user_id', '=', $this->userId)->value('mentor_id');
         $this->mailMentor = User::where('user_id', '=', $mentorId)->value('email');
