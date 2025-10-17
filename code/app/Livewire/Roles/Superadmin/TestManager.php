@@ -10,17 +10,32 @@ class TestManager extends Component
 {
 
     public $tests;
+    public $editingId;
+    public $showDeleteModal = false;
 
     public function mount() {
-        $this->tests = Test::all();
+        $this->tests = Test::where('active', 1)->get();
     }
 
     public function deleteTest(int $id)
     {
-        $test = Test::findOrFail($id);
-        Question::where('test_id', $test->test_id)->delete();
-        $test->delete();
-        $this->tests = Test::all();
+        $this->editingId = $id;
+        $this->showDeleteModal = true;
+    }
+
+    public function putTestInactive()
+    {
+        if (!$this->editingId) {
+            return;
+        }
+
+        $test = Test::findOrFail($this->editingId);
+        $test->active = 0;
+        $test->save();
+
+        $this->editingId = null;
+        $this->tests = Test::where('active', 1)->get();
+        $this->showDeleteModal = false;
     }
 
     public function loadTest(int $id)

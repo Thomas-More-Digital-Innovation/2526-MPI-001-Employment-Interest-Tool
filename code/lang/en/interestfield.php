@@ -18,6 +18,7 @@ return [
     'addbtn' => 'Add',
     'updatebtn' => 'Update',
     'delete_confirm' => 'Are you sure you want to delete this interest field? This action cannot be undone.',
+    'delete_confirm_test' => 'Are you sure you want to delete this test? This action cannot be undone.',
     'delete_success' => 'Interest field deleted successfully.',
     'delete_error' => 'Interest field cannot be deleted as it is used by a question.',
     'delete_heading' => 'Confirm Deletion',

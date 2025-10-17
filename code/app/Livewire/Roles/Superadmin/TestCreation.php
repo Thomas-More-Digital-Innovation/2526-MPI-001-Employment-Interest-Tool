@@ -34,7 +34,7 @@ class TestCreation extends Component
     {
         // Fetch all interest fields from the database
         $this->interestFields = InterestField::all();
-        // retrieve from the session (possible) given data by 
+        // retrieve from the session (possible) given data by
         $editId = session()->pull('edit_test_id');
         $editName = session()->pull('edit_test_name');
         $editQuestions = session()->pull('edit_questions');
@@ -106,6 +106,7 @@ class TestCreation extends Component
             // otherwise safe to create
             $test = Test::create([
                 'test_name' => $this->test_name,
+                'active' => 1,
             ]);
         }
         foreach ($this->questions as $index => $question) {
@@ -154,7 +155,7 @@ class TestCreation extends Component
             }
             return;
         }
-        
+
         // We are using this to split the string into an array at every point (question.0.title becomes ["question", "0", "title])
         // We can now use this to take the index
         if (preg_match('/^questions\.(\d+)\./', $name, $m)) {
@@ -226,7 +227,7 @@ class TestCreation extends Component
     public function reorderQuestions(int $oldIndex, int $newIndex): void {
         // Track which question is currently selected
         $wasSelectedItem = $this->selectedQuestion === $oldIndex;
-        
+
         // First we take the array and declare it locally (looks weird if done directly on $this->questions)
         $items = $this->questions;
         // We use this function to "cut off" the item we picked up
@@ -242,7 +243,7 @@ class TestCreation extends Component
 
         // return the sorted array to the page :)
         $this->questions = array_values($items);
-        
+
         // Update selectedQuestion to follow the moved item
         if ($wasSelectedItem) {
             // If the dragged item was selected, follow it to its new position

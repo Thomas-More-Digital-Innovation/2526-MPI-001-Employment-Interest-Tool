@@ -24,7 +24,7 @@ class EnsureClientIsActive
             return $next($request);
         }
 
-        if ($user->isClient() && !$user->active) {
+        if (!$user->active) {
             Auth::logout();
 
             $request->session()->invalidate();
