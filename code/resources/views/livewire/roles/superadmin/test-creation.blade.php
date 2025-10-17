@@ -16,12 +16,10 @@
                 @endphp
                 <label for="Upload-Image"
                     class="min-h-[25vh] rounded-2xl flex-1 flex items-center justify-center m-4 cursor-pointer {{ $imgSet ? '' : 'bg-zinc-300 dark:bg-zinc-600' }}">
-                    @if ($imgSet)
-                        <img src="{{ route('question.image', ['filename' => $questions[$selectedQuestion]['media_link']]) }}"
-                            alt="Question Image" class="rounded-2xl max-h-full max-w-full object-contain">
-                    @else
-                        <span class="text-zinc-500 dark:text-zinc-400">{{ __('testcreation.no_image_uploaded') }}</span>
-                    @endif
+                    <x-question-image 
+                        :media-link="$questions[$selectedQuestion]['media_link'] ?? ''"
+                        :uploaded-image="$questions[$selectedQuestion]['uploaded_image'] ?? null"
+                        alt="Question Image" />
                 </label>
                 <input id="Upload-Image" type="file" wire:model="questions.{{ $selectedQuestion }}.uploaded_image"
                     accept="image/*" class="hidden">
@@ -133,7 +131,7 @@
 
                             {{-- Container for uploading media --}}
 
-                            <div class="my-5">
+                            <div class="flex items-center mt-3 w-full gap-2 inline-flex flex-wrap md:flex-nowrap">
                                 <flux:button type="button" icon="photo"
                                     onclick="document.getElementById('Upload-Image-2').click()">
                                     {{ __('testcreation.choose_image') }}
@@ -144,6 +142,40 @@
                                 @error('questions.' . $selectedQuestion . '.uploaded_image')
                                     <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
                                 @enderror
+                                <span> {{ __('testcreation.or') }}</span>
+                                @php
+                                    $currentMediaLink = $questions[$selectedQuestion]['media_link'] ?? '';
+                                    $appUrl = config('app.url');
+                                    // Check if it's an external link (has http/https but NOT from our domain)
+                                    $isExternalLink = (str_starts_with($currentMediaLink, 'http://') || str_starts_with($currentMediaLink, 'https://')) 
+                                                      && !str_starts_with($currentMediaLink, $appUrl);
+                                @endphp
+                                <div x-data="{
+                                    mediaLink: $wire.entangle('questions.{{ $selectedQuestion }}.media_link').live,
+                                    appUrl: @js($appUrl),
+                                    inputValue: @js($isExternalLink ? $currentMediaLink : ''),
+                                    init() {
+                                        this.$watch('mediaLink', (value) => {
+                                            // When mediaLink changes from Livewire, update input only if external
+                                            const link = value || '';
+                                            const isExt = (link.startsWith('http://') || link.startsWith('https://')) 
+                                                         && !link.startsWith(this.appUrl);
+                                            this.inputValue = isExt ? value : '';
+                                        });
+                                    },
+                                    updateLink() {
+                                        this.mediaLink = this.inputValue;
+                                    }
+                                }" class="flex-1">
+                                    <input 
+                                        type="text"
+                                        x-model="inputValue"
+                                        @input.debounce.300ms="updateLink()"
+                                        placeholder="{{ __('testcreation.media_link_placeholder') }}"
+                                        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                    />
+                                </div>
+
                             </div>
 
                         </div>

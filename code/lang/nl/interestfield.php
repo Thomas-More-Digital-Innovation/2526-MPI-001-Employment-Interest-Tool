@@ -18,6 +18,7 @@ return [
     'addbtn' => 'Toevoegen',
     'updatebtn' => 'Bijwerken',
     'delete_confirm' => 'Weet u zeker dat u dit interessegebied wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
+    'delete_confirm_test' => 'Weet u zeker dat u deze test wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     'delete_success' => 'Interessegebied succesvol verwijderd.',
     'delete_error' => 'Interessegebied kan niet worden verwijderd omdat het wordt gebruikt door een vraag.',
     'delete_heading' => 'Bevestig Verwijdering',
