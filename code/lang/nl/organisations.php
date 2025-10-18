@@ -10,7 +10,6 @@ return [
     'expire_date' => 'Vervaldatum',
     'active' => 'Actief',
     'actions' => 'Acties',
-
     'manage_admins' => 'Beheer organisatiebeheerders',
     'create_admin' => 'Maak beheerder aan',
     'remove_admin' => 'Verwijderen',
@@ -20,6 +19,7 @@ return [
     'activate' => 'Activeren',
     'inactivate' => 'Deactiveren',
     'deactivate_confirm' => 'Weet je zeker dat je deze organisatie wilt deactiveren?',
+    'activate_confirm' => 'Weet je zeker dat je deze organisatie wilt activeren?',
     'cancel' => 'Annuleren',
     'confirm' => 'Bevestigen',
     'save_changes' => 'Wijzigingen opslaan',
