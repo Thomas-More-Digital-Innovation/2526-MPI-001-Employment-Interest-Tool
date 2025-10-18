@@ -5,9 +5,9 @@
 <div>
     <flux:heading class="py-1" size="xl"> {{ $viewingClient->first_name }} {{ $viewingClient->last_name }}</flux:heading>
        <flux:heading class="py-1" size="xl">{{ __('Tests') }}</flux:heading>
-    <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white shadow-sm">
-        <x-table class="min-w-full divide-y divide-gray-800" border>
-            <thead class="bg-gray-50 dark:bg-zinc-600">
+    <div class="overflow-x-auto rounded-lg shadow-sm">
+        <x-table class="min-w-full divide-y divide-gray-800">
+            <thead class="bg-gray-50 dark:bg-zinc-900">
                 <tr class="text-left text-sm font-semibold text-gray-700 dark:text-gray-200">
                     <th class="px-4 py-3">#</th>
                     <th class="px-4 py-3">{{ __('client-tests.Test_name') }}</th>
@@ -17,7 +17,7 @@
                 </tr>
             </thead>
 
-            <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
+            <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-900 dark:text-gray-50">
                 @forelse ($attempts as $attempt)
                 <tr wire:key="test-row-{{ $index}}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
                     <td class="px-4 py-3">{{ $index++}}</td>
