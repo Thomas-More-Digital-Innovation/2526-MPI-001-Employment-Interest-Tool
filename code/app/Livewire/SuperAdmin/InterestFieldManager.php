@@ -108,7 +108,7 @@ class InterestFieldManager extends BaseCrudComponent
 
     protected function defaultFormState(): array
     {
-        $languages = Language::all();
+        $languages = Language::getEnabledLanguages();
 
         $form = [
             'name' => '',
