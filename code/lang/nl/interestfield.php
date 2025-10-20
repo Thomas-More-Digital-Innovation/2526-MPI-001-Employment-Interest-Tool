@@ -36,4 +36,10 @@ return [
     'inactive_heading' => 'Inactieve Interessegebieden',
     'show_inactive' => 'Toon Inactieve Interessegebieden',
     'hide_inactive' => 'Verberg Inactieve Interessegebieden',
+    'linked_questions_title' => 'Gekoppelde vragen',
+    'no_linked_questions' => 'Er zijn geen vragen gekoppeld aan dit interessegebied.',
+    'not_found' => 'Interessegebied niet gevonden.',
+    'test_label' => 'Test',
+    'question_label' => 'Vraag',
+    'unknown_test' => '—',
 ];
