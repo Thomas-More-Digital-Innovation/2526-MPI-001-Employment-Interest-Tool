@@ -41,6 +41,19 @@ class LanguagesManager extends BaseCrudComponent
         return Language::where('language_id', $id)->firstOrFail();
     }
 
+    public function getViewData(): array
+    {
+        // Provide the world languages list to the blade view
+        return $this->viewData();
+    }
+
+    protected function viewData(): array
+    {
+        return array_merge(parent::viewData(), [
+            'worldLanguages' => config('world_languages'),
+        ]);
+    }
+
     public function toggleEnable(int $id): void
     {
         $language = $this->findRecord($id);
@@ -49,6 +62,63 @@ class LanguagesManager extends BaseCrudComponent
 
         session()->flash('status', ['message' => __('languages.language_updated'), 'type' => 'success']);
         $this->dispatch('crud-record-updated', id: $id);
+        $this->resetPage();
+    }
+
+    /**
+     * Create a new language record from the selected language code.
+     */
+    public function createLanguage(): void
+    {
+        $rules = [
+            'form.language_code' => ['required', 'string', 'size:2', function ($attribute, $value, $fail) {
+                // Ensure the code exists in our world languages list
+                $list = config('world_languages');
+                if (! array_key_exists($value, $list)) {
+                    $fail(__('languages.invalid_language'));
+                }
+            }],
+        ];
+
+        $this->validate($rules);
+
+        // Ensure not already present
+        $existing = Language::where('language_code', $this->form['language_code'])->first();
+        if ($existing) {
+            session()->flash('status', ['message' => __('languages.already_exists'), 'type' => 'error']);
+            $this->dispatch('crud-record-created', id: null);
+            return;
+        }
+
+        $name = config('world_languages')[$this->form['language_code']] ?? $this->form['language_code'];
+
+        $language = Language::create([
+            'language_code' => $this->form['language_code'],
+            'language_name' => $name,
+            'enabled' => false,
+        ]);
+
+        session()->flash('status', ['message' => __('languages.language_created'), 'type' => 'success']);
+        $this->resetFormState();
+        $this->dispatch('crud-record-created', id: $language->language_id);
+        $this->resetPage();
+    }
+
+    /**
+     * Remove a language by id.
+     */
+    public function removeLanguage(int $id): void
+    {
+        $language = Language::where('language_id', $id)->first();
+        if (! $language) {
+            session()->flash('status', ['message' => __('languages.no_languages'), 'type' => 'error']);
+            return;
+        }
+
+        $language->delete();
+
+        session()->flash('status', ['message' => __('languages.language_removed'), 'type' => 'success']);
+        $this->dispatch('crud-record-deleted', id: $id);
         $this->resetPage();
     }
 

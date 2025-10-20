@@ -23,11 +23,32 @@
                     <flux:modal.trigger name="language-toggle-{{ $record->language_id }}">
                         <flux:button
                             size="sm"
-                            variant="outline"
+                            variant="primary"
+                            icon="power"
                         >
                             {{ $record->enabled ? __('Disable') : __('Enable') }}
                         </flux:button>
                     </flux:modal.trigger>
+
+                    {{-- Delete button: disabled when language is enabled (show tooltip), otherwise opens remove modal --}}
+                    @if ($record->enabled)
+                        <flux:tooltip content="{{ __('languages.disable_before_remove') }}">
+                            <flux:button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                icon="trash"
+                                class="cursor-not-allowed text-gray-400! text:color-gray-600"
+                                aria-disabled="true"
+                            >
+                                {{ __('Delete') }}
+                            </flux:button>
+                        </flux:tooltip>
+                    @else
+                        <flux:modal.trigger name="language-remove-{{ $record->language_id }}">
+                            <flux:button size="sm" variant="danger" icon="trash">{{ __('Delete') }}</flux:button>
+                        </flux:modal.trigger>
+                    @endif
 
                     <flux:modal name="language-toggle-{{ $record->language_id }}" class="max-w-md text-left">
                         <div>
@@ -41,6 +62,22 @@
                             </flux:modal.close>
                             <flux:modal.close>
                                 <flux:button size="sm" variant="danger" wire:click="toggleEnable({{ $record->language_id }})">{{ __('Confirm') }}</flux:button>
+                            </flux:modal.close>
+                        </div>
+                    </flux:modal>
+
+                    <flux:modal name="language-remove-{{ $record->language_id }}" class="max-w-md text-left">
+                        <div>
+                            <p class="text-2xl font-semibold">{{ $record->language_name }}</p>
+                            <p class="text-sm mt-2">{{ __('languages.confirm_remove') }}</p>
+                        </div>
+
+                        <div class="flex gap-2 justify-end mt-4">
+                            <flux:modal.close>
+                                <flux:button size="sm" variant="ghost">{{ __('Cancel') }}</flux:button>
+                            </flux:modal.close>
+                            <flux:modal.close>
+                                <flux:button size="sm" variant="danger" wire:click="removeLanguage({{ $record->language_id }})">{{ __('Confirm') }}</flux:button>
                             </flux:modal.close>
                         </div>
                     </flux:modal>
