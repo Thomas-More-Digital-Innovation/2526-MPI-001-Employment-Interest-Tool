@@ -12,11 +12,11 @@ return new class extends Migration
    public function up()
     {
         Schema::create('frequently_asked_question_translation', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('frequently_asked_question_id');
-            $table->unsignedBigInteger('language_id');
+            $table->id('frequently_asked_question_translation_id');
+            $table->integer('frequently_asked_question_id');
+            $table->integer('language_id');
             $table->string('question');
-            $table->text('answer')->nullable();
+            $table->string('answer');
             $table->timestamps();
 
             $table->unique(['frequently_asked_question_id', 'language_id'], 'faq_lang_unique');
