@@ -88,10 +88,9 @@
                                 <flux:tooltip content="{{ __('interestfield.cannot_delete_used') }}">
                                     <flux:button
                                         type="button"
-                                        variant="outline"
+                                        variant="danger"
                                         size="sm"
                                         icon="trash"
-                                        class="text-gray-400! text:color-gray-600"
                                         wire:click="showLinkedQuestions({{ $interestField->interest_field_id }})">
                                         {{ __('Delete') }}
                                     </flux:button>
