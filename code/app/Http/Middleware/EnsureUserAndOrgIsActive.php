@@ -44,7 +44,7 @@ class EnsureUserAndOrgIsActive
             return redirect()->route('home')->with(
                 'status',
                 __('middleware.account_inactivated')
-            );
+            )->with('error', true);
         }
 
         // Check organisation active flag (users are always linked to an organisation)
@@ -57,7 +57,7 @@ class EnsureUserAndOrgIsActive
             return redirect()->route('home')->with(
                 'status',
                 __('middleware.organisation_inactivated')
-            );
+            )->with('error', true);
         }
 
         return $next($request);
