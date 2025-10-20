@@ -43,7 +43,7 @@ class EnsureUserAndOrgIsActive
 
             return redirect()->route('home')->with(
                 'status',
-                __('Your account has been inactivated. Please contact your mentor or administrator if you believe this is a mistake.')
+                __('middleware.account_inactivated')
             );
         }
 
@@ -56,7 +56,7 @@ class EnsureUserAndOrgIsActive
 
             return redirect()->route('home')->with(
                 'status',
-                __('Your organisation has been inactivated. Please contact your administrator if you believe this is a mistake.')
+                __('middleware.organisation_inactivated')
             );
         }
 
