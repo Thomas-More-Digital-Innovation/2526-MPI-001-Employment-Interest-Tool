@@ -97,7 +97,7 @@
                             id="client-first-name"
                             type="text"
                             wire:model.defer="form.first_name"
-                            :label="__('First name')"
+                            :label="__('user.first_name')"
                             required
                             autofocus />
                         @error('form.first_name')
@@ -110,7 +110,7 @@
                             id="client-last-name"
                             type="text"
                             wire:model.defer="form.last_name"
-                            :label="__('Last name')"
+                            :label="__('user.last_name')"
                             required/>
                         @error('form.last_name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -130,11 +130,17 @@
                     </div>
 
                     <div>
+                        <flux:label for="client-password" >
+                            {{ __('user.password') }}
+                            <flux:tooltip content="{{ $editingId ? __('user.new_password_optional') : __('Password') }}" class="ml-1">
+                                <flux:icon name="information-circle" variant="outline" />
+                            </flux:tooltip>
+                        </flux:label>
+
                         <flux:input
                             id="client-password"
                             type="password"
                             wire:model.defer="form.password"
-                            :label="$editingId ? __('New password (leave blank to keep current)') : __('Password')"
                             :required="!$editingId" />
                         @error('form.password')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

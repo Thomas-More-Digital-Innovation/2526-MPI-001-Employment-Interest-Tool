@@ -6,12 +6,12 @@
     <x-table class="min-w-full divide-y divide-gray-800">
         <thead class="bg-gray-50 dark:bg-zinc-900">
         <tr class="text-left text-sm font-semibold text-gray-700 dark:text-gray-200">
-            <th class="px-4 py-3">{{ __('First name') }}</th>
-            <th class="px-4 py-3">{{ __('Last name') }}</th>
-            <th class="px-4 py-3">{{ __('Username') }}</th>
-            <th class="px-4 py-3">{{ __('Language') }}</th>
-            <th class="px-4 py-3">{{ __('Status') }}</th>
-            <th class="px-4 py-3 text-right">{{ __('Actions') }}</th>
+            <th class="px-4 py-3">{{ __('user.first_name') }}</th>
+            <th class="px-4 py-3">{{ __('user.last_name') }}</th>
+            <th class="px-4 py-3">{{ __('user.username') }}</th>
+            <th class="px-4 py-3">{{ __('user.language') }}</th>
+            <th class="px-4 py-3">{{ __('user.status') }}</th>
+            <th class="px-4 py-3 text-right">{{ __('user.actions') }}</th>
         </tr>
         </thead>
         <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-900 dark:text-gray-50">
