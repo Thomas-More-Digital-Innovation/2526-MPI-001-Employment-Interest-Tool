@@ -13,36 +13,28 @@ return new class extends Migration
     {
         Schema::create('frequently_asked_question_translation', function (Blueprint $table) {
             $table->id('frequently_asked_question_translation_id');
-            $table->integer('frequently_asked_question_id');
-            $table->integer('language_id');
+            $table->foreignId('frequently_asked_question_id')
+                ->constrained('frequently_asked_question', 'frequently_asked_question_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreignId('language_id')
+                ->constrained('language', 'language_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->string('question');
             $table->string('answer');
             $table->timestamps();
 
             $table->unique(['frequently_asked_question_id', 'language_id'], 'faq_lang_unique');
-
-            $table->foreign('frequently_asked_question_id', 'fk_faq_translation_faq')
-                ->references('id')->on('frequently_asked_question')
-                ->onDelete('cascade');
-
-            $table->foreign('language_id', 'fk_faq_translation_language')
-                ->references('id')->on('languages')
-                ->onDelete('cascade');
         });
     }
 
-    
+
     /**
      * Reverse the migrations.
     */
     public function down()
     {
-        Schema::table('frequently_asked_question_translation', function (Blueprint $table) {
-            $table->dropForeign('fk_faq_translation_faq');
-            $table->dropForeign('fk_faq_translation_language');
-            $table->dropUnique('faq_lang_unique');
-        });
-
         Schema::dropIfExists('frequently_asked_question_translation');
     }
 };
