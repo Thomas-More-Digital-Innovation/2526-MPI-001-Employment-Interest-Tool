@@ -38,26 +38,29 @@ class InactivatedClientTest extends TestCase
         Livewire::test(Login::class)
             ->set('username', 'inactivated_client')
             ->set('password', 'secret123!')
-            ->call('login')
-            ->assertHasErrors(['username']);
+            ->call('login');
 
+        $response = $this->get(route('dashboard'));
+        $response->assertRedirect(route('home'));
+        $response->assertSessionHas('status', 'Your account has been inactivated. Please contact your mentor or administrator if you believe this is a mistake.');
         $this->assertGuest();
     }
 
     /** @test */
     public function test_inactivated_client_is_logged_out_and_redirected_home(): void
     {
-        $client = User::factory()->create([
+        $user = User::factory()->create([
             'username' => 'active_then_inactivated',
             'password' => Hash::make('secret123!'),
             'active' => false,
         ]);
-        $client->roles()->attach($this->clientRole->role_id);
+        $user->roles()->attach($this->clientRole->role_id);
 
-        $response = $this->actingAs($client)->get(route('dashboard'));
+        /** @var \App\Models\User $user */
+        $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertRedirect(route('home'));
-        $response->assertSessionHas('status', __('Your account has been inactivated. Please contact your mentor or administrator if you believe this is a mistake.'));
+        $response->assertSessionHas('status', 'Your account has been inactivated. Please contact your mentor or administrator if you believe this is a mistake.');
         $this->assertGuest();
     }
 }
