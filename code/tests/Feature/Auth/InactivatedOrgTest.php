@@ -3,9 +3,9 @@
 namespace Tests\Feature\Auth;
 
 use App\Livewire\Auth\Login;
+use App\Models\Organisation;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Organisation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
@@ -71,11 +71,11 @@ class InactivatedOrgTest extends TestCase
         ]);
         $user->roles()->attach($this->clientRole->role_id);
 
-    /** @var \App\Models\User $user */
-    $response = $this->actingAs($user)->get(route('dashboard'));
+        /** @var \App\Models\User $user */
+        $response = $this->actingAs($user)->get(route('dashboard'));
 
-    $response->assertRedirect(route('home'));
-    $response->assertSessionHas('status', 'Your organisation has been inactivated. Please contact your administrator if you believe this is a mistake.');
+        $response->assertRedirect(route('home'));
+        $response->assertSessionHas('status', 'Your organisation has been inactivated. Please contact your administrator if you believe this is a mistake.');
         $this->assertGuest();
     }
 }
