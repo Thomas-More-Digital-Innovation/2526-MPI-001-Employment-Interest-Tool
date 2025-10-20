@@ -12,6 +12,7 @@
         "php": "^8.2",
         "fakerphp/faker": "^1.24",
         "laravel-lang/common": "^6.7",
+        "laravel-lang/json-fallback": "^2.2",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
