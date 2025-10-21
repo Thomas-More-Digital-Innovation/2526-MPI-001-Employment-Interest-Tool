@@ -24,13 +24,13 @@
     <!-- Main content -->
     <div class="grid grid-cols-2 md:grid-cols-4 grid-rows-[auto_1fr] md:grid-rows-1 gap-2 h-full mt-2">
         <!-- Image + Title -->
-        <div class="col-span-2 md:col-span-2 row-start-1 md:order-2 flex flex-col content-center h-full">
+        <div class="col-span-2 md:col-span-2 row-start-1 md:order-2 flex flex-col justify-center items-center h-full overflow-hidden">
             <x-question-image 
                 :image-url="$image" 
                 :alt="$imageDescription" 
-                class="object-contain rounded-md h-full" />
+                class="object-contain rounded-md w-full max-h-[60vh] flex-shrink" />
             <h2
-                class="text-4xl md:text-5xl font-semibold mt-2 text-center h-full break-words overflow-hidden max-w-full">
+                class="text-4xl md:text-5xl font-semibold mt-2 text-center break-words max-w-full flex-shrink min-h-0">
                 {{ $title }}</h2>
         </div>
 
@@ -90,20 +90,21 @@
         <div class="bg-red-400 py-2" :style="`width: ${progress}%`"></div>
     </div>
     <!-- Stop Test Confirmation Modal -->
-    <flux:modal name="stop-test-confirmation" class="  flex flex-col space-y-6">
-        <div>
-            <p class="text-4xl">{{ __('Stop Test') }}</p>
-            <p class="text-2xl mt-2">{{ __('Are you sure you want to stop the test?') }}</p>
+    <flux:modal name="stop-test-confirmation">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">{{ __('Stop Test') }}</flux:heading>
+                <flux:text class="text-xl mt-2">{{ __('Are you sure you want to stop the test?') }}</flux:text>
+            </div>
 
-        </div>
-
-        <div class="flex gap-2 justify-end">
-            <flux:modal.close>
-                <flux:button size="2xl" variant="ghost">{{ __('Cancel') }}</flux:button>
-            </flux:modal.close>
-            <flux:modal.close>
-                <flux:button size="2xl" variant="danger" wire:click="close">{{ __('Stop') }}</flux:button>
-            </flux:modal.close>
+            <div class="flex gap-2 justify-end pt-4">
+                <flux:modal.close>
+                    <flux:button size="lg" variant="ghost">{{ __('Cancel') }}</flux:button>
+                </flux:modal.close>
+                <flux:modal.close>
+                    <flux:button size="lg" variant="danger" wire:click="close">{{ __('Stop') }}</flux:button>
+                </flux:modal.close>
+            </div>
         </div>
     </flux:modal>
 </div>
