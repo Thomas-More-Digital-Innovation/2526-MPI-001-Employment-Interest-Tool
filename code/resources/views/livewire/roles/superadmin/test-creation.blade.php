@@ -205,9 +205,14 @@
             </div>
 
             {{-- Randomize Questions Button --}}
-            <flux:button type="button" wire:click="randomizeQuestions">
-                {{ __('testcreation.randomize_questions') }}
-            </flux:button>
+            <div class="flex w-full p-2 items-center flex-shrink-0">
+                <button
+                    type="button"
+                    wire:click="randomizeQuestions"
+                    class="w-full bg-gray-200 hover:bg-gray-300 text-black text-sm font-medium py-2 px-4 rounded-lg transition">
+                    {{ __('testcreation.randomize_questions') }}
+                </button>
+            </div>
 
             {{-- Container to list + sort questions automatically, Basic-sortable is a selector for the sortable.js script --}}
             <ul id="Basic-sortable" class="w-full px-2 overflow-y-auto flex-1 min-h-0" x-data x-init="if (!$el._sortableBound) {
