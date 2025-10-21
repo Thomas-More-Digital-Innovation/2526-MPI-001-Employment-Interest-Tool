@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\FirstLoginComponent;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -34,6 +35,7 @@ Route::get('/locale/{locale}', function ($locale) {
 })->name('locale.change');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/first-login', FirstLoginComponent::class)->name('first-login-page');
 
     Route::get('/dashboard', function () {
         $user = Auth::user();

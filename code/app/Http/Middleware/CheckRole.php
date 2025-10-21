@@ -22,6 +22,10 @@ class CheckRole
 
         $user = Auth::user();
 
+        if(!$user->isClient() && $user->first_login){
+            return redirect()->route('first-login-page');
+        }
+
         if (!$user->hasAnyRole($roles)) {
             abort(403, 'Unauthorized. You do not have the required role to access this page.');
         }
