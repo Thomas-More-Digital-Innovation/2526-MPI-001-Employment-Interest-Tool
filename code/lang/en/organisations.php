@@ -10,7 +10,6 @@ return [
     'expire_date' => 'Expiry date',
     'active' => 'Active',
     'actions' => 'Actions',
-
     'manage_admins' => 'Manage organisation admins',
     'create_admin' => 'Create admin',
     'remove_admin' => 'Remove',
@@ -19,7 +18,8 @@ return [
     'edit' => 'Edit',
     'activate' => 'Activate',
     'inactivate' => 'Inactivate',
-    'toggle_confirm' => 'Are you sure you want to deactivate this organisation?',
+    'deactivate_confirm' => 'Are you sure you want to deactivate this organisation?',
+    'activate_confirm' => 'Are you sure you want to activate this organisation?',
     'cancel' => 'Cancel',
     'confirm' => 'Confirm',
     'save_changes' => 'Save changes',
