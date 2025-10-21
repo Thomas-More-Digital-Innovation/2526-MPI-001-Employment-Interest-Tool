@@ -24,6 +24,7 @@ return [
     'uploading' => 'Uploading...',
     'submit' => 'Submit',
     'questions' => 'Questions',
+    'randomize_questions' => 'Randomize Questions',
     'untitled' => 'Untitled',
     'question_title' => 'Question :number - :title',
     'question_undefined' => 'Question :number - Undefined',
