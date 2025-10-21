@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Language;
 use App\Livewire\SuperAdmin\ResearcherManager;
+use App\Livewire\SuperAdmin\ResearcherFormModal;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -68,10 +69,9 @@ class ResearcherManagerTest extends TestCase
     public function test_can_create_researcher(): void
     {
         Livewire::actingAs($this->superAdmin)
-            ->test(ResearcherManager::class)
-            ->call('startCreate')
-            ->assertSet('formModalVisible', true)
-            ->assertSet('formModalMode', 'create')
+            ->test(ResearcherFormModal::class)
+            ->call('openForm')
+            ->assertSet('mode', 'create')
             ->set('form.first_name', 'New')
             ->set('form.last_name', 'Researcher')
             ->set('form.username', 'new_researcher')
@@ -104,10 +104,9 @@ class ResearcherManagerTest extends TestCase
         $researcher->roles()->attach($this->researcherRole->role_id);
 
         Livewire::actingAs($this->superAdmin)
-            ->test(ResearcherManager::class)
-            ->call('startEdit', $researcher->user_id)
-            ->assertSet('formModalVisible', true)
-            ->assertSet('formModalMode', 'edit')
+            ->test(ResearcherFormModal::class)
+            ->call('openForm', $researcher->user_id)
+            ->assertSet('mode', 'edit')
             ->assertSet('form.first_name', 'Original')
             ->set('form.first_name', 'Updated')
             ->set('form.last_name', 'Name')

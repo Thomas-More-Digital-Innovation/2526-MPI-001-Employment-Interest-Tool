@@ -81,31 +81,12 @@ class ResearcherManager extends ResearcherCRUDManager
 
     public function startCreate(): void
     {
-        $this->ensureMentorContext();
-
-        $this->resetFormState();
-        $this->formModalMode = 'create';
-        $this->formModalVisible = true;
-
-        $this->dispatch('modal-open', name: 'admin-client-form');
-        $this->dispatch('crud-form-opened', mode: 'create');
+        $this->dispatch('open-researcher-form');
     }
 
     public function startEdit(int $recordId): void
     {
-        $this->ensureMentorContext();
-
-        $record = $this->findRecord($recordId);
-        $this->editingId = $recordId;
-        $this->form = $this->transformRecordToForm($record);
-        $this->formModalMode = 'edit';
-        $this->formModalVisible = true;
-
-        $this->resetErrorBag();
-        $this->resetValidation();
-
-        $this->dispatch('modal-open', name: 'admin-client-form');
-        $this->dispatch('crud-form-opened', mode: 'edit');
+        $this->dispatch('open-researcher-form', researcherId: $recordId);
     }
 
     public function cancelForm(): void
