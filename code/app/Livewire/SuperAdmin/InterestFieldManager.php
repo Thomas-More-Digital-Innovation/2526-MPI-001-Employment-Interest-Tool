@@ -13,6 +13,8 @@ class InterestFieldManager extends BaseCrudComponent
 
     public array $availableLanguages = [];
     public bool $showInactivated = false;
+    // Questions linked to the currently inspected interest field
+    public array $linkedQuestions = [];
 
     protected function rules(): array
     {
@@ -186,6 +188,30 @@ class InterestFieldManager extends BaseCrudComponent
     {
         $this->editingId = $id; // Store the ID of the interest field to be deleted
         $this->dispatch('modal-open', name: 'delete-interest-field-confirmation');
+    }
+
+    /**
+     * Load questions linked to an interest field and open a modal to show them.
+     */
+    public function showLinkedQuestions(int $id): void
+    {
+        $interestField = InterestField::where('interest_field_id', $id)->first();
+
+        // Load related questions and eager load the test relation
+        $questions = $interestField->questions()->with('test')->get();
+
+        // Transform questions to a minimal array for the view
+        $this->linkedQuestions = $questions->map(function ($q) {
+            return [
+                'id' => $q->question_id,
+                'question_number' => $q->question_number,
+                'text' => $q->getQuestion(app()->getLocale()),
+                'test' => $q->test ? ($q->test->name ?? $q->test->test_name ?? null) : null,
+            ];
+        })->toArray();
+
+        // Open the modal in the frontend
+        $this->dispatch('modal-open', name: 'linked-questions-modal');
     }
 
     /**
