@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'clientsManager' => 'Cliëntenbeheer',
+    'clientsManager' => 'Beheer klanten',
     'SearchClients' => 'Zoek cliënten',
     'SearchClientBy' => 'Zoek alle cliënten op naam of gebruikersnaam',
     'SearchClientByAndActive' => 'Zoek actieve cliënten op naam of gebruikersnaam',

@@ -1,4 +1,4 @@
-<x-layouts.app.sidebar :title="$title ?? null">
+<x-layouts.app.sidebar :title="__('InteresseTest') . (isset($title) ? ' - ' . $title : '')">
     <flux:main>
         {{ $slot }}
     </flux:main>

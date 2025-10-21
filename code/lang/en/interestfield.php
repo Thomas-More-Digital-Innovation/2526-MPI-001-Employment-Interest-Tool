@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'manager' => 'Interest Field Manager',
+    'manager' => 'Manage Interest Fields',
     'search' => 'Search by name or description',
     'add' => 'Add Interest Field',
     'edit' => 'Edit Interest Field',
@@ -18,9 +18,12 @@ return [
     'addbtn' => 'Add',
     'updatebtn' => 'Update',
     'delete_confirm' => 'Are you sure you want to delete this interest field? This action cannot be undone.',
+    'delete_confirm_test' => 'Are you sure you want to delete this test? This action cannot be undone.',
     'delete_success' => 'Interest field deleted successfully.',
     'delete_error' => 'Interest field cannot be deleted as it is used by a question.',
     'delete_heading' => 'Confirm Deletion',
+    'deactivated_success' => 'Interest field deactivated successfully.',
+    'cannot_delete_used' => 'This interest field cannot be deleted because it is used in one or more questions.',
     'default' => 'Default',
     'translation_removed_success' => 'Translation removed successfully.',
     'select_valid_language' => 'Please select a valid language.',
@@ -28,4 +31,10 @@ return [
     'no_fields_found' => 'No interest fields found yet.',
     'add_translation' => 'Add translation',
     'select_language' => 'Select a language',
+    'active_label' => 'Active',
+    'inactive_label' => 'Inactive',
+    'inactive_heading' => 'Inactive Interest Fields',
+    'show_inactive' => 'Show Inactive Interest Fields',
+    'hide_inactive' => 'Hide Inactive Interest Fields',
+
 ];

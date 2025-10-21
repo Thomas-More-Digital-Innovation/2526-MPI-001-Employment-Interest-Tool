@@ -5,12 +5,15 @@
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
             <flux:input wire:model="first_name" :label="ucfirst(__('user.first_name'))" type="text" required autofocus autocomplete="first_name" />
             <flux:input wire:model="last_name" :label="ucfirst(__('user.last_name'))" type="text" required autofocus autocomplete="last_name" />
-            @if(auth()->user()->isClient())
-                <flux:input wire:model="email" :label="ucfirst(__('user.email'))" type="email" readonly />
-            @else
+            @if(!auth()->user()->isClient())
                 <flux:input wire:model="email" :label="ucfirst(__('user.email'))" type="email" required />
             @endif
-            <flux:checkbox wire:model="is_sound_on" :label="$is_sound_on ? __('user.sound_on') : __('user.sound_off')" type="checkbox" required autofocus/>
+            <div x-data="{ soundOn: @entangle('is_sound_on') }" class="flex items-center space-x-3">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <flux:checkbox wire:model="is_sound_on" :label="''" type="checkbox" required autofocus class="!p-0" />
+                    <span class="select-none" x-text="soundOn ? @js(__('user.sound_on')) : @js(__('user.sound_off'))"></span>
+                </label>
+            </div>
             {{-- Dropdown with type of vision--}}
             <flux:select wire:model="vision_type" :label="__('user.vision_type')" required>
                  <option value="Normal">{{ __('user.vision_type_normal') }}</option>

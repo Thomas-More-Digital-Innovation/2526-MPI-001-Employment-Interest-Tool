@@ -5,8 +5,11 @@
         @livewireStyles
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
-    <body class="h-screen">
-        <flux:header class="bg-zinc-300/60 dark:bg-zinc-900 border-b border-zinc-500/50 dark:border-zinc-700">
+    <body class="h-screen {{ strtolower(auth()->user()->vision_type) ?? 'normal' }}">
+    <livewire:svg-colorblindness/>
+<flux:header
+    class="px-8 bg-zinc-300/60 dark:bg-zinc-900 border-b border-zinc-500/50 dark:border-zinc-700"
+>
             <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo-small />
             </a>

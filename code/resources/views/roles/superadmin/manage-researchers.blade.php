@@ -4,7 +4,7 @@
             <div class="bg-white dark:bg-zinc-400/10 overflow-hidden shadow rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
                     <flux:heading class="py-1" size="xl">{{ __('manage-researchers.manage_researchers') }}</flux:heading>
-                    <livewire:superadmin.researcher-manager/>
+                    @livewire('super-admin.researcher-manager')
                 </div>
             </div>
         </div>

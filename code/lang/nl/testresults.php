@@ -7,4 +7,5 @@ return [
     'most_interested_in' => 'Je bent het meest geïnteresseerd in',
     'second_most_interested_in' => 'Je tweede interesse is',
     'least_interested_in' => 'Je bent het minst geïnteresseerd in',
+    'continue' => 'Doorgaan'
 ];
