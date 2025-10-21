@@ -38,4 +38,10 @@ return [
     'clearing' => 'Verrekening...',
     'or' => 'of',
     'media_link_placeholder' => 'Voer youtube of vimeo link in',
+    'incomplete_questions_title' => 'Onvolledige Vragen',
+    'no_complete_questions_message' => 'Alle vragen zijn onvolledig. Zorg ervoor dat ten minste één vraag een titel en een geselecteerd interessegebied heeft voordat u opslaat.',
+    'incomplete_questions_warning' => 'De volgende vragen zijn onvolledig en worden NIET opgeslagen. Alleen volledige vragen worden opgeslagen in de test.',
+    'incomplete_questions_list' => 'Onvolledige Vragen:',
+    'question' => 'Vraag',
+    'save_complete_questions' => 'Volledige Vragen Opslaan',
 ];

@@ -83,17 +83,50 @@ class TestCreation extends Component
         'questions' => 'required|array|min:1',
         ]);
 
-        // then check the colors, all must be green to submit test
+        // Filter questions: separate complete (green) and incomplete questions
+        $completeQuestions = [];
+        $incompleteQuestions = [];
+        
         foreach ($this->questions as $i => $q) {
-            if (($q['circleFill'] ?? null) !== 'green') {
+            if (($q['circleFill'] ?? null) === 'green') {
+                $completeQuestions[] = $q;
+            } else {
                 $this->addError('questions.'.$i, 'Question '.($i + 1).' is incomplete.');
+                $incompleteQuestions[] = $i + 1;
             }
         }
 
-        // if any red/yellow left, don’t continue
-        if ($this->getErrorBag()->isNotEmpty()) {
+        // If there are incomplete questions, show modal warning
+        if (!empty($incompleteQuestions)) {
+            $hasComplete = !empty($completeQuestions);
+            $this->dispatch('show-incomplete-questions-modal', 
+                questions: $incompleteQuestions, 
+                noComplete: !$hasComplete
+            );
             return;
         }
+
+        // All questions are complete, proceed with save
+        $this->saveTest($completeQuestions);
+    }
+
+    public function saveTest($questionsToSave = null) {
+        // If no questions provided, filter them again
+        if ($questionsToSave === null) {
+            $questionsToSave = [];
+            foreach ($this->questions as $q) {
+                if (($q['circleFill'] ?? null) === 'green') {
+                    $questionsToSave[] = $q;
+                }
+            }
+        }
+
+        // Check if there are any questions to save
+        if (empty($questionsToSave)) {
+            session()->flash('error', 'No complete questions to save.');
+            return;
+        }
+
         // check if test is being edited or created
         if ($this->test_id) {
             // if edited then find the test
@@ -109,7 +142,9 @@ class TestCreation extends Component
                 'active' => 1,
             ]);
         }
-        foreach ($this->questions as $index => $question) {
+        
+        // Save only the complete (green) questions
+        foreach ($questionsToSave as $index => $question) {
             // create new questions for the test
             Question::create([
                 'test_id' => $test->test_id,
@@ -121,9 +156,23 @@ class TestCreation extends Component
                 'sound_link' => $question['sound_link'] ?? null,
             ]);
         }
+        
         $this->clearSession();
-        return redirect()->route('superadmin.test.manager')->with('success', 'Test saved successfully.');
-
+        
+        // Calculate how many questions were skipped
+        $totalQuestions = count($this->questions);
+        $savedCount = count($questionsToSave);
+        $skippedCount = $totalQuestions - $savedCount;
+        
+        // Show appropriate success message
+        if ($skippedCount > 0) {
+            // Some questions were skipped
+            return redirect()->route('superadmin.test.manager')
+                ->with('warning', "Test saved with {$savedCount} complete question(s). {$skippedCount} incomplete question(s) were not saved.");
+        } else {
+            // All questions were saved
+            return redirect()->route('superadmin.test.manager')->with('success', 'Test saved successfully.');
+        }
     }
 
     // Runs on every update made, used to recalculate the status
