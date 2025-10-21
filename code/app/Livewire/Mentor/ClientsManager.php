@@ -81,6 +81,15 @@ class ClientsManager extends BaseCrudComponent
      */
     public bool $showInactivated = false;
 
+    /**
+     * Keep query string state for search & pagination of both tables.
+     */
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'activePage' => ['except' => 1],
+        'inactivePage' => ['except' => 1],
+    ];
+
     public function mount(): void
     {
         parent::mount();
@@ -211,7 +220,12 @@ class ClientsManager extends BaseCrudComponent
 
     public function getInactivatedClientsProperty()
     {
-        return $this->applySearch($this->inactivatedClientsQuery())->paginate($this->perPage());
+        return $this->applySearch($this->inactivatedClientsQuery())->paginate($this->perPage(), ['*'], 'inactivePage');
+    }
+
+    public function getRecordsProperty()
+    {
+        return $this->applySearch($this->baseQuery())->paginate($this->perPage(), ['*'], 'activePage');
     }
 
     protected function applySearch(Builder $query): Builder
@@ -402,7 +416,8 @@ class ClientsManager extends BaseCrudComponent
     public function toggleShowInactivated(): void
     {
         $this->showInactivated = !$this->showInactivated;
-        $this->resetPage();
+        $this->resetPage('activePage');
+        $this->resetPage('inactivePage');
     }
 
     protected function ensureMentorContext(bool $force = false): void
