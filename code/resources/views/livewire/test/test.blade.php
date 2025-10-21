@@ -1,4 +1,25 @@
-<div class="flex flex-col h-full" x-data="{ playAudio(refName){ let audio = this.$refs[refName]; if(!audio) return; try{ audio.pause(); audio.currentTime = 0; audio.load(); audio.play(); }catch(e){ console.debug('audio play failed', e); } } }">
+<div class="flex flex-col h-full" 
+     x-data="{ 
+         playAudio(refName){ 
+             let audio = this.$refs[refName]; 
+             if(!audio) return; 
+             try{ 
+                 audio.pause(); 
+                 audio.currentTime = 0; 
+                 audio.load(); 
+                 audio.play(); 
+             }catch(e){ 
+                 console.debug('audio play failed', e); 
+             } 
+         },
+         buttonsDisabled: false,
+         handleButtonClick(action) {
+             if (this.buttonsDisabled) return;
+             this.buttonsDisabled = true;
+             action();
+             setTimeout(() => { this.buttonsDisabled = false; }, 1000);
+         }
+     }">
 
     <!-- Main content -->
     <div class="grid grid-cols-2 md:grid-cols-4 grid-rows-[auto_1fr] md:grid-rows-1 gap-2 h-full mt-2">
@@ -18,8 +39,8 @@
             <div class="hidden md:flex justify-start h-1/5"></div>
             <button
                 class="w-full h-4/5 bg-green-400 rounded-full shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.3),inset_4px_4px_8px_rgba(255,255,255,0.3),0_8px_16px_rgba(0,0,0,0.4)] hover:-translate-y-2 hover:shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.3),inset_4px_4px_8px_rgba(255,255,255,0.3),0_12px_20px_rgba(0,0,0,0.5)] active:translate-y-1 active:shadow-[inset_4px_4px_12px_rgba(0,0,0,0.4),inset_-4px_-4px_8px_rgba(255,255,255,0.2)] transition-all duration-150 cursor-pointer"
-                wire:click="like" wire:loading.attr="disabled" wire:target="like, dislike, next, previous"
-                @if ($isQuestionLoading) disabled @endif>
+                @click="handleButtonClick(() => $wire.like())"
+                :disabled="buttonsDisabled">
             </button>
         </div>
         <div class="h-full row-start-2 md:row-start-1 md:order-3">
@@ -33,15 +54,16 @@
             </div>
             <button
                 class="w-full h-4/5 bg-red-500 rounded-full shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.3),inset_4px_4px_8px_rgba(255,255,255,0.3),0_8px_16px_rgba(0,0,0,0.4)] hover:-translate-y-2 hover:shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.3),inset_4px_4px_8px_rgba(255,255,255,0.3),0_12px_20px_rgba(0,0,0,0.5)] active:translate-y-1 active:shadow-[inset_4px_4px_12px_rgba(0,0,0,0.4),inset_-4px_-4px_8px_rgba(255,255,255,0.2)] transition-all duration-150 cursor-pointer"
-                wire:click="dislike" wire:loading.attr="disabled" wire:target="like, dislike, next, previous"
-                @if ($isQuestionLoading) disabled @endif>
+                @click="handleButtonClick(() => $wire.dislike())"
+                :disabled="buttonsDisabled">
             </button>
         </div>
     </div>
 
     <!-- Controls -->
     <div class="flex justify-around items-center m-4">
-        <button wire:click="previous"
+        <button @click="handleButtonClick(() => $wire.previous())"
+            :disabled="buttonsDisabled"
             class="text-6xl @if (!$previousEnabled) invisible @endif"><flux:icon.arrow-left
                 class="size-12 md:size-32" /></button>
 
@@ -58,7 +80,9 @@
         <livewire:test.send-feedback-test wire:key="feedback-{{ $questionNumber }}" :class="'size-6 md:size-16'" :clientName="$clientName"
             :questionNumber="$questionNumber" :test="$testName" :question="$title" :mail-mentor="$mailMentor" :onCloseEvent="App\Livewire\Test\Test::UNCLEAR_CLOSED_EVENT" />
 
-        <button wire:click="next" class="text-6xl"><flux:icon.arrow-right class="size-12 md:size-32" /></button>
+        <button @click="handleButtonClick(() => $wire.next())"
+            :disabled="buttonsDisabled"
+            class="text-6xl"><flux:icon.arrow-right class="size-12 md:size-32" /></button>
     </div>
     <!-- Progress bar -->
     {{-- wire:key is needed to force the alpine component to re-render --}}
