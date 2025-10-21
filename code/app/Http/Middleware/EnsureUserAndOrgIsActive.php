@@ -60,6 +60,19 @@ class EnsureUserAndOrgIsActive
             )->with('error', true);
         }
 
+            // Check organisation expire_date (if set and in the past, block login)
+            if (!empty($user->organisation->expire_date) && strtotime($user->organisation->expire_date) < time()) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('home')->with(
+                    'status',
+                    __('middleware.organisation_expired')
+                )->with('error', true);
+            }
+
+
+
         return $next($request);
     }
 }
