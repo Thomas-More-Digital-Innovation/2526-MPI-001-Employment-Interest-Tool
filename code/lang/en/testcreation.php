@@ -38,4 +38,10 @@ return [
     'clearing' => 'Clearing...',
     'or' => 'or',
     'media_link_placeholder' => 'Enter youtube or vimeo link',
+    'incomplete_questions_title' => 'Incomplete Questions',
+    'no_complete_questions_message' => 'All questions are incomplete. Please ensure at least one question has a title and an interest field selected before saving.',
+    'incomplete_questions_warning' => 'The following questions are incomplete and will NOT be saved. Only complete questions will be saved to the test.',
+    'incomplete_questions_list' => 'Incomplete Questions:',
+    'question' => 'Question',
+    'save_complete_questions' => 'Save Complete Questions',
 ];

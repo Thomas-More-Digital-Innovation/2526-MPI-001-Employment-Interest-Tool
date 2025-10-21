@@ -298,6 +298,66 @@
         </div>
     </flux:modal>
 
+    {{-- Incomplete Questions Error Modal --}}
+    <flux:modal name="incomplete-questions-modal" class="max-w-md"
+        x-data="{ incompleteQuestions: [], noComplete: false }"
+        x-on:show-incomplete-questions-modal.window="
+            incompleteQuestions = $event.detail.questions || [];
+            noComplete = $event.detail.noComplete || false;
+            $flux.modal('incomplete-questions-modal').show();
+        ">
+        <div>
+            <flux:heading size="lg" class="mb-4">{{ __('testcreation.incomplete_questions_title') }}</flux:heading>
+            
+            <div class="mb-4">
+                <p class="text-zinc-600 dark:text-zinc-400 mb-3" x-show="noComplete">
+                    {{ __('testcreation.no_complete_questions_message') }}
+                </p>
+                <p class="text-zinc-600 dark:text-zinc-400 mb-3" x-show="!noComplete">
+                    {{ __('testcreation.incomplete_questions_warning') }}
+                </p>
+                
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                    <p class="text-sm font-semibold text-red-800 dark:text-red-400 mb-2">
+                        {{ __('testcreation.incomplete_questions_list') }}
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-300">
+                        <template x-for="qNum in incompleteQuestions" :key="qNum">
+                            <li x-text="'{{ __('testcreation.question') }} ' + qNum"></li>
+                        </template>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                {{-- Show only Close button if no complete questions --}}
+                <template x-if="noComplete">
+                    <flux:modal.close>
+                        <flux:button variant="primary">
+                            {{ __('actions.close') }}
+                        </flux:button>
+                    </flux:modal.close>
+                </template>
+                
+                {{-- Show Cancel and Save buttons if there are complete questions --}}
+                <template x-if="!noComplete">
+                    <div class="flex gap-2">
+                        <flux:modal.close>
+                            <flux:button variant="ghost">
+                                {{ __('actions.cancel') }}
+                            </flux:button>
+                        </flux:modal.close>
+                        <flux:modal.close>
+                            <flux:button wire:click="saveTest" variant="primary">
+                                {{ __('testcreation.save_complete_questions') }}
+                            </flux:button>
+                        </flux:modal.close>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </flux:modal>
+
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
         <script>
