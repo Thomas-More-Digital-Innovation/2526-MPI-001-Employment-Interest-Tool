@@ -162,8 +162,9 @@ class ResearcherManager extends ResearcherCRUDManager
     {
         return $clients
             ->groupBy(fn(User $client) => $client->mentor_id ?? 0)
-            ->map(function (Collection $group): array {
+            ->map(function (Collection $group, $mentorId): array {
                 return [
+                    'mentor_id' => $mentorId,
                     'clients' => $group
                         ->values(),
                 ];

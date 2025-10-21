@@ -39,7 +39,7 @@
                     {{ trans_choice('{0}No mentors|{1}:count mentor|[2,*]:count mentors', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
                 </span>
                 </div>
-                @include('livewire.admin.mentor-manager-table', ['records' => $group['clients']])
+                @include('livewire.admin.mentor-manager-table', ['records' => $group['clients'], 'tableKey' => 'active'])
             </section>
         @empty
             <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
@@ -69,7 +69,7 @@
                     </span>
                         </div>
 
-                        @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients']])
+                        @include('livewire.admin.mentor-manager-table', ['records' => $group['clients'], 'tableKey' => 'inactive'])
                     </section>
                 @empty
                     <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
