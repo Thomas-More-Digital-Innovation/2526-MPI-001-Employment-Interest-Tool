@@ -57,6 +57,11 @@ class LanguagesManager extends BaseCrudComponent
     public function toggleEnable(int $id): void
     {
         $language = $this->findRecord($id);
+        // Prevent toggling Dutch and English
+        if (in_array($language->language_code, ['nl', 'en'])) {
+            session()->flash('status', ['message' => __('languages.cannot_toggle_default'), 'type' => 'error']);
+            return;
+        }
         $language->enabled = ! (bool) $language->enabled;
         $language->save();
 
@@ -113,6 +118,19 @@ class LanguagesManager extends BaseCrudComponent
         if (! $language) {
             session()->flash('status', ['message' => __('languages.no_languages'), 'type' => 'error']);
             return;
+        }
+
+        // Prevent deletion of Dutch and English
+        if (in_array($language->language_code, ['nl', 'en'])) {
+            session()->flash('status', ['message' => __('languages.cannot_remove_default'), 'type' => 'error']);
+            return;
+        }
+
+        // Set users with this language to Dutch
+        $dutch = Language::where('language_code', 'nl')->first();
+        if ($dutch) {
+            \App\Models\User::where('language_id', $language->language_id)
+                ->update(['language_id' => $dutch->language_id]);
         }
 
         $language->delete();
