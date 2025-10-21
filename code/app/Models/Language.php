@@ -14,7 +14,14 @@ class Language extends Model
     protected $fillable = [
         'language_code',
         'language_name',
+        'enabled',
     ];
+
+    // Get languages that are enabled
+    public static function getEnabledLanguages()
+    {
+        return self::where('enabled', true)->get();
+    }
 
     // Relationships
     public function questionTranslations()

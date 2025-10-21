@@ -36,5 +36,11 @@ return [
     'inactive_heading' => 'Inactive Interest Fields',
     'show_inactive' => 'Show Inactive Interest Fields',
     'hide_inactive' => 'Hide Inactive Interest Fields',
+    'linked_questions_title' => 'Linked Questions',
+    'no_linked_questions' => 'There are no questions linked to this interest field.',
+    'not_found' => 'Interest field not found.',
+    'test_label' => 'Test',
+    'question_label' => 'Question',
+    'unknown_test' => '—',
 
 ];

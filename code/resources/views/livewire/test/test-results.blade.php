@@ -24,6 +24,9 @@
                 <x-text variant="large">
                     {{ $mainInterest['interest_field_name'] }}
                 </x-text>
+                <x-text variant="small">
+                    {{ $mainInterest['interest_field_description'] }}
+                </x-text>
 
                 @if($firstUrl)
                     <x-question-image 
@@ -44,6 +47,9 @@
                 <x-text variant="large">
                     {{ $secondInterest['interest_field_name'] }}
                 </x-text>
+                <x-text variant="small">
+                    {{ $secondInterest['interest_field_description'] }}
+                </x-text>
 
                 @if($secondUrl)
                     <x-question-image 
@@ -63,6 +69,9 @@
                 </x-text>
                 <x-text variant="large">
                     {{ $lastInterest['interest_field_name'] }}
+                </x-text>
+                <x-text variant="small">
+                    {{ $lastInterest['interest_field_description'] }}
                 </x-text>
 
                 @if($lastUrl)

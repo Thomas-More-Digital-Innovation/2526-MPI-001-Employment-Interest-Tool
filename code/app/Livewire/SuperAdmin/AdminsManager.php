@@ -157,6 +157,7 @@ class AdminsManager extends BaseCrudComponent
                 'last_name' => $this->form['last_name'],
                 'username' => $this->form['username'],
                 'email' => $this->form['email'],
+                'language_id' => $this->form['language_id'],
                 'active' => (bool) $this->form['active'],
             ];
 

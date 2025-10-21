@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\FirstLoginComponent;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -34,6 +35,7 @@ Route::get('/locale/{locale}', function ($locale) {
 })->name('locale.change');
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/first-login', FirstLoginComponent::class)->name('first-login-page');
 
     Route::get('/dashboard', function () {
         $user = Auth::user();
@@ -86,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
         Route::view('superadmin/interest-field-manager', view: 'roles.superadmin.interest-field-manager')->name('superadmin.interest-field-manager');
         Route::view('superadmin/organisations-manager', view: 'roles.superadmin.organisations-manager')->name('superadmin.organisations-manager');
         Route::view('superadmin/admins-manager', view: 'roles.superadmin.admins-manager')->name('superadmin.admins-manager');
+        Route::view('superadmin/languages-manager', view: 'roles.superadmin.languages-manager')->name('superadmin.languages-manager');
     });
 
     Route::middleware(['role:Admin'])->group(function () {

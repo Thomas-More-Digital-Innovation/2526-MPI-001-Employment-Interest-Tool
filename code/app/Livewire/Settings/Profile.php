@@ -147,7 +147,7 @@ class Profile extends Component
      */
     public function getLanguagesProperty()
     {
-        return Language::all();
+        return Language::getEnabledLanguages();
     }
 
 }

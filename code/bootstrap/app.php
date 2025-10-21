@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             \App\Http\Middleware\SetUserLocale::class,
-            \App\Http\Middleware\EnsureClientIsActive::class,
+            \App\Http\Middleware\EnsureUserAndOrgIsActive::class,
             \App\Http\Middleware\SetLivewireLayout::class,
         ]);
 

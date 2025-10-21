@@ -1,10 +1,11 @@
 @props([
 'records' => [],
+'tableKey' => 'active',
 ])
 
-<div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white shadow-sm">
-    <x-table class="min-w-full divide-y divide-gray-800" border>
-        <thead class="bg-gray-50 dark:bg-zinc-600">
+<div class="overflow-x-auto rounded-lg shadow-sm">
+    <x-table class="min-w-full divide-y divide-gray-800">
+        <thead class="bg-gray-50 dark:bg-zinc-900">
             <tr class="text-left text-sm font-semibold text-gray-700 dark:text-gray-200">
                 <th class="px-4 py-3">{{ __('user.first_name') }}</th>
                 <th class="px-4 py-3">{{ __('user.last_name') }}</th>
@@ -14,9 +15,9 @@
                 <th class="px-4 py-3 text-right">{{ __('user.actions') }}</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
+        <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-900 dark:text-gray-50">
             @forelse ($records as $client)
-            <tr wire:key="client-{{ $client->user_id }}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
+            <tr wire:key="client-{{ $tableKey }}-{{ $client->user_id }}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
                 <td class="px-4 py-3">{{ $client->first_name }}</td>
                 <td class="px-4 py-3">{{ $client->last_name }}</td>
                 <td class="px-4 py-3 font-mono">{{ $client->username }}</td>
@@ -35,7 +36,7 @@
                         <flux:menu>
                             <flux:menu.item
                                 icon="pencil"
-                                wire:click="startEdit({{ $client->user_id }})">
+                                wire:click="$dispatch('open-client-form', { clientId: {{ $client->user_id }} })">
                                 {{ __('manage-clients.EditClient') }}
                             </flux:menu.item>
 
@@ -67,7 +68,7 @@
     </x-table>
 
     @if (method_exists($records, 'links'))
-    <div class="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-zinc-600 px-4 py-3">
+    <div class="pt-4 pb-2 px-2 dark:bg-zinc-900 dark:text-gray-50">
         {{ $records->links() }}
     </div>
     @endif

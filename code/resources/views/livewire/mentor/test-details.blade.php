@@ -24,10 +24,10 @@
     </div>
 
 
-    <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white shadow-sm mt-6">
-        <h3 class="px-4 pt-4 text-lg font-semibold">{{ __('test-details.QuestionsAndAnswers') }}</h3>
-        <x-table class="min-w-full divide-y divide-gray-800" border>
-            <thead class="bg-gray-50 dark:bg-zinc-600">
+    <div class="overflow-x-auto rounded-lg shadow-sm">
+        <h3 class="px-4 pt-4 text-lg font-semibold bg-gray-50 dark:bg-zinc-900 text-gray-700 dark:text-gray-200">{{ __('test-details.QuestionsAndAnswers') }}</h3>
+        <x-table class="min-w-full divide-y divide-gray-800">
+            <thead class="bg-gray-50 dark:bg-zinc-900">
                 <tr class="text-left text-sm font-semibold text-gray-700 dark:text-gray-200">
                     <th class="px-4 py-3">{{ __('test-details.Question') }}</th>
                     <th class="px-4 py-3">{{ __('test-details.TimeSpent') }}</th>
@@ -35,7 +35,7 @@
                     <th class="px-4 py-3"></th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-500 dark:text-gray-50">
+            <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-900 dark:text-gray-50">
                 @php $qIndex = 1; @endphp
                 @forelse($attempt->answers ?? [] as $answer)
                     <tr>

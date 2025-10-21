@@ -113,3 +113,12 @@ jobs:
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
             "docker compose up -d"
+    
+    # Clean up docker images on the vm
+    - name: Clean up Docker images on VM
+      run: |
+        ssh -o StrictHostKeyChecking=no \
+            -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
+            -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            "docker image prune -f"

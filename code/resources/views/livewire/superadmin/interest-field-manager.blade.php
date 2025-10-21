@@ -88,11 +88,10 @@
                                 <flux:tooltip content="{{ __('interestfield.cannot_delete_used') }}">
                                     <flux:button
                                         type="button"
-                                        variant="outline"
+                                        variant="danger"
                                         size="sm"
                                         icon="trash"
-                                        class="cursor-not-allowed text-gray-400! text:color-gray-600"
-                                        >
+                                        wire:click="showLinkedQuestions({{ $interestField->interest_field_id }})">
                                         {{ __('Delete') }}
                                     </flux:button>
                                 </flux:tooltip>
@@ -121,7 +120,7 @@
     </div>
 
     <!-- Pagination -->
-    <div class="mt-4">
+    <div class="pt-4 pb-2 px-2 dark:bg-zinc-900 dark:text-gray-50">
         {{ $records->links() }}
     </div>
 
@@ -200,7 +199,7 @@
     @endif
 
     @if ($showInactivated)
-    <div class="mt-4">
+    <div class="pt-4 pb-2 px-2 dark:bg-zinc-900 dark:text-gray-50">
         {{ $this->inactiveRecords->links() }}
     </div>
     @endif
@@ -376,6 +375,47 @@
                     wire:click="deleteInterestField">
                     {{ __('Delete') }}
                 </flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
+    <flux:modal
+        name="linked-questions-modal"
+        class="max-w-2xl"
+        x-on:close="$wire.call('cancelForm')">
+        <div class="space-y-6">
+            <flux:heading size="lg">{{ __('interestfield.linked_questions_title') }}</flux:heading>
+                @if (count($linkedQuestions) === 0)
+                    <p class="text-sm text-red-600 font-bold">{{ __('interestfield.no_linked_questions') }}</p>
+                @else
+                    <p class="text-sm text-red-600 font-bold">{{ __('interestfield.cannot_delete_used') }}</p>
+
+                    <div class="mt-4 grid gap-3">
+                        @foreach ($linkedQuestions as $q)
+                            <div class="border rounded-lg p-4 bg-white dark:bg-zinc-800">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="flex-1">
+                                        <div class="text-sm text-gray-600 dark:text-gray-300">
+                                            <strong>{{ __('interestfield.test_label') }}:</strong>
+                                            {{ $q['test'] ?? __('interestfield.unknown_test') }}
+                                            <span class="mx-2">-</span>
+                                            <strong>{{ __('interestfield.question_label') }}:</strong>
+                                            {{ $q['question_number'] ?? $q['id'] }}
+                                        </div>
+
+                                        <div class="mt-2 text-sm text-gray-800 dark:text-gray-50">
+                                            "{{ $q['text'] }}"
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            <div class="flex justify-end">
+                <flux:modal.close>
+                    <flux:button type="button" variant="filled">{{ __('Close') }}</flux:button>
+                </flux:modal.close>
             </div>
         </div>
     </flux:modal>

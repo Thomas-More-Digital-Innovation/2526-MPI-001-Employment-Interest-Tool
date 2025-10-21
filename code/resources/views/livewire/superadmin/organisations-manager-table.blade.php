@@ -70,7 +70,7 @@
         </tbody>
     </x-table>
 
-    {{-- <div class="mt-4">
+    <div class="pt-4 pb-2 px-2 dark:bg-zinc-900 dark:text-gray-50">
         {{ $records->links() }}
-    </div> --}}
+    </div>
 </div>
