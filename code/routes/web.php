@@ -24,6 +24,10 @@ Route::get('/login', function () {
     return redirect()->route('home');
 });
 
+Route::get('/organisation/join', function() {
+    return view('joinUs');
+})->name('organisation.joinUs');
+
 
 Route::get('/locale/{locale}', function ($locale) {
     $validLocales = \App\Models\Language::pluck('language_code')->toArray();

@@ -43,8 +43,34 @@
             </div>
         </div>
         <div class="w-full xl:w-1/2 flex items-center justify-center bg-neutral-800 ">
-            <div class="xl:w-1/2 bg-mpi rounded-3xl">
+            <div class="xl:w-1/2 bg-mpi rounded-3xl flex flex-col items-center">
                 <livewire:auth.login />
+                <div x-data="{ showModal: false }">
+                    <!-- Modal -->
+                    <div x-show="showModal" 
+                         class="fixed inset-0 bg-black/40 bg-opacity-50 z-50 flex items-center justify-center"
+                         x-transition>
+                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-md">
+                            <h3 class="text-lg font-bold mb-4">{{ __('Confirm') }}</h3>
+                            <p class="mb-4">{{ __('Are you sure you want to join us as an organization?') }}</p>
+                            <div class="flex justify-end space-x-3">
+                                <button @click="showModal = false" 
+                                        class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                                    {{ __('Cancel') }}
+                                </button>
+                                <a href="{{ route('organisation.joinUs') }}" 
+                                   class="px-4 py-2 bg-mpi text-white rounded hover:bg-opacity-90">
+                                    {{ __('Continue') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Trigger Button -->
+                    <button @click="showModal = true" 
+                            class="text-white duration-100 ease-in-out hover:underline hover:scale-105">
+                        {{__("Want to join us?")}}
+                    </button>
+                </div>
             </div>
         </div>
     </section>
