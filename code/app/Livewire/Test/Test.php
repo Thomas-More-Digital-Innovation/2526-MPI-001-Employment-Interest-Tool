@@ -17,6 +17,7 @@ class Test extends Component
     public $testId;
     public $userId;
     public $testAttemptId;
+    public $previousEnabled = true;
     public $isQuestionLoading = true;
 
     public $startTime;
