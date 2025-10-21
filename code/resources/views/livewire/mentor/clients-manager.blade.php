@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    @include('livewire.mentor.clients-manager-table', ['records' => $records])
+    @include('livewire.mentor.clients-manager-table', ['records' => $records, 'tableKey' => 'active'])
 
     <div class="flex flex-wrap items-center gap-3">
         <flux:button
@@ -45,7 +45,7 @@
     </div>
     @if ($showInactivated)
     <div class="mt-4">
-        @include('livewire.mentor.clients-manager-table', ['records' => $inactivatedClients])
+        @include('livewire.mentor.clients-manager-table', ['records' => $inactivatedClients, 'tableKey' => 'inactive'])
     </div>
     @endif
 
