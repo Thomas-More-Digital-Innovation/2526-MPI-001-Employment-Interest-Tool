@@ -21,4 +21,6 @@ return [
     'confirm_remove' => 'Are you sure you want to remove this language? This action cannot be undone.',
     'language_removed' => 'Language removed successfully.',
     'disable_before_remove' => 'Disable the language before removing it.',
+    'cannot_remove_default' => 'The default languages (English and Dutch) cannot be removed.',
+    'cannot_toggle_default' => 'The default languages (English and Dutch) cannot be enabled or disabled.',
 ];

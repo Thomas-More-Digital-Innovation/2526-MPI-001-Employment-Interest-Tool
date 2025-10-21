@@ -21,4 +21,6 @@ return [
     'confirm_remove' => 'Weet u zeker dat u deze taal wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     'language_removed' => 'Taal succesvol verwijderd.',
     'disable_before_remove' => 'Schakel de taal uit voordat u deze verwijdert.',
+    'cannot_remove_default' => 'De standaardtalen (Engels en Nederlands) kunnen niet worden verwijderd.',
+    'cannot_toggle_default' => 'De standaardtalen (Engels en Nederlands) kunnen niet worden in- of uitgeschakeld.',
 ];
