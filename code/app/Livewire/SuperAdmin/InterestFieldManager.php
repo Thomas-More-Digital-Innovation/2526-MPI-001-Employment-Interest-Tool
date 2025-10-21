@@ -15,8 +15,6 @@ class InterestFieldManager extends BaseCrudComponent
     public bool $showInactivated = false;
     // Questions linked to the currently inspected interest field
     public array $linkedQuestions = [];
-    // Title for the linked questions modal
-    public string $linkedQuestionsModalTitle = '';
 
     protected function rules(): array
     {
@@ -199,17 +197,8 @@ class InterestFieldManager extends BaseCrudComponent
     {
         $interestField = InterestField::where('interest_field_id', $id)->first();
 
-        if (! $interestField) {
-            session()->flash('status', [
-                'message' => __('interestfield.not_found'),
-                'type' => 'error',
-            ]);
-
-            return;
-        }
-
-    // Load related questions and eager load the test relation
-    $questions = $interestField->questions()->with('test')->get();
+        // Load related questions and eager load the test relation
+        $questions = $interestField->questions()->with('test')->get();
 
         // Transform questions to a minimal array for the view
         $this->linkedQuestions = $questions->map(function ($q) {
@@ -220,8 +209,6 @@ class InterestFieldManager extends BaseCrudComponent
                 'test' => $q->test ? ($q->test->name ?? $q->test->test_name ?? null) : null,
             ];
         })->toArray();
-
-        $this->linkedQuestionsModalTitle = __('interestfield.linked_questions_title');
 
         // Open the modal in the frontend
         $this->dispatch('modal-open', name: 'linked-questions-modal');

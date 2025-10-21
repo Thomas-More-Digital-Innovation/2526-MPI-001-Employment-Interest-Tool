@@ -384,7 +384,7 @@
         class="max-w-2xl"
         x-on:close="$wire.call('cancelForm')">
         <div class="space-y-6">
-            <flux:heading size="lg">{{ $linkedQuestionsModalTitle }}</flux:heading>
+            <flux:heading size="lg">{{ __('interestfield.linked_questions_title') }}</flux:heading>
                 @if (count($linkedQuestions) === 0)
                     <p class="text-sm text-red-600 font-bold">{{ __('interestfield.no_linked_questions') }}</p>
                 @else
