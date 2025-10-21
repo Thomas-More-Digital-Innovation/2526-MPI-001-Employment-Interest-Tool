@@ -36,7 +36,7 @@
                         <flux:menu>
                             <flux:menu.item
                                 icon="pencil"
-                                wire:click="startEdit({{ $client->user_id }})">
+                                wire:click="$dispatch('open-client-form', { clientId: {{ $client->user_id }} })">
                                 {{ __('manage-clients.EditClient') }}
                             </flux:menu.item>
 
