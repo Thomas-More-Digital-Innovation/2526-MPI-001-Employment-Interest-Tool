@@ -238,7 +238,12 @@
                         </div>
                         {{-- Button that assigns the clicked question as the selected one and displays the values on the main container, text is truncated and shows up on hover as a tooltip :-) --}}
                         <span class="w-full justify-start text-left truncate whitespace-nowrap overflow-hidden">
-                            {{ $question['title'] ? __('testcreation.question_title', ['number' => $index + 1, 'title' => $question['title']]) : __('testcreation.question_undefined', ['number' => $index + 1]) }}
+                            @php
+                                $questionInterestId = $question['interest'] ?? -1;
+                                $questionInterest = $interestFields->firstWhere('interest_field_id', $questionInterestId);
+                                $interestName = $questionInterest ? $questionInterest->getName(app()->getLocale()) : null;
+                            @endphp
+                            {{ $interestName ? __('testcreation.question_title', ['number' => $index + 1, 'title' => $interestName]) : __('testcreation.question_undefined', ['number' => $index + 1]) }}
                         </span>
                         {{-- Button + svg of a trashcan that removes the question from the array :) --}}
                         <flux:button variant="ghost" icon="trash"
