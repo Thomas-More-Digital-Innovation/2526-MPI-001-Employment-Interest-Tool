@@ -16,7 +16,7 @@
                 @endphp
                 <label for="Upload-Image"
                     class="min-h-[25vh] rounded-2xl flex-1 flex items-center justify-center m-4 cursor-pointer {{ $imgSet ? '' : 'bg-zinc-300 dark:bg-zinc-600' }}">
-                    <x-question-image 
+                    <x-question-image
                         :media-link="$questions[$selectedQuestion]['media_link'] ?? ''"
                         :uploaded-image="$questions[$selectedQuestion]['uploaded_image'] ?? null"
                         alt="Question Image" />
@@ -147,7 +147,7 @@
                                     $currentMediaLink = $questions[$selectedQuestion]['media_link'] ?? '';
                                     $appUrl = config('app.url');
                                     // Check if it's an external link (has http/https but NOT from our domain)
-                                    $isExternalLink = (str_starts_with($currentMediaLink, 'http://') || str_starts_with($currentMediaLink, 'https://')) 
+                                    $isExternalLink = (str_starts_with($currentMediaLink, 'http://') || str_starts_with($currentMediaLink, 'https://'))
                                                       && !str_starts_with($currentMediaLink, $appUrl);
                                 @endphp
                                 <div x-data="{
@@ -158,7 +158,7 @@
                                         this.$watch('mediaLink', (value) => {
                                             // When mediaLink changes from Livewire, update input only if external
                                             const link = value || '';
-                                            const isExt = (link.startsWith('http://') || link.startsWith('https://')) 
+                                            const isExt = (link.startsWith('http://') || link.startsWith('https://'))
                                                          && !link.startsWith(this.appUrl);
                                             this.inputValue = isExt ? value : '';
                                         });
@@ -167,7 +167,7 @@
                                         this.mediaLink = this.inputValue;
                                     }
                                 }" class="flex-1">
-                                    <input 
+                                    <input
                                         type="text"
                                         x-model="inputValue"
                                         @input.debounce.300ms="updateLink()"
@@ -196,12 +196,24 @@
     <aside class="w-full md:w-1/4 p-3 md:self-start">
         <div
             class="flex flex-col mt-3 bg-zinc-50 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 pl-2 rounded-xl mb-4 md:max-h-[85vh]">
+
             {{-- Header + Button to add questions --}}
             <div class="flex w-full justify-between p-2 items-center flex-shrink-0">
                 <flux:heading size="lg">{{ __('testcreation.questions') }}</flux:heading>
                 <flux:button type="button" wire:click.stop="createQuestion" variant="primary" color="green">+
                 </flux:button>
             </div>
+
+            {{-- Randomize Questions Button --}}
+            <div class="flex w-full p-2 items-center flex-shrink-0">
+                <button
+                    type="button"
+                    wire:click="randomizeQuestions"
+                    class="w-full bg-gray-200 hover:bg-gray-300 text-black text-sm font-medium py-2 px-4 rounded-lg transition">
+                    {{ __('testcreation.randomize_questions') }}
+                </button>
+            </div>
+
             {{-- Container to list + sort questions automatically, Basic-sortable is a selector for the sortable.js script --}}
             <ul id="Basic-sortable" class="w-full px-2 overflow-y-auto flex-1 min-h-0" x-data x-init="if (!$el._sortableBound) {
                 $el._sortableBound = true;

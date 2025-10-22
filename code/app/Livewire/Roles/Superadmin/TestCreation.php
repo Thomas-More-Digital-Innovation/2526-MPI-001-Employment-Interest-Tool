@@ -306,6 +306,34 @@ class TestCreation extends Component
         }
     }
 
+    // Randomize questions in the test
+    public function randomizeQuestions(): void
+    {
+        // Remember which item is selected and tag it
+        $selectedIndex = $this->selectedQuestion ?? 0;
+        if (isset($this->questions[$selectedIndex])) {
+            $this->questions[$selectedIndex]['__selected'] = true;
+        }
+
+        // Normalize keys and shuffle
+        $this->questions = array_values($this->questions);
+        shuffle($this->questions);
+
+        // Re-index numbers and find the new selected index
+        $newSelectedIndex = 0;
+        foreach ($this->questions as $i => &$q) {
+            $q['question_number'] = $i + 1;
+            if (!empty($q['__selected'])) {
+                $newSelectedIndex = $i;
+                unset($q['__selected']);
+            }
+        }
+        unset($q);
+
+        // Keep selectedQuestion an int
+        $this->selectedQuestion = $newSelectedIndex;
+    }
+
     public function clearSound(int $index): void
     {
         if (!isset($this->questions[$index])) return;
