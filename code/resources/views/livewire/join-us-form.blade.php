@@ -16,7 +16,7 @@
                 name="organisation"
                 id="organisation"
                 wire:model.live="organisation"
-                placeholder="Acme Inc."
+                placeholder="{{ __('Organization') }} {{ __('Name') }}"
                 required
                 class="w-full"
             />
@@ -30,7 +30,7 @@
                 name="fullName"
                 id="fullName"
                 wire:model.live="fullName"
-                placeholder="John Doe"
+                placeholder="{{ __('user.first_name') }} {{ __('user.last_name') }}"
                 required
                 class="w-full"
             />
@@ -44,7 +44,7 @@
                 name="emailAddress"
                 id="emailAddress"
                 wire:model.live="emailAddress"
-                placeholder="amazing@example.com"
+                placeholder="email@example.com"
                 required
                 class="w-full"
             />
