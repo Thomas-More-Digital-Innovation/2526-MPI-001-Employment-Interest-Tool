@@ -44,7 +44,7 @@
                 </span>
             </div>
 
-            @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients']])
+            @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients'], 'tableKey' => 'active-' . $group['mentor_id']])
         </section>
         @empty
         <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
@@ -77,7 +77,7 @@
                     </span>
                 </div>
 
-                @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients']])
+                @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients'], 'tableKey' => 'inactive-' . $group['mentor_id']])
             </section>
             @empty
             <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
