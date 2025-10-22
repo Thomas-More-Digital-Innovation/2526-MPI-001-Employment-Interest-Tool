@@ -10,6 +10,7 @@ class Faq extends Model
 {
     use HasFactory;
     protected $table = 'frequently_asked_question';
+    protected $primaryKey = 'frequently_asked_question_id';
 
     protected $fillable = ['question', 'answer'];
 
