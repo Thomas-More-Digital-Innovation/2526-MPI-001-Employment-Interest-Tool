@@ -175,6 +175,7 @@ class MentorManager extends MentorsCrudManager
     {
         return array_merge(parent::viewData(), [
             'languages' => $this->languages,
+            'records' => $this->records,
             'inactivatedMentors' => $this->inactivatedMentors,
             'showInactivated' => $this->showInactivated,
         ]);
