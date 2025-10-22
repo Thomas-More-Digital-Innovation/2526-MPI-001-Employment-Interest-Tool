@@ -43,12 +43,12 @@
             </div>
         </div>
         <div class="w-full xl:w-1/2 flex items-center justify-center bg-neutral-800 ">
-            <div class="xl:w-1/2 bg-mpi rounded-3xl flex flex-col items-center">
+            <div class="xl:w-1/2 bg-mpi rounded-3xl flex flex-col items-center pb-4">
                 <livewire:auth.login />
                 <flux:modal.trigger name="confirm-organization-join">
                     <button
                         class="text-white hover:underline hover:scale-105 duration-200 ease-in-out">
-                        {{ __('Want to join us?') }}
+                        {{ __('joinrequest.want_to_join_us') }}
                     </button>
                 </flux:modal.trigger>
                 <flux:modal name="confirm-organization-join">
@@ -58,7 +58,7 @@
                         </flux:heading>
 
                         <flux:text>
-                            {{ __('Are you sure you want to join us as an organization?') }}
+                            {{ __('joinrequest.are_you_sure_you_want_to_join_us_as_an_organization') }}
                         </flux:text>
 
                         <div class="flex justify-end gap-3 pt-3 pb-3">

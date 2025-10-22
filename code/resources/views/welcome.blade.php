@@ -38,7 +38,7 @@
                             <livewire:auth.login />
                             <div x-data="{ showModal: false }">
                                 <!-- Modal -->
-                                <div x-show="showModal" 
+                                <div x-show="showModal"
                                     class="fixed inset-0 bg-black/40 bg-opacity-50 z-50 flex items-center justify-center"
                                     x-transition>
                                     <div class="bg-white p-6 rounded-lg shadow-xl max-w-md">
@@ -55,9 +55,9 @@
                                     </div>
                                 </div>
                                 <!-- Trigger Button -->
-                                <button @click="showModal = true" 
+                                <button @click="showModal = true"
                                         class="text-white duration-100 ease-in-out hover:underline hover:scale-105">
-                                    {{__("Want to join us?")}}
+                                    {{__("joinrequest.want_to_join_us")}}
                                 </button>
                             </div>
                         </div>

@@ -6,24 +6,24 @@
     @endif
 
     <form wire:submit.prevent="sendMail" class="flex flex-col text-white space-y-4 sm:space-y-5">
-        <h1 class="text-2xl sm:text-3xl text-center">{{ __('Want to join us?') }}</h1>
+        <h1 class="text-2xl sm:text-3xl text-center">{{ __('joinrequest.want_to_join_us') }}</h1>
 
         <div class="space-y-1">
-            <label for="organisation" class="text-base sm:text-lg md:text-xl">{{ __('Organization') }}</label>
+            <label for="organisation" class="text-base sm:text-lg md:text-xl">{{ __('joinrequest.organization') }}</label>
             <flux:input
                 type="text"
                 size="sm"
                 name="organisation"
                 id="organisation"
                 wire:model.live="organisation"
-                placeholder="{{ __('Organization') }} {{ __('Name') }}"
+                placeholder="{{ __('joinrequest.organization') }} {{ __('Name') }}"
                 required
                 class="w-full"
             />
         </div>
 
         <div class="space-y-1">
-            <label for="fullName" class="text-base sm:text-lg md:text-xl">{{ __('Full Name') }}</label>
+            <label for="fullName" class="text-base sm:text-lg md:text-xl">{{ __('joinrequest.full_name') }}</label>
             <flux:input
                 type="text"
                 size="sm"
@@ -51,7 +51,7 @@
         </div>
 
         <div class="space-y-1">
-            <label for="heardFrom" class="text-base sm:text-lg md:text-xl">{{ __('Where have you heard about us?') }}</label>
+            <label for="heardFrom" class="text-base sm:text-lg md:text-xl">{{ __('joinrequest.where_have_you_heard_about_us') }}</label>
             <flux:input
                 type="text"
                 size="sm"
@@ -63,7 +63,7 @@
         </div>
 
         <div class="space-y-1">
-            <label for="joinUs" class="text-base sm:text-lg md:text-xl">{{ __('Why would you like to join us?') }}</label>
+            <label for="joinUs" class="text-base sm:text-lg md:text-xl">{{ __('joinrequest.why_join_us') }}</label>
             <flux:textarea
                 size="sm"
                 name="joinUs"
