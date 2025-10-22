@@ -23,31 +23,13 @@
             </flux:input>
         </div>
         <div class="flex-shrink-0 content-end">
-            <flux:modal.trigger name="admin-client-form">
-                <flux:button type="button" wire:click="startCreate" icon="user-plus" class="bg-color-mpi">
-                    {{ __('manage-researchers.addResearcher') }}
-                </flux:button>
-            </flux:modal.trigger>
+            <flux:button type="button" wire:click="$dispatch('open-researcher-form')" icon="user-plus" class="bg-color-mpi">
+                {{ __('manage-researchers.addResearcher') }}
+            </flux:button>
         </div>
     </div>
 
-    <div class="space-y-8">
-        @forelse ($activeClientGroups as $group)
-            <section class="space-y-3">
-                <div class="flex items-center justify-between gap-3">
-                    <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                    {{ trans_choice('{0}No researcher|{1}:count researcher|[2,*]:count researchers', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
-
-                </span>
-                </div>
-                @include('livewire.admin.mentor-manager-table', ['records' => $group['clients'], 'tableKey' => 'active-' . $group['mentor_id']])
-            </section>
-        @empty
-            <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
-                {{ __('manage-researchers.noResearchersFound') }}
-            </div>
-        @endforelse
-    </div>
+    @include('livewire.admin.mentor-manager-table', ['records' => $records, 'tableKey' => 'active'])
 
     <div class="flex flex-wrap items-center gap-3">
         <flux:button
@@ -61,23 +43,7 @@
     </div>
     @if ($showInactivated)
         <div class="mt-4">
-            <div class="space-y-8">
-                @forelse ($inactiveClientGroups as $group)
-                    <section class="space-y-3">
-                        <div class="flex items-center justify-between gap-3">
-                            <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
-                        {{ trans_choice('{0}No mentors|{1}:count mentor|[2,*]:count mentors', $group['clients']->count(), ['count' => $group['clients']->count()]) }}
-                    </span>
-                        </div>
-
-                        @include('livewire.admin.admin-clients-manager-table', ['records' => $group['clients'], 'tableKey' => 'inactive-' . $group['mentor_id']])
-                    </section>
-                @empty
-                    <div class="rounded-md border border-dashed border-gray-300 p-8 text-center text-gray-500">
-                        {{ __('manage-researchers.noInactiveFound') }}
-                    </div>
-                @endforelse
-            </div>
+            @include('livewire.admin.mentor-manager-table', ['records' => $inactivatedResearchers, 'tableKey' => 'inactive'])
         </div>
     @endif
 

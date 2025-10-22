@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\SuperAdmin;
+namespace App\Livewire\Admin;
 
 use App\Models\Language;
 use App\Models\Role;
@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
 
-class ResearcherFormModal extends Component
+class MentorFormModal extends Component
 {
     public array $form = [];
     public ?int $editingId = null;
@@ -21,9 +21,9 @@ class ResearcherFormModal extends Component
     
     protected ?int $organisationId = null;
     protected ?int $defaultLanguageId = null;
-    protected Role $researcherRole;
+    protected Role $mentorRole;
 
-    protected $listeners = ['open-researcher-form' => 'openForm'];
+    protected $listeners = ['open-mentor-form' => 'openForm'];
 
     public function mount(): void
     {
@@ -35,10 +35,10 @@ class ResearcherFormModal extends Component
     protected function ensureContext(): void
     {
         $admin = Auth::user();
-        abort_unless($admin?->isSuperAdmin(), 403);
+        abort_unless($admin?->isAdmin(), 403);
 
         $this->organisationId = $admin->organisation_id;
-        $this->researcherRole = Role::where('role', Role::RESEARCHER)->firstOrFail();
+        $this->mentorRole = Role::where('role', Role::MENTOR)->firstOrFail();
     }
 
     protected function loadLanguages(): void
@@ -56,25 +56,25 @@ class ResearcherFormModal extends Component
             ?? $languageCollection->first()?->language_id;
     }
 
-    public function openForm(?int $researcherId = null): void
+    public function openForm(?int $mentorId = null): void
     {
         $this->ensureContext();
         
-        if ($researcherId) {
-            $researcher = User::where('user_id', $researcherId)
+        if ($mentorId) {
+            $mentor = User::where('user_id', $mentorId)
                 ->where('organisation_id', $this->organisationId)
-                ->whereHas('roles', fn($q) => $q->where('role', Role::RESEARCHER))
+                ->whereHas('roles', fn($q) => $q->where('role', Role::MENTOR))
                 ->firstOrFail();
 
-            $this->editingId = $researcherId;
+            $this->editingId = $mentorId;
             $this->mode = 'edit';
             $this->form = [
-                'first_name' => $researcher->first_name,
-                'last_name' => $researcher->last_name ?? '',
-                'username' => $researcher->username,
+                'first_name' => $mentor->first_name,
+                'last_name' => $mentor->last_name ?? '',
+                'username' => $mentor->username,
                 'password' => '',
-                'language_id' => $researcher->language_id,
-                'active' => (bool) $researcher->active,
+                'language_id' => $mentor->language_id,
+                'active' => (bool) $mentor->active,
             ];
         } else {
             $this->resetForm();
@@ -85,7 +85,7 @@ class ResearcherFormModal extends Component
         $this->resetValidation();
         
         // Open the modal after setting up the form
-        $this->dispatch('modal-open', name: 'superadmin-researcher-form');
+        $this->dispatch('modal-open', name: 'admin-mentor-form');
     }
 
     protected function resetForm(): void
@@ -104,7 +104,7 @@ class ResearcherFormModal extends Component
     public function cancel(): void
     {
         $this->resetForm();
-        $this->dispatch('modal-close', name: 'superadmin-researcher-form');
+        $this->dispatch('modal-close', name: 'admin-mentor-form');
     }
 
     protected function rules(): array
@@ -147,38 +147,38 @@ class ResearcherFormModal extends Component
 
         DB::transaction(function () use ($attributes, $isEditing) {
             if ($this->editingId) {
-                $researcher = User::where('user_id', $this->editingId)
+                $mentor = User::where('user_id', $this->editingId)
                     ->where('organisation_id', $this->organisationId)
                     ->firstOrFail();
                     
-                $researcher->fill($attributes);
+                $mentor->fill($attributes);
 
                 if (!empty($this->form['password'])) {
-                    $researcher->password = Hash::make($this->form['password']);
+                    $mentor->password = Hash::make($this->form['password']);
                 }
 
-                $researcher->save();
+                $mentor->save();
             } else {
-                $researcher = new User($attributes);
-                $researcher->password = Hash::make($this->form['password']);
-                $researcher->first_login = true;
+                $mentor = new User($attributes);
+                $mentor->password = Hash::make($this->form['password']);
+                $mentor->first_login = true;
 
-                $researcher->save();
-                $researcher->roles()->syncWithoutDetaching([$this->researcherRole->role_id]);
+                $mentor->save();
+                $mentor->roles()->syncWithoutDetaching([$this->mentorRole->role_id]);
             }
         });
 
         session()->flash('status', $isEditing 
-            ? __('Researcher updated successfully.') 
-            : __('Researcher created successfully.'));
+            ? __('Mentor updated successfully.') 
+            : __('Mentor created successfully.'));
 
         $this->resetForm();
-        $this->dispatch('researcher-saved');
-        $this->dispatch('modal-close', name: 'superadmin-researcher-form');
+        $this->dispatch('mentor-saved');
+        $this->dispatch('modal-close', name: 'admin-mentor-form');
     }
 
     public function render()
     {
-        return view('livewire.superadmin.researcher-form-modal');
+        return view('livewire.admin.mentor-form-modal');
     }
 }

@@ -26,6 +26,22 @@ class MentorManager extends MentorsCrudManager
     public ?int $pendingDeleteId = null;
 
     public string $deleteModalName = '';
+    
+    protected $listeners = ['mentor-saved' => '$refresh'];
+    
+    /**
+     * Determines whether inactivated mentors are visible in the list.
+     */
+    public bool $showInactivated = false;
+    
+    /**
+     * Keep query string state for search & pagination of both tables.
+     */
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'activePage' => ['except' => 1],
+        'inactivePage' => ['except' => 1],
+    ];
 
     protected function ensureMentorContext(bool $force = false): void
     {
@@ -83,31 +99,12 @@ class MentorManager extends MentorsCrudManager
 
     public function startCreate(): void
     {
-        $this->ensureMentorContext();
-
-        $this->resetFormState();
-        $this->formModalMode = 'create';
-        $this->formModalVisible = true;
-
-        $this->dispatch('modal-open', name: 'admin-client-form');
-        $this->dispatch('crud-form-opened', mode: 'create');
+        $this->dispatch('open-mentor-form');
     }
 
     public function startEdit(int $recordId): void
     {
-        $this->ensureMentorContext();
-
-        $record = $this->findRecord($recordId);
-        $this->editingId = $recordId;
-        $this->form = $this->transformRecordToForm($record);
-        $this->formModalMode = 'edit';
-        $this->formModalVisible = true;
-
-        $this->resetErrorBag();
-        $this->resetValidation();
-
-        $this->dispatch('modal-open', name: 'admin-client-form');
-        $this->dispatch('crud-form-opened', mode: 'edit');
+        $this->dispatch('open-mentor-form', mentorId: $recordId);
     }
 
     public function cancelForm(): void
@@ -119,7 +116,7 @@ class MentorManager extends MentorsCrudManager
     public function closeFormModal(): void
     {
         $this->resetFormState();
-        $this->dispatch('modal-close', name: 'admin-client-form');
+        $this->dispatch('modal-close', name: 'admin-mentor-form');
     }
 
     protected function baseQuery(): Builder
@@ -146,31 +143,14 @@ class MentorManager extends MentorsCrudManager
             ->orderBy('last_name');
     }
 
-    public function getActiveClientGroupsProperty(): Collection
+    public function getRecordsProperty()
     {
-        return $this->groupClients(
-            $this->applySearch($this->baseQuery())->get()
-        );
+        return $this->applySearch($this->baseQuery())->paginate($this->perPage(), ['*'], 'activePage');
     }
 
-    public function getInactiveClientGroupsProperty(): Collection
+    public function getInactivatedMentorsProperty()
     {
-        return $this->groupClients(
-            $this->applySearch($this->inactivatedClientsQuery())->get()
-        );
-    }
-
-    protected function groupClients(Collection $clients): Collection
-    {
-        return $clients
-            ->groupBy(fn(User $client) => $client->mentor_id ?? 0)
-            ->map(function (Collection $group): array {
-                return [
-                    'clients' => $group
-                        ->values(),
-                ];
-            })
-            ->values();
+        return $this->applySearch($this->inactivatedClientsQuery())->paginate($this->perPage(), ['*'], 'inactivePage');
     }
 
     protected function findRecord(int $id)
@@ -195,8 +175,7 @@ class MentorManager extends MentorsCrudManager
     {
         return array_merge(parent::viewData(), [
             'languages' => $this->languages,
-            'activeClientGroups' => $this->activeClientGroups,
-            'inactiveClientGroups' => $this->inactiveClientGroups,
+            'inactivatedMentors' => $this->inactivatedMentors,
             'showInactivated' => $this->showInactivated,
         ]);
     }

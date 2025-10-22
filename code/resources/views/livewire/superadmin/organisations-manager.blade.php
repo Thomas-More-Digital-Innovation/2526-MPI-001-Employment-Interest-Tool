@@ -36,7 +36,7 @@
     </div>
 
     {{-- main table --}}
-    @include('livewire.superadmin.organisations-manager-table', ['records' => $records])
+    @include('livewire.superadmin.organisations-manager-table', ['records' => $records, 'tableKey' => 'active'])
 
     {{-- show/hide inactive --}}
     <div class="mt-4">
@@ -57,7 +57,7 @@
                         {{ __('organisations.no_inactive_found') }}
                     </div>
                 @else
-                    @include('livewire.superadmin.organisations-manager-table', ['records' => $this->inactivatedRecords])
+                    @include('livewire.superadmin.organisations-manager-table', ['records' => $this->inactivatedRecords, 'tableKey' => 'inactive'])
                 @endif
             </div>
         @endif

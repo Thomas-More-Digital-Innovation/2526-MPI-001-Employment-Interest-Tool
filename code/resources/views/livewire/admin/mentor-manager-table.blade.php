@@ -29,16 +29,14 @@
                 </td>
                 <td class="px-4 py-3">
                     <div class="flex justify-end gap-2">
-                        <flux:modal.trigger name="mentor-client-form">
-                            <flux:button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                icon="pencil"
-                                wire:click="startEdit({{ $client->user_id }})">
-                                {{ __('Edit') }}
-                            </flux:button>
-                        </flux:modal.trigger>
+                        <flux:button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            icon="pencil"
+                            wire:click="startEdit({{ $client->user_id }})">
+                            {{ __('Edit') }}
+                        </flux:button>
                     </div>
                 </td>
             </tr>
