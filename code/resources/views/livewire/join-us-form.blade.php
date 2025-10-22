@@ -1,6 +1,6 @@
 <div class="bg-neutral-800 rounded-2xl w-1/2 p-10 m-3">
     @if (session()->has('message'))
-        <div class="mb-4 mt-4 p-4 bg-color-mpi rounded">
+        <div class="mb-4 mt-4 p-4 bg-mpi text-white rounded">
             {{ session('message') }}
         </div>
     @endif
