@@ -8,4 +8,5 @@ return [
     'leave_blank_to_keep' => 'Leeg laten om huidig wachtwoord te behouden',
     'delete_confirm_text' => 'Weet je zeker dat je deze admin wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     'confirm_delete' => 'Administrator verwijderen',
+    'back' => 'Ga terug',
 ];

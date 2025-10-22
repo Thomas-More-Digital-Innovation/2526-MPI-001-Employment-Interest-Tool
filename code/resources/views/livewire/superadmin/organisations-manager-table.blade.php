@@ -50,6 +50,12 @@
                                 wire:click="requestToggle({{ $record->organisation_id }})">
                                 {{ $record->active ? __('organisations.inactivate') : __('organisations.activate') }}
                             </flux:menu.item>
+
+                            <flux:menu.item
+                                icon="users"
+                                wire:click="manageAdmins({{ $record->organisation_id }})">
+                                {{ __('organisations.manage_admins') }}
+                            </flux:menu.item>
                         </flux:menu>
                     </flux:dropdown>
                 </td>
@@ -64,7 +70,7 @@
         </tbody>
     </x-table>
 
-    {{-- <div class="mt-4">
+    <div class="pt-4 pb-2 px-2 dark:bg-zinc-900 dark:text-gray-50">
         {{ $records->links() }}
-    </div> --}}
+    </div>
 </div>

@@ -82,6 +82,7 @@ class TestResults extends Component
                 return [
                     'interest_field_id'   => $id,
                     'interest_field_name' => $field->getName($locale),
+                    'interest_field_description' => $field->getDescription($locale),
                     'total'               => (int) ($selectedCounts[$id] ?? 0),
                 ];
             })

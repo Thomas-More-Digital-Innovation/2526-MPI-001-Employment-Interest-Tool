@@ -15,7 +15,7 @@ class LanguageSelector extends Component
      */
     public function __construct($position = 'top-right')
     {
-        $this->languages = Language::all();
+        $this->languages = Language::getEnabledLanguages();
         $this->position = $position;
     }
 

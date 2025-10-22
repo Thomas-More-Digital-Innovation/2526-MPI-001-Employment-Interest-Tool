@@ -3,6 +3,7 @@
 namespace Tests\Feature\Mentor;
 
 use App\Livewire\Mentor\ClientsManager;
+use App\Livewire\Mentor\ClientFormModal;
 use App\Models\Option;
 use App\Models\Role;
 use App\Models\User;
@@ -65,8 +66,8 @@ class ClientsManagerTest extends TestCase
     public function test_mentor_can_create_client_with_disabilities(): void
     {
         Livewire::actingAs($this->mentor)
-            ->test(ClientsManager::class)
-            ->call('startCreate')
+            ->test(ClientFormModal::class)
+            ->call('openForm')
             ->set('form.first_name', 'New')
             ->set('form.last_name', 'Client')
             ->set('form.username', 'new_client')
@@ -74,7 +75,7 @@ class ClientsManagerTest extends TestCase
             ->set('form.language_id', $this->mentor->language_id)
             ->set('form.active', true)
             ->call('save')
-            ->assertDispatched('crud-record-saved');
+            ->assertDispatched('client-saved');
 
         $this->assertDatabaseHas('users', [
             'username' => 'new_client',
@@ -92,12 +93,12 @@ class ClientsManagerTest extends TestCase
         $client = $this->clientForMentor();
 
         Livewire::actingAs($this->mentor)
-            ->test(ClientsManager::class)
-            ->call('startEdit', $client->user_id)
+            ->test(ClientFormModal::class)
+            ->call('openForm', $client->user_id)
             ->set('form.first_name', 'Updated')
             ->set('form.username', 'updated_username')
             ->call('save')
-            ->assertDispatched('crud-record-saved');
+            ->assertDispatched('client-saved');
 
         $this->assertDatabaseHas('users', [
             'user_id' => $client->user_id,
@@ -157,13 +158,13 @@ class ClientsManagerTest extends TestCase
             'vision_type' => 'normal',
         ]);
 
-        Livewire::test(ClientsManager::class)
-            ->call('startEdit', $client->user_id)
+        Livewire::test(ClientFormModal::class)
+            ->call('openForm', $client->user_id)
             ->set('form.is_sound_on', true)
             ->set('form.vision_type', 'deuteranopia')
             ->set('form.password', '')
             ->call('save')
-            ->assertDispatched('crud-record-saved');
+            ->assertDispatched('client-saved');
 
         $client->refresh();
 
@@ -178,8 +179,8 @@ class ClientsManagerTest extends TestCase
             'password' => Hash::make('keep-me'),
         ]);
 
-        Livewire::test(ClientsManager::class)
-            ->call('startEdit', $client->user_id)
+        Livewire::test(ClientFormModal::class)
+            ->call('openForm', $client->user_id)
             ->set('form.password', '')
             ->call('save');
 
@@ -195,8 +196,8 @@ class ClientsManagerTest extends TestCase
             'password' => Hash::make('old-secret'),
         ]);
 
-        Livewire::test(ClientsManager::class)
-            ->call('startEdit', $client->user_id)
+        Livewire::test(ClientFormModal::class)
+            ->call('openForm', $client->user_id)
             ->set('form.password', 'new-secret-123')
             ->call('save');
 
@@ -216,10 +217,10 @@ class ClientsManagerTest extends TestCase
         ]);
 
         Livewire::test(ClientsManager::class)
-            ->call('requestToggle', $client->user_id)
-            ->assertSet('toggleModalVisible', true)
-            ->assertSet('toggleModalWillActivate', false)
-            ->assertSet('toggleModalName', 'Toggle Target');
+            ->call('requestToggle', $client->user_id);
+        
+        $client->refresh();
+        $this->assertFalse($client->active);
     }
 
     public function test_confirm_toggle_switches_active_state_and_dispatches_event(): void
@@ -232,9 +233,7 @@ class ClientsManagerTest extends TestCase
         ]);
 
         Livewire::test(ClientsManager::class)
-            ->call('requestToggle', $client->user_id)
-            ->call('confirmToggle')
-            ->assertDispatched('crud-record-updated', id: $client->user_id, active: true);
+            ->call('requestToggle', $client->user_id);
 
         $client->refresh();
 

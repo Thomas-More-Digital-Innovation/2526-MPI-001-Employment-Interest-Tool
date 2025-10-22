@@ -221,14 +221,6 @@ class Test extends Component
     #[On('delay-loading')]
     public function disableLoading()
     {
-        $this->dispatch('enable-buttons-delayed');
-    }
-
-    #[On('enable-buttons-delayed')]
-    public function enableButtonsWithDelay()
-    {
-        sleep(1);
         $this->isQuestionLoading = false;
-        $this->dispatch('loading-state-changed', ['loading' => false]);
     }
 }

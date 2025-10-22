@@ -45,8 +45,7 @@
                 type="button"
                 icon="{{ $showInactivated ? 'eye-slash' : 'eye' }}"
                 wire:click="toggleShowInactivated"
-                class="bg-color-mpi-500 text-amber-50">
-
+                class="bg-color-mpi">
                 {{ $showInactivated ? __('organisations.hide_inactive') :  __('organisations.show_inactive') }}
             </flux:button>
         </div>
@@ -167,8 +166,12 @@
                 {{ __('organisations.confirm') }}
             </flux:heading>
 
-            <flux:text class="text-sm text-gray-700">
-                {{ __('organisations.deactivate_confirm') }}
+            <flux:text class="text-sm">
+                @if ($confirmingOrgIsActive === true)
+                    {{ __('organisations.deactivate_confirm') }}
+                @else
+                    {{ __('organisations.activate_confirm') }}
+                @endif
             </flux:text>
 
             <div class="flex justify-end gap-3 border-t border-gray-200 pt-4">

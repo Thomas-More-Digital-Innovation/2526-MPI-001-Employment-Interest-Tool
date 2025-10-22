@@ -18,9 +18,12 @@ class AdminsManager extends BaseCrudComponent
 {
     protected ?Role $adminRole = null;
 
-    // lists used in selects
-    public Collection $organisations;
+    // organisation derived from session context (single organisation)
+    public ?Organisation $organisation = null;
     public Collection $languages;
+
+    // current organisation context (from session)
+    public ?int $currentOrganisationId = null;
 
     protected function view(): string
     {
@@ -34,8 +37,15 @@ class AdminsManager extends BaseCrudComponent
         if (!isset($this->adminRole)) {
             $this->adminRole = Role::where('role', Role::ADMIN)->firstOrFail();
         }
-        // Load organisations & languages for select inputs
-        $this->organisations = Organisation::orderBy('name')->get();
+        // Load the organisation referenced by the session. We only need the
+        // single organisation context when managing admins.
+        $orgId = session('organisation_id') ?: null;
+        if (! $orgId) {
+            $this->redirectRoute('superadmin.organisations-manager');
+            return;
+        }
+        $this->currentOrganisationId = $orgId;
+        $this->organisation = $orgId ? Organisation::where('organisation_id', $orgId)->first() : null;
         $this->languages = Language::orderBy('language_name')->get();
     }
 
@@ -46,7 +56,7 @@ class AdminsManager extends BaseCrudComponent
             'last_name' => '',
             'username' => '',
             'password' => '',
-            'organisation_id' => null,
+            'email' => '',
             'language_id' => null,
             'active' => true,
         ];
@@ -55,10 +65,9 @@ class AdminsManager extends BaseCrudComponent
     public function startCreate(): void
     {
         parent::startCreate();
-
-        // set sensible defaults when creating a new admin
-        if ($this->organisations->count() > 0) {
-            $this->form['organisation_id'] = $this->organisations->first()->organisation_id;
+        // Bind the new admin to the organisation available in session.
+        if ($this->currentOrganisationId) {
+            $this->form['organisation_id'] = $this->currentOrganisationId;
         }
         if ($this->languages->count() > 0) {
             $this->form['language_id'] = $this->languages->first()->language_id;
@@ -74,10 +83,13 @@ class AdminsManager extends BaseCrudComponent
 
     protected function baseQuery(): Builder
     {
-        return User::query()
+        $query = User::query()
             ->whereHas('roles', fn($q) => $q->where('role', Role::ADMIN))
             ->orderBy('first_name')
-            ->orderBy('last_name');
+            ->orderBy('last_name')
+            ->where('organisation_id', $this->currentOrganisationId);
+
+        return $query;
     }
 
     protected function applySearch(Builder $query): Builder
@@ -106,6 +118,7 @@ class AdminsManager extends BaseCrudComponent
             'last_name' => $record->last_name,
             'username' => $record->username,
             'password' => '',
+            'email' => $record->email,
             'organisation_id' => $record->organisation_id,
             'language_id' => $record->language_id ?? null,
             'active' => (bool) $record->active,
@@ -121,6 +134,8 @@ class AdminsManager extends BaseCrudComponent
             'form.last_name' => ['nullable', 'string', 'max:255'],
             'form.username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($userId, 'user_id')],
             'form.password' => [$this->editingId ? 'nullable' : 'required', 'string', Password::defaults()],
+            // organisation_id is required but will be set from session; still
+            // validate as integer if provided.
             'form.organisation_id' => ['required', 'integer'],
             'form.language_id' => ['required', 'integer'],
             'form.active' => ['boolean'],
@@ -141,7 +156,8 @@ class AdminsManager extends BaseCrudComponent
                 'first_name' => $this->form['first_name'],
                 'last_name' => $this->form['last_name'],
                 'username' => $this->form['username'],
-                'organisation_id' => $this->form['organisation_id'],
+                'email' => $this->form['email'],
+                'language_id' => $this->form['language_id'],
                 'active' => (bool) $this->form['active'],
             ];
 
@@ -157,8 +173,9 @@ class AdminsManager extends BaseCrudComponent
                     'first_name' => $this->form['first_name'],
                     'last_name' => $this->form['last_name'],
                     'username' => $this->form['username'],
+                    'email' => $this->form['email'],
                     'password' => Hash::make($this->form['password']),
-                    'organisation_id' => $this->form['organisation_id'],
+                    'organisation_id' => $this->currentOrganisationId,
                     'language_id' => $this->form['language_id'],
                     'active' => (bool) $this->form['active'],
                     'first_login' => true,
@@ -177,14 +194,26 @@ class AdminsManager extends BaseCrudComponent
         $this->dispatch('crud-record-saved');
     }
 
+    public function unactiveAdmin(int $userId): void
+    {
+        $user = $this->findRecord($userId);
+        $user->active = false;
+        $user->save();
+
+        $this->dispatch('crud-record-updated', id: $userId);
+        $this->resetPage();
+    }
+
     public function removeAdmin(int $userId): void
     {
         $user = $this->findRecord($userId);
         if (!isset($this->adminRole)) {
             $this->adminRole = Role::where('role', Role::ADMIN)->firstOrFail();
         }
+
         $user->roles()->detach($this->adminRole->role_id);
-    session()->flash('status', ['message' => 'Admin removed.', 'type' => 'success']);
+        $user->delete();
+
         $this->dispatch('crud-record-updated', id: $userId);
         $this->resetPage();
     }
@@ -203,8 +232,12 @@ class AdminsManager extends BaseCrudComponent
         if (! $this->deletingUserId) {
             return;
         }
-
-        $this->removeAdmin($this->deletingUserId);
+        $user = $this->findRecord($this->deletingUserId);
+        if ($user->active) {
+            $this->unactiveAdmin($this->deletingUserId);
+        } else {
+            $this->removeAdmin($this->deletingUserId);
+        }
         $this->deletingUserId = null;
         $this->dispatch('modal-close', name: 'admin-delete-confirm');
     }
