@@ -19,6 +19,8 @@ class OrganisationsManager extends BaseCrudComponent
      * @var \Illuminate\Database\Eloquent\Collection|array
      */
     public $availableTests = [];
+    // cached counts for view (computed on render)
+    public int $totalOrganisations = 0;
 
     protected function view(): string
     {
@@ -152,6 +154,18 @@ class OrganisationsManager extends BaseCrudComponent
             'expire_date' => $record->expire_date ? $record->expire_date->format('Y-m-d') : null,
             'tests' => $testsMap,
         ];
+    }
+
+    /**
+     * Compute totals used by the view. Called by the view layer.
+     */
+    protected function viewData(): array
+    {
+        $this->totalOrganisations = Organisation::query()->count();
+
+        return array_merge(parent::viewData(), [
+            'totalOrganisations' => $this->totalOrganisations,
+        ]);
     }
 
     protected function rules(): array

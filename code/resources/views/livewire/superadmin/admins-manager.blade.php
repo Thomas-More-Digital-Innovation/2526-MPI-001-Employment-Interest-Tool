@@ -25,6 +25,7 @@
                 <flux:label class="block text-sm font-medium" for="admin-search">
                     {{ __('Search') }}
                 </flux:label>
+                
                 <flux:input
                     id="admin-search"
                     type="search"
@@ -41,7 +42,16 @@
             </div>
         </div>
 
-        @include('livewire.superadmin.admins-manager-table', ['records' => $records])
+    <div class="space-y-8">
+        <section class="space-y-3">
+            <div class="flex items-center justify-between gap-3">
+                <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
+                    {{ trans_choice('admins.totals', $totalAdmins ?? 0, ['count' => $totalAdmins ?? 0]) }}
+                </span>
+            </div>
+            @include('livewire.superadmin.admins-manager-table', ['records' => $records])
+        </section>
+    </div>
 
         <flux:modal
             name="admin-form"
@@ -49,7 +59,7 @@
             x-on:close="$wire.call('resetFormState')">
             <div class="space-y-6">
                 <flux:heading size="lg">
-                    {{ $editingId ? __('Edit') : __('Add') }}
+                    {{ $editingId ? __('actions.edit') : __('actions.create') }}
                 </flux:heading>
 
                 <form wire:submit.prevent="save" class="space-y-6">
@@ -59,7 +69,7 @@
                                 id="admin-first"
                                 type="text"
                                 wire:model.defer="form.first_name"
-                                :label="__('First Name')"
+                                :label="__('user.first_name')"
                                 required
                                 autofocus />
                             @error('form.first_name')
@@ -72,10 +82,8 @@
                                 id="admin-last"
                                 type="text"
                                 wire:model.defer="form.last_name"
-                                :label="__('Last Name')" />
-                            @error('form.last_name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                                :label="__('user.last_name')" />
+                            {{-- Errors rendered by the flux input component --}}
                         </div>
 
                         <div>
@@ -85,9 +93,7 @@
                                 wire:model.defer="form.username"
                                 :label="__('admins.username')"
                                 required />
-                            @error('form.username')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            {{-- Errors rendered by the flux input component --}}
                         </div>
 
                         <div>
@@ -95,44 +101,47 @@
                                 id="admin-email"
                                 type="email"
                                 wire:model.defer="form.email"
-                                :label="__('Email')"
+                                :label="__('user.email')"
                                 required />
-                            @error('form.email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            {{-- Errors rendered by the flux input component --}}
                         </div>
 
-                        <div>
-                            <flux:input
-                                id="admin-password"
-                                type="password"
-                                wire:model.defer="form.password"
-                                :label="__('Password')"
-                                :placeholder="$editingId ? __('admins.leave_blank_to_keep') : ''" />
-                            @error('form.password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        
+                            <div>
+                                <flux:label for="client-password" >
+                                    {{ __('user.password') }}
+                                    <flux:tooltip content="{{ $editingId ? __('user.new_password_optional') : __('Password') }}" class="ml-1">
+                                        <flux:icon name="information-circle" variant="outline" />
+                                    </flux:tooltip>
+                                </flux:label>
+
+                                <flux:input
+                                    id="client-password"
+                                    type="password"
+                                    wire:model.defer="form.password"
+                                    :required="!$editingId" />
+                                @error('form.password')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
                         <div class="md:col-span-2">
                             <flux:label for="admin-active" class="block text-sm font-medium">
-                                {{ __('Status') }}
+                                {{ __('user.status') }}
                             </flux:label>
                             <div class="mt-2">
                                 <flux:checkbox
                                     id="admin-active"
                                     wire:model.defer="form.active"
-                                    :label="__('Active')" />
+                                    :label="__('user.active')" />
                             </div>
-                            @error('form.active')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            {{-- Errors rendered by the flux checkbox component --}}
                         </div>
 
                         {{-- Organisation is managed via OrganisationsManager; admins are tied to the organisation in session. --}}
 
                         <div class="md:col-span-2">
-                            <flux:select wire:model.defer="form.language_id" :label="__('Language')" required>
+                            <flux:select wire:model.defer="form.language_id" :label="__('user.language')" required>
                                 @foreach($this->languages as $lang)
                                     <option value="{{ $lang->language_id }}">{{ $lang->language_name }}</option>
                                 @endforeach

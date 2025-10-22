@@ -35,8 +35,18 @@
         </div>
     </div>
 
-    {{-- main table --}}
-    @include('livewire.superadmin.organisations-manager-table', ['records' => $records])
+    <div class="space-y-8">
+        <section class="space-y-3">
+            <div class="flex items-center justify-between gap-3">
+                <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
+                    {{ trans_choice('organisations.totals', $totalOrganisations, ['count' => $totalOrganisations]) }}
+                </span>
+            </div>
+
+            {{-- main table --}}
+            @include('livewire.superadmin.organisations-manager-table', ['records' => $records])
+        </section>
+    </div>
 
     {{-- show/hide inactive --}}
     <div class="mt-4">
