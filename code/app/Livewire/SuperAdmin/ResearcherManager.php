@@ -173,6 +173,7 @@ class ResearcherManager extends ResearcherCRUDManager
     {
         return array_merge(parent::viewData(), [
             'languages' => $this->languages,
+            'records' => $this->records,
             'inactivatedResearchers' => $this->inactivatedResearchers,
             'showInactivated' => $this->showInactivated,
         ]);
