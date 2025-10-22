@@ -29,7 +29,6 @@
                         <flux:menu>
                             <flux:menu.item
                                 icon="pencil"
-                                icon-variant="outline"
                                 wire:click="startEdit({{ $record->user_id }})">
                                 {{ __('Edit') }}
                             </flux:menu.item>

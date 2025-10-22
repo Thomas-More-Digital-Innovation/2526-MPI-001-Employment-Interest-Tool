@@ -19,6 +19,7 @@ class Organisation extends Model
 
     protected $casts = [
         'active' => 'boolean',
+        'expire_date' => 'date',
     ];
 
     // Relationships
