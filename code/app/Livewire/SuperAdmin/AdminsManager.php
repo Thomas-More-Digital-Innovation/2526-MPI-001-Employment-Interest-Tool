@@ -24,10 +24,26 @@ class AdminsManager extends BaseCrudComponent
 
     // current organisation context (from session)
     public ?int $currentOrganisationId = null;
+    // cached totals
+    public int $totalAdmins = 0;
 
     protected function view(): string
     {
         return 'livewire.superadmin.admins-manager';
+    }
+
+    protected function viewData(): array
+    {
+        // compute total admins for current organisation if available
+        $this->totalAdmins = $this->currentOrganisationId
+            ? User::query()->whereHas('roles', fn($q) => $q->where('role', Role::ADMIN))->where('organisation_id', $this->currentOrganisationId)->count()
+            : 0;
+
+        return array_merge(parent::viewData(), [
+            'totalAdmins' => $this->totalAdmins,
+            'organisation' => $this->organisation,
+            'languages' => $this->languages,
+        ]);
     }
 
     protected function initializeCrud(): void
@@ -142,6 +158,21 @@ class AdminsManager extends BaseCrudComponent
         ];
     }
 
+    /**
+     * Map validation attribute names to user-friendly labels.
+     * This prevents messages like "form.username" appearing to the user.
+     */
+    public function attributes()
+    {
+        return [
+            'form.first_name' => __('user.first_name'),
+            'form.last_name' => __('user.last_name'),
+            'form.username' => __('admins.username'),
+            'form.password' => __('user.password'),
+            'form.email' => __('user.email'),
+        ];
+    }
+
     public function save(): void
     {
         $this->validate();
@@ -186,6 +217,8 @@ class AdminsManager extends BaseCrudComponent
             });
 
             session()->flash('status', ['message' => 'Admin created.', 'type' => 'success']);
+            // Clear search so the new admin is visible in the current (unfiltered) list
+            $this->search = '';
         }
 
         $this->resetFormState();

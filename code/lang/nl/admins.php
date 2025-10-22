@@ -9,4 +9,6 @@ return [
     'delete_confirm_text' => 'Weet je zeker dat je deze admin wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.',
     'confirm_delete' => 'Administrator verwijderen',
     'back' => 'Ga terug',
+    // totals
+    'totals' => '{0}Geen admins|{1}:count admin|[2,*]:count admins',
 ];
