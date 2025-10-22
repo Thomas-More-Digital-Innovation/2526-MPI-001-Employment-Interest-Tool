@@ -1,27 +1,83 @@
-<div class="bg-neutral-800 rounded-2xl w-1/2 p-10 m-3">
+<div class="bg-neutral-800 md:rounded-2xl w-full md:w-4/5 lg:w-2/3 xl:w-1/2 p-5 sm:p-6 md:p-8 lg:p-10 m-3 mx-auto shadow-lg">
     @if (session()->has('message'))
-        <div class="mb-4 mt-4 p-4 bg-mpi text-white rounded">
+        <div class="mb-4 mt-2 p-3 sm:p-4 bg-mpi text-white rounded">
             {{ session('message') }}
         </div>
     @endif
-    <form wire:submit.prevent="sendMail" class="flex flex-col text-white space-y-3">
-        <h1 class="text-3xl text-center">{{ __('Want to join us?') }}</h1>
 
-        <label for="organsiation" class="text-2xl">{{ __('Organization') }}</label>
-        <flux:input type="text" size="sm" name="organisation" id="organisation" wire:model.live="organisation" placeholder="Acme Inc." required/>
+    <form wire:submit.prevent="sendMail" class="flex flex-col text-white space-y-4 sm:space-y-5">
+        <h1 class="text-2xl sm:text-3xl text-center">{{ __('Want to join us?') }}</h1>
 
-        <label for="fullName" class="text-2xl">{{ __('Full Name') }}</label>
-        <flux:input type="text" size="sm" name="fullName" id="fullName" wire:model.live="fullName" placeholder="John Doe" required/>
+        <div class="space-y-1">
+            <label for="organisation" class="text-base sm:text-lg md:text-xl">{{ __('Organization') }}</label>
+            <flux:input
+                type="text"
+                size="sm"
+                name="organisation"
+                id="organisation"
+                wire:model.live="organisation"
+                placeholder="Acme Inc."
+                required
+                class="w-full"
+            />
+        </div>
 
-        <label for="emailAddress" class="text-2xl">{{ __('Email Address') }}</label>
-        <flux:input type="email" size="sm" name="emailAddress" id="emailAddress" wire:model.live="emailAddress" placeholder="amazing@example.com" required/>
+        <div class="space-y-1">
+            <label for="fullName" class="text-base sm:text-lg md:text-xl">{{ __('Full Name') }}</label>
+            <flux:input
+                type="text"
+                size="sm"
+                name="fullName"
+                id="fullName"
+                wire:model.live="fullName"
+                placeholder="John Doe"
+                required
+                class="w-full"
+            />
+        </div>
 
-        <label for="heardFrom" class="text-2xl">{{ __('Where have you heard about us?') }}</label>
-        <flux:input type="text" size="sm" name="heardFrom" id="heardFrom" wire:model.live="heardFrom" />
+        <div class="space-y-1">
+            <label for="emailAddress" class="text-base sm:text-lg md:text-xl">{{ __('Email Address') }}</label>
+            <flux:input
+                type="email"
+                size="sm"
+                name="emailAddress"
+                id="emailAddress"
+                wire:model.live="emailAddress"
+                placeholder="amazing@example.com"
+                required
+                class="w-full"
+            />
+        </div>
 
-        <label for="joinUs" class="text-2xl">{{ __('Why would you like to join us?') }}</label>
-        <flux:textarea size="sm" name="joinUs" id="joinUs" wire:model.live="joinUs"/>
+        <div class="space-y-1">
+            <label for="heardFrom" class="text-base sm:text-lg md:text-xl">{{ __('Where have you heard about us?') }}</label>
+            <flux:input
+                type="text"
+                size="sm"
+                name="heardFrom"
+                id="heardFrom"
+                wire:model.live="heardFrom"
+                class="w-full"
+            />
+        </div>
 
-        <button type="submit" class="bg-color-mpi text-2xl p-2 rounded-2xl duration-200 ease-in-out">{{ __('Submit') }}</button>
+        <div class="space-y-1">
+            <label for="joinUs" class="text-base sm:text-lg md:text-xl">{{ __('Why would you like to join us?') }}</label>
+            <flux:textarea
+                size="sm"
+                name="joinUs"
+                id="joinUs"
+                wire:model.live="joinUs"
+                class="w-full min-h-28"
+            />
+        </div>
+
+        <button
+            type="submit"
+            class="bg-color-mpi text-lg sm:text-xl p-3 sm:p-3.5 rounded-2xl duration-200 ease-in-out w-full hover:opacity-90"
+        >
+            {{ __('Submit') }}
+        </button>
     </form>
 </div>

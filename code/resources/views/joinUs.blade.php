@@ -22,7 +22,9 @@
 
 <body>
     <div class="absolute top-4 left-4 z-50">
-        <flux:button href="{{ route('home') }}" >{{ __('Go Home') }}</flux:button>
+        <flux:button href="{{ route('home') }}" >
+            <flux:icon.arrow-left class="w-4 h-4"/>
+            {{ __('Go Home') }}</flux:button>
     </div>
     <div class="absolute top-4 right-4 z-50 bg-neutral-800 rounded">
         <x-language-selector />
