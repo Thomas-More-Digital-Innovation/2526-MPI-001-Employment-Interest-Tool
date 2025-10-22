@@ -61,9 +61,9 @@
                             {{ __('Are you sure you want to join us as an organization?') }}
                         </flux:text>
 
-                        <div class="flex justify-end gap-3 pt-3">
-                            <flux:button 
-                                href="{{ route('organisation.joinUs') }}" 
+                        <div class="flex justify-end gap-3 pt-3 pb-3">
+                            <flux:button
+                                href="{{ route('organisation.joinUs') }}"
                                 class="!bg-mpi !text-white">
                                 {{ __('Continue') }}
                             </flux:button>
