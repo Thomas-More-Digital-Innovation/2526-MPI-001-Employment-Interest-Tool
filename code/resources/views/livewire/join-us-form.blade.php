@@ -1,5 +1,4 @@
 <div class="bg-neutral-800 rounded-2xl w-1/2 p-10 m-3">
-    <flux:button href="{{ route('home') }}" >{{ __('Go Home') }}</flux:button>
     @if (session()->has('message'))
         <div class="mb-4 mt-4 p-4 bg-color-mpi rounded">
             {{ session('message') }}
