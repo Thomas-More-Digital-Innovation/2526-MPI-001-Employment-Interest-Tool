@@ -315,14 +315,9 @@
     "Enter your username to receive a password reset link": "Enter your username to receive a password reset link",
     "Want to join us?": "Want to join us?",
     "Organization": "Organization",
-    "Where they heard from us": "Where they heard from us",
-    "Why they want to join": "Why they want to join",
-    "New membership request from": "New membership request from",
-    "This message was sent from": "This message was sent from",
-    "New Join Request": "New Join Request",
-    "New Join Description": "You received a new join request. Details are below.",
     "Full Name": "Full Name",
     "Where have you heard about us?": "Where have you heard about us?",
     "Why would you like to join us?": "Why would you like to join us?",
-    "Are you sure you want to join us as an organization?": "Are you sure you want to join us as an organization?"
+    "Are you sure you want to join us as an organization?": "Are you sure you want to join us as an organization?",
+    "Contact Success": "Thank you for your interest! We will contact you soon."
 }

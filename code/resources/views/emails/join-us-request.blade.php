@@ -27,7 +27,7 @@
                         <tr>
                             <td style="background:#007f88; padding:18px 24px;">
                                 <h1 class="title" style="margin:0; font-size:22px; line-height:1.2; color:#ffffff; font-weight:700; text-align:left;">
-                                    {{ __('New Join Request') }}
+                                    Nieuw lidmaatschapsverzoek
                                 </h1>
                             </td>
                         </tr>
@@ -36,7 +36,7 @@
                         <tr>
                             <td style="padding:20px 24px 8px 24px; color:#333333;">
                                 <p style="margin:0 0 12px 0; font-size:14px; color:#4b5563;">
-                                    {{ __('New Join Description') }}
+                                    Je hebt een nieuw lidmaatschapsverzoek ontvangen. Hieronder vind je de details.
                                 </p>
                             </td>
                         </tr>
@@ -48,7 +48,7 @@
                                     <!-- Organization -->
                                     <tr>
                                         <td style="padding:16px; background:#ffffff;">
-                                            <strong style="display:block; font-size:13px; color:#111827;">{{ __('Organization') }}</strong>
+                                            <strong style="display:block; font-size:13px; color:#111827;">Organisatie</strong>
                                             <div style="margin-top:6px; font-size:15px; color:#374151;">{{ $organisation ?? '-' }}</div>
                                         </td>
                                     </tr>
@@ -58,7 +58,7 @@
                                     <!-- Name -->
                                     <tr>
                                         <td style="padding:16px; background:#ffffff;">
-                                            <strong style="display:block; font-size:13px; color:#111827;">{{ __('Name') }}</strong>
+                                            <strong style="display:block; font-size:13px; color:#111827;">Naam</strong>
                                             <div style="margin-top:6px; font-size:15px; color:#374151;">{{ $fullName ?? '-' }}</div>
                                         </td>
                                     </tr>
@@ -69,7 +69,7 @@
                                     <!-- Email -->
                                     <tr>
                                         <td style="padding:16px; background:#ffffff;">
-                                            <strong style="display:block; font-size:13px; color:#111827;">{{ __('Email') }}</strong>
+                                            <strong style="display:block; font-size:13px; color:#111827;">E-mail</strong>
                                             <div style="margin-top:6px; font-size:15px; color:#374151;">
                                                 <a href="mailto:{{ $emailAddress }}" style="color:#007f88;">{{ $emailAddress ?? '-' }}</a>
                                             </div>
@@ -82,7 +82,7 @@
                                     <!-- Heard From -->
                                     <tr>
                                         <td style="padding:16px; background:#ffffff;">
-                                            <strong style="display:block; font-size:13px; color:#111827;">{{ __('Where they heard from us') }}</strong>
+                                            <strong style="display:block; font-size:13px; color:#111827;">Waar ze van ons gehoord hebben</strong>
                                             <div style="margin-top:6px; font-size:15px; color:#374151;">{{ $heardFrom ?? '—' }}</div>
                                         </td>
                                     </tr>
@@ -93,7 +93,7 @@
                                     <!-- Message -->
                                     <tr>
                                         <td style="padding:16px; background:#ffffff;">
-                                            <strong style="display:block; font-size:13px; color:#111827;">{{ __('Why they want to join') }}</strong>
+                                            <strong style="display:block; font-size:13px; color:#111827;">Waarom ze willen aansluiten</strong>
                                             <div style="margin-top:8px; font-size:15px; color:#374151; white-space:pre-wrap;">{{ $joinUs ?? '—' }}</div>
                                         </td>
                                     </tr>
@@ -104,7 +104,7 @@
                         <!-- Footer -->
                         <tr>
                             <td style="padding:0 24px 20px 24px; border-top:1px solid #f3f4f6; text-align:left;">
-                                <p style="margin:12px 0 0 0; font-size:12px; color:#9ca3af;">{{ __('This message was sent from') }} {{ __("InteresseTest") }}.</p>
+                                <p style="margin:12px 0 0 0; font-size:12px; color:#9ca3af;">Dit bericht was verstuurd van InteresseTest.</p>
                             </td>
                         </tr>
                     </table>

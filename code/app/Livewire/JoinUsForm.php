@@ -56,7 +56,7 @@ class JoinUsForm extends Component
             );
         }
 
-        session()->flash('message', 'Thank you for your interest! We will contact you soon.');
+        session()->flash('message', __('Contact Success'));
         $this->reset();
     }
 

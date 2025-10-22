@@ -19,7 +19,7 @@ class JoinUsRequest extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __('New membership request from') . " " . $this->fullName,
+            subject: "Nieuw lidmaatschapsverzoek van " . $this->fullName,
         );
     }
 
