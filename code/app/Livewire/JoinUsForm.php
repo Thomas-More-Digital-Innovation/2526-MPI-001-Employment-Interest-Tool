@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Role;
 
 class JoinUsForm extends Component
 {
@@ -32,7 +33,7 @@ class JoinUsForm extends Component
         $allSuperAdminMails = DB::table('users')
             ->join('user_role', 'user_role.user_id', "=", "users.user_id")
             ->join('role', 'user_role.role_id', '=', 'role.role_id')
-            ->where('role.role', '=', 'SuperAdmin')
+            ->where('role.role', '=', Role::SUPER_ADMIN)
             ->pluck('users.email');
 
         // ensure we have a collection and include configured admin address
