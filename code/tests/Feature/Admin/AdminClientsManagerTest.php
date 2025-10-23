@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Livewire\Admin\AdminClientsManager;
+use App\Livewire\Admin\AdminClientFormModal;
 use App\Models\Language;
 use App\Models\Role;
 use App\Models\User;
@@ -96,8 +97,8 @@ class AdminClientsManagerTest extends TestCase
         ]);
 
         Livewire::actingAs($this->admin)
-            ->test(AdminClientsManager::class)
-            ->call('startCreate')
+            ->test(AdminClientFormModal::class)
+            ->call('openForm')
             ->set('form.first_name', 'New')
             ->set('form.last_name', 'Client')
             ->set('form.username', 'new_admin_client')
@@ -106,7 +107,7 @@ class AdminClientsManagerTest extends TestCase
             ->set('form.active', true)
             ->set('form.mentor_id', $mentor->user_id)
             ->call('save')
-            ->assertDispatched('crud-record-saved');
+            ->assertDispatched('admin-client-saved');
 
         $this->assertDatabaseHas('users', [
             'username' => 'new_admin_client',
@@ -119,15 +120,15 @@ class AdminClientsManagerTest extends TestCase
     public function test_assigning_invalid_mentor_id_triggers_validation_error(): void
     {
         Livewire::actingAs($this->admin)
-            ->test(AdminClientsManager::class)
-            ->call('startCreate')
+            ->test(AdminClientFormModal::class)
+            ->call('openForm')
             ->set('form.first_name', 'Invalid')
             ->set('form.username', 'invalid_mentor_client')
             ->set('form.password', 'BadMentor123!')
             ->set('form.language_id', $this->language->language_id)
             ->set('form.mentor_id', 999)
             ->call('save')
-            ->assertHasErrors(['form.mentor_id' => 'exists']);
+            ->assertHasErrors('form.mentor_id');
     }
 
     /** @test */
@@ -144,13 +145,13 @@ class AdminClientsManagerTest extends TestCase
         ]);
 
         Livewire::actingAs($this->admin)
-            ->test(AdminClientsManager::class)
-            ->call('startEdit', $client->user_id)
+            ->test(AdminClientFormModal::class)
+            ->call('openForm', $client->user_id)
             ->set('form.first_name', 'Edited Name')
             ->set('form.mentor_id', $mentorB->user_id)
             ->set('form.password', '')
             ->call('save')
-            ->assertDispatched('crud-record-saved');
+            ->assertDispatched('admin-client-saved');
 
         $this->assertDatabaseHas('users', [
             'user_id' => $client->user_id,

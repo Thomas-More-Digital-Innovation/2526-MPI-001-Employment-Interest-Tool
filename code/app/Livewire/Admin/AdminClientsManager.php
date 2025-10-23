@@ -26,6 +26,11 @@ class AdminClientsManager extends MentorClientsManager
 
     public string $deleteModalName = '';
 
+    /**
+     * Listen for admin client saved event to refresh the list
+     */
+    protected $listeners = ['admin-client-saved' => '$refresh'];
+
     protected function ensureMentorContext(bool $force = false): void
     {
         /** @var User|null $admin */
@@ -107,31 +112,12 @@ class AdminClientsManager extends MentorClientsManager
 
     public function startCreate(): void
     {
-        $this->ensureMentorContext();
-
-        $this->resetFormState();
-        $this->formModalMode = 'create';
-        $this->formModalVisible = true;
-
-        $this->dispatch('modal-open', name: 'admin-client-form');
-        $this->dispatch('crud-form-opened', mode: 'create');
+        $this->dispatch('open-admin-client-form');
     }
 
     public function startEdit(int $recordId): void
     {
-        $this->ensureMentorContext();
-
-        $record = $this->findRecord($recordId);
-        $this->editingId = $recordId;
-        $this->form = $this->transformRecordToForm($record);
-        $this->formModalMode = 'edit';
-        $this->formModalVisible = true;
-
-        $this->resetErrorBag();
-        $this->resetValidation();
-
-        $this->dispatch('modal-open', name: 'admin-client-form');
-        $this->dispatch('crud-form-opened', mode: 'edit');
+        $this->dispatch('open-admin-client-form', clientId: $recordId);
     }
 
     public function cancelForm(): void
