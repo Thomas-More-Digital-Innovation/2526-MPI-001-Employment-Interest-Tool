@@ -1,16 +1,16 @@
 <flux:modal
-    name="superadmin-researcher-form"
+    name="admin-mentor-form"
     class="max-w-3xl">
     <div class="space-y-6">
         <flux:heading size="lg">
-            {{ $mode === 'edit' ? __('manage-researchers.editResearcher') : __('manage-researchers.addResearcher') }}
+            {{ $mode === 'edit' ? __('manage-mentors.editMentor') : __('manage-mentors.addMentor') }}
         </flux:heading>
 
         <form wire:submit.prevent="save" class="space-y-6">
             <div class="grid gap-4 md:grid-cols-2">
                 <div>
                     <flux:input
-                        id="researcher-first-name"
+                        id="mentor-first-name"
                         type="text"
                         wire:model.defer="form.first_name"
                         :label="__('user.first_name')"
@@ -23,10 +23,11 @@
 
                 <div>
                     <flux:input
-                        id="researcher-last-name"
+                        id="mentor-last-name"
                         type="text"
                         wire:model.defer="form.last_name"
-                        :label="__('user.last_name')" />
+                        :label="__('user.last_name')" 
+                        required/>
                     @error('form.last_name')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -34,7 +35,7 @@
 
                 <div>
                     <flux:input
-                        id="researcher-username"
+                        id="mentor-username"
                         type="text"
                         wire:model.defer="form.username"
                         :label="__('user.username')"
@@ -46,7 +47,7 @@
 
                 <div>
                     <flux:input
-                        id="researcher-password"
+                        id="mentor-password"
                         type="password"
                         wire:model.defer="form.password"
                         :label="$editingId ? __('user.new_password_optional') : __('user.password')"
@@ -58,7 +59,7 @@
 
                 <div class="md:col-span-2">
                     <flux:select
-                        id="researcher-language"
+                        id="mentor-language"
                         wire:model.defer="form.language_id"
                         :label="__('Language')"
                         required>
@@ -74,14 +75,14 @@
                 </div>
 
                 <div class="md:col-span-2">
-                    <flux:label for="researcher-active" class="block text-sm font-medium">
+                    <flux:label for="mentor-active" class="block text-sm font-medium">
                         {{ __('user.account_status') }}
                     </flux:label>
                     <div class="mt-2">
                         <flux:checkbox
-                            id="researcher-active"
+                            id="mentor-active"
                             wire:model.defer="form.active"
-                            :label="__('manage-researchers.ResearcherCanSignIn')" />
+                            :label="__('manage-mentors.MentorCanSignIn')" />
                     </div>
                     @error('form.active')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -100,7 +101,7 @@
                 <flux:button
                     type="submit"
                     variant="primary">
-                    {{ $editingId ? __('manage-researchers.SaveChanges') : __('manage-researchers.CreateResearcher') }}
+                    {{ $editingId ? __('manage-mentors.SaveChanges') : __('manage-mentors.CreateMentor') }}
                 </flux:button>
             </div>
         </form>

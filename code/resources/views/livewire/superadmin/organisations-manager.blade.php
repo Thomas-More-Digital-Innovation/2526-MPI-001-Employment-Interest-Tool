@@ -67,7 +67,7 @@
                         {{ __('organisations.no_inactive_found') }}
                     </div>
                 @else
-                    @include('livewire.superadmin.organisations-manager-table', ['records' => $this->inactivatedRecords])
+                    @include('livewire.superadmin.organisations-manager-table', ['records' => $this->inactivatedRecords, 'tableKey' => 'inactive'])
                 @endif
             </div>
         @endif

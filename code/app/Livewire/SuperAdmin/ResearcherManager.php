@@ -24,6 +24,22 @@ class ResearcherManager extends ResearcherCRUDManager
     public ?int $pendingDeleteId = null;
 
     public string $deleteModalName = '';
+    
+    protected $listeners = ['researcher-saved' => '$refresh'];
+    
+    /**
+     * Determines whether inactivated researchers are visible in the list.
+     */
+    public bool $showInactivated = false;
+    
+    /**
+     * Keep query string state for search & pagination of both tables.
+     */
+    protected $queryString = [
+        'search' => ['except' => ''],
+        'activePage' => ['except' => 1],
+        'inactivePage' => ['except' => 1],
+    ];
 
     protected function ensureMentorContext(bool $force = false): void
     {
@@ -98,7 +114,7 @@ class ResearcherManager extends ResearcherCRUDManager
     public function closeFormModal(): void
     {
         $this->resetFormState();
-        $this->dispatch('modal-close', name: 'admin-client-form');
+        $this->dispatch('modal-close', name: 'superadmin-researcher-form');
     }
 
     protected function baseQuery(): Builder
@@ -125,32 +141,14 @@ class ResearcherManager extends ResearcherCRUDManager
             ->orderBy('last_name');
     }
 
-    public function getActiveClientGroupsProperty(): Collection
+    public function getRecordsProperty()
     {
-        return $this->groupClients(
-            $this->applySearch($this->baseQuery())->get()
-        );
+        return $this->applySearch($this->baseQuery())->paginate($this->perPage(), ['*'], 'activePage');
     }
 
-    public function getInactiveClientGroupsProperty(): Collection
+    public function getInactivatedResearchersProperty()
     {
-        return $this->groupClients(
-            $this->applySearch($this->inactivatedClientsQuery())->get()
-        );
-    }
-
-    protected function groupClients(Collection $clients): Collection
-    {
-        return $clients
-            ->groupBy(fn(User $client) => $client->mentor_id ?? 0)
-            ->map(function (Collection $group, $mentorId): array {
-                return [
-                    'mentor_id' => $mentorId,
-                    'clients' => $group
-                        ->values(),
-                ];
-            })
-            ->values();
+        return $this->applySearch($this->inactivatedClientsQuery())->paginate($this->perPage(), ['*'], 'inactivePage');
     }
 
     protected function findRecord(int $id)
@@ -175,8 +173,8 @@ class ResearcherManager extends ResearcherCRUDManager
     {
         return array_merge(parent::viewData(), [
             'languages' => $this->languages,
-            'activeClientGroups' => $this->activeClientGroups,
-            'inactiveClientGroups' => $this->inactiveClientGroups,
+            'records' => $this->records,
+            'inactivatedResearchers' => $this->inactivatedResearchers,
             'showInactivated' => $this->showInactivated,
         ]);
     }

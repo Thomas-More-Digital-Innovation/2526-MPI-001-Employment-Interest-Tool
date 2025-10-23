@@ -109,7 +109,8 @@ class OrganisationsManager extends BaseCrudComponent
     public function toggleShowInactivated(): void
     {
         $this->showInactivated = ! $this->showInactivated;
-        $this->resetPage();
+        $this->resetPage('activePage');
+        $this->resetPage('inactivePage');
     }
 
     /**
@@ -121,11 +122,19 @@ class OrganisationsManager extends BaseCrudComponent
     }
 
     /**
+     * Paginated active records with search applied.
+     */
+    public function getRecordsProperty()
+    {
+        return $this->applySearch($this->baseQuery())->paginate($this->perPage(), ['*'], 'activePage');
+    }
+
+    /**
      * Paginated inactive records with search applied.
      */
     public function getInactivatedRecordsProperty()
     {
-        return $this->applySearch($this->inactivatedQuery())->paginate($this->perPage());
+        return $this->applySearch($this->inactivatedQuery())->paginate($this->perPage(), ['*'], 'inactivePage');
     }
 
     protected function findRecord(int $id)
