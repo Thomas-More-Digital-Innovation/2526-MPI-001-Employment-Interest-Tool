@@ -18,9 +18,9 @@ class MentorFormModal extends Component
     public ?int $editingId = null;
     public string $mode = 'create';
     public array $languages = [];
-    
+
     protected ?int $organisationId = null;
-    protected ?int $defaultLanguageId = null;
+    protected ?int $defaultLanguageId = 1;
     protected Role $mentorRole;
 
     protected $listeners = ['open-mentor-form' => 'openForm'];
@@ -59,7 +59,7 @@ class MentorFormModal extends Component
     public function openForm(?int $mentorId = null): void
     {
         $this->ensureContext();
-        
+
         if ($mentorId) {
             $mentor = User::where('user_id', $mentorId)
                 ->where('organisation_id', $this->organisationId)
@@ -83,7 +83,7 @@ class MentorFormModal extends Component
 
         $this->resetErrorBag();
         $this->resetValidation();
-        
+
         // Open the modal after setting up the form
         $this->dispatch('modal-open', name: 'admin-mentor-form');
     }
@@ -150,7 +150,7 @@ class MentorFormModal extends Component
                 $mentor = User::where('user_id', $this->editingId)
                     ->where('organisation_id', $this->organisationId)
                     ->firstOrFail();
-                    
+
                 $mentor->fill($attributes);
 
                 if (!empty($this->form['password'])) {
@@ -168,8 +168,8 @@ class MentorFormModal extends Component
             }
         });
 
-        session()->flash('status', $isEditing 
-            ? __('Mentor updated successfully.') 
+        session()->flash('status', $isEditing
+            ? __('Mentor updated successfully.')
             : __('Mentor created successfully.'));
 
         $this->resetForm();

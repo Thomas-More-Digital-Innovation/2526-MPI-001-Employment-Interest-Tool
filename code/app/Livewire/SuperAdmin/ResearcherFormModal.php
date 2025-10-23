@@ -18,9 +18,9 @@ class ResearcherFormModal extends Component
     public ?int $editingId = null;
     public string $mode = 'create';
     public array $languages = [];
-    
+
     protected ?int $organisationId = null;
-    protected ?int $defaultLanguageId = null;
+    protected ?int $defaultLanguageId = 1;
     protected Role $researcherRole;
 
     protected $listeners = ['open-researcher-form' => 'openForm'];
@@ -59,7 +59,7 @@ class ResearcherFormModal extends Component
     public function openForm(?int $researcherId = null): void
     {
         $this->ensureContext();
-        
+
         if ($researcherId) {
             $researcher = User::where('user_id', $researcherId)
                 ->where('organisation_id', $this->organisationId)
@@ -83,7 +83,7 @@ class ResearcherFormModal extends Component
 
         $this->resetErrorBag();
         $this->resetValidation();
-        
+
         // Open the modal after setting up the form
         $this->dispatch('modal-open', name: 'superadmin-researcher-form');
     }
@@ -150,7 +150,7 @@ class ResearcherFormModal extends Component
                 $researcher = User::where('user_id', $this->editingId)
                     ->where('organisation_id', $this->organisationId)
                     ->firstOrFail();
-                    
+
                 $researcher->fill($attributes);
 
                 if (!empty($this->form['password'])) {
@@ -168,8 +168,8 @@ class ResearcherFormModal extends Component
             }
         });
 
-        session()->flash('status', $isEditing 
-            ? __('Researcher updated successfully.') 
+        session()->flash('status', $isEditing
+            ? __('Researcher updated successfully.')
             : __('Researcher created successfully.'));
 
         $this->resetForm();

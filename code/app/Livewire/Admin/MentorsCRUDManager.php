@@ -38,7 +38,7 @@ class MentorsCRUDManager extends BaseCrudComponent
     /**
      * Cached default language id for the form.
      */
-    protected ?int $defaultLanguageId = null;
+    protected ?int $defaultLanguageId = 1;
 
 
     /**
