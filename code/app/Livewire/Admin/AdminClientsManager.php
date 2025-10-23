@@ -29,7 +29,10 @@ class AdminClientsManager extends MentorClientsManager
     /**
      * Listen for admin client saved event to refresh the list
      */
-    protected $listeners = ['admin-client-saved' => '$refresh'];
+    protected $listeners = [
+        'admin-client-saved' => '$refresh',
+        'request-client-delete' => 'handleDeleteRequest',
+    ];
 
     protected function ensureMentorContext(bool $force = false): void
     {
@@ -352,6 +355,11 @@ class AdminClientsManager extends MentorClientsManager
         $this->deleteModalVisible = true;
 
         $this->dispatch('modal-open', name: 'admin-client-delete');
+    }
+
+    public function handleDeleteRequest(int $clientId): void
+    {
+        $this->requestDelete($clientId);
     }
 
     public function confirmDelete(): void

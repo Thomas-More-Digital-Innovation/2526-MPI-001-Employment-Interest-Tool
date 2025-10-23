@@ -130,16 +130,29 @@
                 </div>
             </div>
 
-            <div class="flex justify-end space-x-2 rtl:space-x-reverse">
-                <flux:modal.close>
-                    <flux:button type="button" variant="filled">
-                        {{ __('Cancel') }}
-                    </flux:button>
-                </flux:modal.close>
-
-                <flux:button type="submit" class="bg-color-mpi">
-                    {{ $mode === 'edit' ? __('manage-clients.UpdateClient') : __('manage-clients.AddClient') }}
+            <div class="flex justify-between space-x-2 rtl:space-x-reverse">
+                @if ($mode === 'edit' && !$form['active'])
+                <flux:button 
+                    type="button" 
+                    variant="danger"
+                    wire:click="requestDelete">
+                    {{ __('manage-clients.DeleteClient') }}
                 </flux:button>
+                @else
+                <div></div>
+                @endif
+
+                <div class="flex space-x-2 rtl:space-x-reverse">
+                    <flux:modal.close>
+                        <flux:button type="button" variant="filled">
+                            {{ __('Cancel') }}
+                        </flux:button>
+                    </flux:modal.close>
+
+                    <flux:button type="submit" class="bg-color-mpi">
+                        {{ $mode === 'edit' ? __('manage-clients.UpdateClient') : __('manage-clients.AddClient') }}
+                    </flux:button>
+                </div>
             </div>
         </form>
     </div>
