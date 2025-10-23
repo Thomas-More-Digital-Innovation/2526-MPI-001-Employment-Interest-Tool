@@ -16,7 +16,7 @@ class Faq extends Model
 
     public function translations()
     {
-        return $this->hasMany(FrequentlyAskedQuestionTranslation::class, 'frequently_asked_question_id');
+        return $this->hasMany(FaqTranslation::class, 'frequently_asked_question_id');
     }
 
     public function translationForLanguage($languageId)

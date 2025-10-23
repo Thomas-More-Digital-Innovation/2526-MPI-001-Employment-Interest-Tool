@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FrequentlyAskedQuestionTranslation extends Model
+class FaqTranslation extends Model
 {
     protected $table = 'frequently_asked_question_translation';
     protected $primaryKey = 'frequently_asked_question_translation_id';

@@ -4,10 +4,9 @@ namespace App\Livewire\SuperAdmin;
 
 use Livewire\Component;
 use App\Models\Faq;
-use App\Models\FrequentlyAskedQuestionTranslation;
+use App\Models\FaqTranslation;
 use App\Models\Language;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Log;
 
 class FaqManager extends Component
 {
@@ -44,7 +43,7 @@ class FaqManager extends Component
     public function startEdit($id)
     {
         $faq = Faq::where('frequently_asked_question_id', $id)->firstOrFail();
-        $englishTranslation = FrequentlyAskedQuestionTranslation::where('frequently_asked_question_id', $id)
+        $englishTranslation = FaqTranslation::where('frequently_asked_question_id', $id)
             ->first();
         $this->editingId = $id;
         $this->form['question_nl'] = $faq->question;
@@ -63,7 +62,7 @@ class FaqManager extends Component
                 'question' => $this->form['question_nl'],
                 'answer' => $this->form['answer_nl'],
             ]);
-            $englishTranslation = FrequentlyAskedQuestionTranslation::where('frequently_asked_question_id', $this->editingId)
+            $englishTranslation = FaqTranslation::where('frequently_asked_question_id', $this->editingId)
                 ->where('language_id', Language::where('language_code', 'en')->value('language_id'))
                 ->first();
             if ($englishTranslation) {
@@ -72,7 +71,7 @@ class FaqManager extends Component
                     'answer' => $this->form['answer_en'],
                 ]);
             } else {
-                FrequentlyAskedQuestionTranslation::create([
+                FaqTranslation::create([
                     'frequently_asked_question_id' => $this->editingId,
                     'language_id' => Language::where('language_code', 'en')->value('language_id'),
                     'question' => $this->form['question_en'],
@@ -85,7 +84,7 @@ class FaqManager extends Component
                 'question' => $this->form['question_nl'],
                 'answer' => $this->form['answer_nl'],
             ]);
-            FrequentlyAskedQuestionTranslation::create([
+            FaqTranslation::create([
                 'frequently_asked_question_id' => $faq->frequently_asked_question_id,
                 'language_id' => Language::where('language_code', 'en')->value('language_id'),
                 'question' => $this->form['question_en'],
@@ -107,7 +106,7 @@ class FaqManager extends Component
     public function deleteFaq()
     {
         Faq::where('frequently_asked_question_id', $this->editingId)->firstOrFail()->delete();
-        FrequentlyAskedQuestionTranslation::where('frequently_asked_question_id', $this->editingId)->delete();
+        FaqTranslation::where('frequently_asked_question_id', $this->editingId)->delete();
         $this->resetFormState();
         $this->dispatch('modal-close', name: 'delete-faq-confirmation');
     }
