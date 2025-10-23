@@ -30,4 +30,14 @@ class InterestFieldTranslation extends Model
     {
         return $this->belongsTo(Language::class, 'language_id', 'language_id');
     }
+
+    public function getAudioUrl()
+    {
+        $filename = $this->sound_link;
+        if (!$filename) {
+            return null;
+        }
+
+        return route('question.sound', ['filename' => $filename]);
+    }
 }

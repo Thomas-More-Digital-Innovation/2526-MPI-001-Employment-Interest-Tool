@@ -6,6 +6,7 @@ use App\Livewire\Crud\BaseCrudComponent;
 use App\Models\InterestField;
 use App\Models\Language;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Lang;
 
 class InterestFieldManager extends BaseCrudComponent
 {
@@ -56,28 +57,41 @@ class InterestFieldManager extends BaseCrudComponent
                 'sound_link' => $this->form['sound_link'] ?? null,
             ]);
 
-            // Update translations
+            // Update translations: only create/update when there is content, delete if translation exists but cleared
             foreach ($this->form['translations'] as $languageCode => $translation) {
+                // Normalize values
+                $name = trim((string) ($translation['name'] ?? ''));
+                $description = trim((string) ($translation['description'] ?? ''));
+                $sound = $translation['sound_link'] ?? null;
+
                 $interestFieldTranslation = $interestField->interestFieldTranslations()
                     ->whereHas('language', function ($query) use ($languageCode) {
                         $query->where('language_code', $languageCode);
                     })
                     ->first();
 
-                if ($interestFieldTranslation) {
-                    // Allow updating sound_link if provided in the translation form
-                    $updateData = $translation;
-                    if (isset($translation['sound_link'])) {
-                        $updateData['sound_link'] = $translation['sound_link'];
+                // If no content and translation exists, delete it
+                if ($interestFieldTranslation && $name === '' && $description === '' && empty($sound)) {
+                    $interestFieldTranslation->delete();
+                    continue;
+                }
+
+                // If there's content, create or update
+                if ($name !== '' || $description !== '' || ! empty($sound)) {
+                    if ($interestFieldTranslation) {
+                        $interestFieldTranslation->update([
+                            'name' => $name,
+                            'description' => $description,
+                            'sound_link' => $sound ?? $interestFieldTranslation->sound_link,
+                        ]);
+                    } else {
+                        $interestField->interestFieldTranslations()->create([
+                            'language_id' => Language::where('language_code', $languageCode)->value('language_id'),
+                            'name' => $name,
+                            'description' => $description,
+                            'sound_link' => $sound ?? null,
+                        ]);
                     }
-                    $interestFieldTranslation->update($updateData);
-                } else {
-                    $interestField->interestFieldTranslations()->create([
-                        'language_code' => $languageCode,
-                        'name' => $translation['name'],
-                        'description' => $translation['description'],
-                        'sound_link' => $translation['sound_link'] ?? null,
-                    ]);
                 }
             }
         } else {
@@ -186,11 +200,20 @@ class InterestFieldManager extends BaseCrudComponent
     {
         $languages = Language::getEnabledLanguages();
 
+        $translations = [];
+        foreach ($languages as $lang) {
+            $translations[$lang->language_code] = [
+                'name' => '',
+                'description' => '',
+                'sound_link' => null,
+            ];
+        }
+
         $form = [
             'name' => '',
             'description' => '',
             'active' => true,
-            'translations' => [],
+            'translations' => $translations,
         ];
 
         return $form;
@@ -225,8 +248,20 @@ class InterestFieldManager extends BaseCrudComponent
             $form['translations'][$translation->language->language_code] = [
                 'name' => $translation->name,
                 'description' => $translation->description,
-                'sound_link' => $translation->sound_link ?? null,
+                'sound_link' => $translation->getAudioUrl() ?? null,
             ];
+        }
+
+        // Ensure all enabled languages are present in the translations array (empty if missing)
+        $languages = Language::getEnabledLanguages();
+        foreach ($languages as $lang) {
+            if (! isset($form['translations'][$lang->language_code])) {
+                $form['translations'][$lang->language_code] = [
+                    'name' => '',
+                    'description' => '',
+                    'sound_link' => null,
+                ];
+            }
         }
 
         return $form;
@@ -419,11 +454,8 @@ class InterestFieldManager extends BaseCrudComponent
 
     public function mount(): void
     {
-        $this->form = [
-            'name' => '',
-            'description' => '',
-            'translations' => [],
-        ];
+        // Initialize form state with translations for all enabled languages
+        $this->form = $this->defaultFormState();
 
         // Fetch available languages from the database, excluding Dutch
         $this->availableLanguages = Language::where('language_code', '!=', 'nl')
