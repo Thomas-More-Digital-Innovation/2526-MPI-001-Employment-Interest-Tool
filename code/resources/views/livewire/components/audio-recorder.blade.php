@@ -166,7 +166,13 @@
                         // Listen for sound cleared event
                         Livewire.on('audio-recorder-cleared', (data) => {
                             console.log('audio-recorder-cleared event received', data);
-                            if (data.recorderId === this.recorderId) {
+                            // Handle both object and array formats
+                            const eventData = Array.isArray(data) ? data[0] : data;
+                            console.log('Processed event data:', eventData);
+                            console.log('Comparing recorderId:', eventData?.recorderId, 'with', this.recorderId);
+                            
+                            if (eventData?.recorderId === this.recorderId) {
+                                console.log('RecorderId matches, clearing audio');
                                 this._clearAudioEl();
                                 this.hasAudio = false;
                                 this.canRecord = true;
@@ -174,6 +180,8 @@
                                 // Also clear file input when clearing audio
                                 this._clearFileInput();
                                 console.log('Audio cleared, state updated', { hasAudio: this.hasAudio, canRecord: this.canRecord });
+                            } else {
+                                console.log('RecorderId does not match, ignoring event');
                             }
                         });
                     },
@@ -333,19 +341,16 @@
                      */
                     clearAll() {
                         console.log('clearAll called');
-                        console.log('wireId:', this.wireId);
-                        console.log('recorderId:', this.recorderId);
                         
                         // Try to find the Livewire component
                         const wireComponent = Livewire.find(this.wireId);
-                        console.log('wireComponent found:', wireComponent);
                         
                         if (wireComponent) {
                             console.log('Calling clearSound on Livewire component');
                             wireComponent.clearSound();
+                            // Note: State will be updated via the 'audio-recorder-cleared' event
                         } else {
                             console.error('Livewire component not found with ID:', this.wireId);
-                            console.log('Available Livewire components:', Object.keys(Livewire.all()));
                         }
                     },
 
