@@ -2,8 +2,12 @@
 
 return [
     'manager' => 'Beheer FAQ',
-    'question' => 'Vraag',
     'answer' => 'Antwoord',
+    'question' => 'Vraag',
+    'question_nl' => 'Vraag (Nederlands)',
+    'answer_nl' => 'Antwoord (Nederlands)',
+    'question_en' => 'Vraag (Engels)',
+    'answer_en' => 'Antwoord (Engels)',
     'search' => 'Zoeken...',
     'add_new' => 'Nieuwe FAQ toevoegen',
     'edit' => 'Bewerken',
@@ -18,6 +22,7 @@ return [
     'actions'=> 'Acties',
     'add'=> 'Nieuwe FAQ toevoegen',
     'delete_confirm'=> 'Wil je deze veelgestelde vraag verwijderen?',
-    'translations'=> 'vertalingen',
+    'translations'=> 'Vertalingen',
+    'add_translation' => 'Vertaling toevoegen',
 
 ];

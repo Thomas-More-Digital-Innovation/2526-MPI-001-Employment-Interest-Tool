@@ -83,63 +83,34 @@
             <form wire:submit.prevent="save" class="space-y-6">
                 <div class="space-y-4">
                     <div>
-                        <flux:label for="question">{{ __('faq.question') }}</flux:label>
-                        <flux:input id="question" type="text" wire:model.defer="form.question" required />
-                        @error('form.question')
+                        <flux:label for="question_nl">{{ __('faq.question_nl') }}</flux:label>
+                        <flux:textarea id="question_nl" wire:model.defer="form.question_nl" required />
+                        @error('form.question_nl')
                             <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
                         @enderror
                     </div>
                     <div>
-                        <flux:label for="answer">{{ __('faq.answer') }}</flux:label>
-                        <flux:textarea id="answer" wire:model.defer="form.answer" required />
-                        @error('form.answer')
+                        <flux:label for="answer_nl">{{ __('faq.answer_nl') }}</flux:label>
+                        <flux:textarea id="answer_nl" wire:model.defer="form.answer_nl" required />
+                        @error('form.answer_nl')
+                            <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div>
+                        <flux:label for="question_en">{{ __('faq.question_en') }}</flux:label>
+                        <flux:textarea id="question_en" wire:model.defer="form.question_en" required />
+                        @error('form.question_en')
+                            <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div>
+                        <flux:label for="answer_en">{{ __('faq.answer_en') }}</flux:label>
+                        <flux:textarea id="answer_en" wire:model.defer="form.answer_en" required />
+                        @error('form.answer_en')
                             <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
-
-                <div class="space-y-6">
-                    <h3 class="text-lg font-semibold mb-2">{{ __('faq.translations') }}</h3>
-
-                    <div class="flex items-center gap-2 mb-4">
-                        <flux:select
-                            id="new-translation-language"
-                            wire:model="newTranslationLanguage">
-                            <option value="" disabled selected>{{ __('interestfield.select_language') }}</option>
-                            @foreach ($availableLanguages as $languageCode => $languageName)
-                                 @if (!isset($form['translations'][$languageCode]))
-                                    <option value="{{ $languageCode }}">
-                                        {{ $languageName }}
-                                    </option>
-                                @endif
-                            @endforeach
-                        </flux:select>
-                        <flux:button type="button" wire:click="addTranslation" class="bg-color-mpi">
-                            {{ __('Add translation') }}
-                        </flux:button>
-                    </div>
-
-                    @foreach ($form['translations'] as $langId => $translation)
-                        <div class="border rounded p-4 mb-2">
-                            <div class="font-bold mb-2">{{ $availableLanguages[$langId] ?? $langId }}</div>
-                            <div class="mb-2">
-                                <flux:label for="translation-question-{{ $langId }}">{{ __('faq.question') }} ({{ $availableLanguages[$langId] ?? $langId }})</flux:label>
-                                <flux:input id="translation-question-{{ $langId }}" type="text" wire:model.defer="form.translations.{{ $langId }}.question" required />
-                                @error("form.translations.{$langId}.question")
-                                    <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div>
-                                <flux:label for="translation-answer-{{ $langId }}">{{ __('faq.answer') }} ({{ $availableLanguages[$langId] ?? $langId }})</flux:label>
-                                <flux:textarea id="translation-answer-{{ $langId }}" wire:model.defer="form.translations.{{ $langId }}.answer" required />
-                                @error("form.translations.{$langId}.answer")
-                                    <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
                 <div class="flex justify-end space-x-2 rtl:space-x-reverse">
                     <flux:modal.close>
                         <flux:button type="button" variant="filled">
