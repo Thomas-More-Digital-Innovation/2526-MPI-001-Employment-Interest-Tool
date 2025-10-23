@@ -3,7 +3,7 @@
     class="max-w-3xl">
     <div class="space-y-6">
         <flux:heading size="lg">
-            {{ $mode === 'edit' ? __('manage-mentors.editMentor') : __('manage-mentors.addMentor') }}
+            {{ $mode === 'edit' ? __('manage-mentors.EditMentor') : __('manage-mentors.addMentor') }}
         </flux:heading>
 
         <form wire:submit.prevent="save" class="space-y-6">
@@ -101,7 +101,7 @@
                 <flux:button
                     type="submit"
                     variant="primary">
-                    {{ $editingId ? __('manage-mentors.SaveChanges') : __('manage-mentors.CreateMentor') }}
+                    {{ $editingId ? __('Save') : __('manage-mentors.CreateMentor') }}
                 </flux:button>
             </div>
         </form>

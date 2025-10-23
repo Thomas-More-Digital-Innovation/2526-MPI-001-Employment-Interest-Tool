@@ -5,6 +5,7 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Test\Test;
+use App\Livewire\joinus;
 use App\Livewire\Test\TestContentOverview;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,8 @@ Route::get('/login', function () {
     // reroute to home page
     return redirect()->route('home');
 });
+
+Route::get('/organisation/join', joinus::class)->name('organisation.joinus');
 
 
 Route::get('/locale/{locale}', function ($locale) {
@@ -88,6 +91,8 @@ Route::middleware(['auth'])->group(function () {
         Route::view('superadmin/interest-field-manager', view: 'roles.superadmin.interest-field-manager')->name('superadmin.interest-field-manager');
         Route::view('superadmin/organisations-manager', view: 'roles.superadmin.organisations-manager')->name('superadmin.organisations-manager');
         Route::view('superadmin/admins-manager', view: 'roles.superadmin.admins-manager')->name('superadmin.admins-manager');
+        Route::view('superadmin/faq-manager', view: 'roles.superadmin.faq-manager')->name('superadmin.faq-manager');
+
         Route::view('superadmin/languages-manager', view: 'roles.superadmin.languages-manager')->name('superadmin.languages-manager');
     });
 
