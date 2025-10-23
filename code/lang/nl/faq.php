@@ -17,4 +17,7 @@ return [
     'success_deleted' => 'FAQ succesvol verwijderd.',
     'actions'=> 'Acties',
     'add'=> 'Nieuwe FAQ toevoegen',
+    'delete_confirm'=> 'Wil je deze veelgestelde vraag verwijderen?',
+    'translations'=> 'vertalingen',
+
 ];

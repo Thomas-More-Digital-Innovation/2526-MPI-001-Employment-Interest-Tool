@@ -5,7 +5,6 @@ return [
     'question' => 'Question',
     'answer' => 'Answer',
     'search' => 'Search...',
-
     'edit' => 'Edit',
     'delete' => 'Delete',
     'save' => 'Save',
@@ -17,4 +16,6 @@ return [
     'success_deleted' => 'FAQ deleted successfully.',
     'actions'=> 'Actions',
     'add'=> 'Add new FAQ',
+    'delete_confirm'=> 'Do you want to delete this frequently asked question?',
+    'translations'=> 'translations',
 ];

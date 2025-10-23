@@ -9,6 +9,7 @@ class FrequentlyAskedQuestionTranslation extends Model
     protected $table = 'frequently_asked_question_translation';
 
     protected $fillable = [
+        'frequently_asked_question_id',
         'language_id',
         'question',
         'answer',

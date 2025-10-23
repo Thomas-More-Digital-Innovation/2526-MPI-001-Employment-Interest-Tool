@@ -29,16 +29,38 @@ class FaqManager extends Component
                 'question' => '',
                 'answer' => '',
             ];
+            // If editing an existing FAQ, persist the translation row immediately
+            if ($this->editingId) {
+                $languageId = Language::where('language_code', $langId)->value('language_id');
+                if ($languageId) {
+                    FrequentlyAskedQuestionTranslation::create([
+                        'frequently_asked_question_id' => $this->editingId,
+                        'language_id' => $languageId,
+                        'language_code' => $langId,
+                        'question' => '',
+                        'answer' => '',
+                    ]);
+                    // store language_id so save() can skip lookup
+                    $this->form['translations'][$langId]['language_id'] = $languageId;
+                }
+            }
         }
         $this->newTranslationLanguage = '';
     }
 
     protected function rules(): array
     {
-        return [
+        $rules = [
             'form.question' => 'required|string|max:255',
             'form.answer' => 'required|string|max:2000',
         ];
+
+        foreach (array_keys($this->form['translations'] ?? []) as $langCode) {
+            $rules["form.translations.{$langCode}.question"] = 'required|string|max:255';
+            $rules["form.translations.{$langCode}.answer"] = 'required|string|max:2000';
+        }
+
+        return $rules;
     }
 
     public function startCreate()
@@ -58,7 +80,8 @@ class FaqManager extends Component
         $this->form['translations'] = [];
         $this->loadLanguages();
         foreach ($faq->translations as $translation) {
-            $this->form['translations'][$translation->language_id] = [
+            $this->form['translations'][$translation->language->language_code ?? $translation->language_id] = [
+                'language_id' => $translation->language_id,
                 'question' => $translation->question,
                 'answer' => $translation->answer,
             ];
@@ -80,14 +103,16 @@ class FaqManager extends Component
                 'question' => $this->form['question'],
                 'answer' => $this->form['answer'],
             ]);
-            $this->editingId = $faq->frequently_asked_question_id;
         }
-        // Save translations
-        foreach ($this->form['translations'] as $language_id => $data) {
+
+        //Save translations 
+        foreach ($this->form['translations'] as $languageCode => $data) {
+            $languageId = $data['language_id'] ?? Language::where('language_code', $languageCode)->value('language_id');
+
             FrequentlyAskedQuestionTranslation::updateOrCreate(
                 [
-                    'frequently_asked_question_id' => $this->editingId,
-                    'language_id' => $language_id,
+                    'frequently_asked_question_id' => $faq->frequently_asked_question_id,
+                    'language_id' => $languageId,
                 ],
                 [
                     'question' => $data['question'],
@@ -95,8 +120,9 @@ class FaqManager extends Component
                 ]
             );
         }
-        $this->resetFormState();
         $this->dispatch('modal-close', name: 'create-faq-form');
+        $this->resetFormState();
+
     }
     public function loadLanguages()
     {
@@ -110,13 +136,40 @@ class FaqManager extends Component
         $this->dispatch('modal-open', name: 'delete-faq-confirmation');
     }
 
+    public function removeTranslation(string $languageCode): void
+    {
+        if (isset($this->form['translations'][$languageCode])) {
+            unset($this->form['translations'][$languageCode]);
+
+            if ($this->editingId) {
+                $languageId = Language::where('language_code', $languageCode)->value('language_id');
+                if ($languageId) {
+                    FrequentlyAskedQuestionTranslation::where('frequently_asked_question_id', $this->editingId)
+                        ->where('language_id', $languageId)
+                        ->delete();
+                }
+            }
+
+            session()->flash('status', [
+                'message' => __('faq.translation_removed_success'),
+                'type' => 'success',
+            ]);
+        }
+    }
+
+    public function updatedNewTranslationLanguage($value): void
+    {
+        $this->newTranslationLanguage = is_string($value) && array_key_exists($value, $this->availableLanguages)
+            ? $value
+            : '';
+    }
+
     public function deleteFaq()
     {
         Faq::where('frequently_asked_question_id', $this->editingId)->firstOrFail()->delete();
         $this->resetFormState();
         $this->dispatch('modal-close', name: 'delete-faq-confirmation');
     }
-
     public function resetFormState()
     {
         $this->form = [

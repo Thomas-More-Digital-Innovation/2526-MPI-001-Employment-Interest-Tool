@@ -124,11 +124,17 @@
                             <div class="font-bold mb-2">{{ $availableLanguages[$langId] ?? $langId }}</div>
                             <div class="mb-2">
                                 <flux:label for="translation-question-{{ $langId }}">{{ __('faq.question') }} ({{ $availableLanguages[$langId] ?? $langId }})</flux:label>
-                                <flux:input id="translation-question-{{ $langId }}" type="text" wire:model.defer="form.translations.{{ $langId }}.question" />
+                                <flux:input id="translation-question-{{ $langId }}" type="text" wire:model.defer="form.translations.{{ $langId }}.question" required />
+                                @error("form.translations.{$langId}.question")
+                                    <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div>
                                 <flux:label for="translation-answer-{{ $langId }}">{{ __('faq.answer') }} ({{ $availableLanguages[$langId] ?? $langId }})</flux:label>
-                                <flux:textarea id="translation-answer-{{ $langId }}" wire:model.defer="form.translations.{{ $langId }}.answer" />
+                                <flux:textarea id="translation-answer-{{ $langId }}" wire:model.defer="form.translations.{{ $langId }}.answer" required />
+                                @error("form.translations.{$langId}.answer")
+                                    <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     @endforeach
@@ -154,7 +160,7 @@
         class="max-w-md">
         <div class="space-y-6">
             <flux:heading size="lg">
-                {{ __('faq.delete_heading') }}
+                {{ __('faq.delete') }}
             </flux:heading>
             <p>{{ __('faq.delete_confirm') }}</p>
             <div class="flex justify-end space-x-2 rtl:space-x-reverse">
