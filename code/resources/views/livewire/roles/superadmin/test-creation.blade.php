@@ -174,7 +174,7 @@ $isExternalLink =
                                                     <div class="text-xs text-zinc-500 dark:text-zinc-400">
                                                         @if ($hasContent)
                                                             <span class="text-green-600 dark:text-green-400">
-                                                                ✓
+                                                                <flux:icon name="check" class="w-4 h-4 inline-block text-green-600 dark:text-green-400" />
                                                                 @if ($hasTitle)
                                                                     {{ __('testcreation.title_label') }}
                                                                 @endif
