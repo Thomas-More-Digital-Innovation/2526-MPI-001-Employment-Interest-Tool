@@ -331,30 +331,21 @@
                     /**
                      * Clear all audio data
                      */
-                    async clearAll() {
+                    clearAll() {
                         console.log('clearAll called');
+                        console.log('wireId:', this.wireId);
+                        console.log('recorderId:', this.recorderId);
                         
                         // Try to find the Livewire component
-                        let wireComponent = Livewire.find(this.wireId);
-                        
-                        // If not found, try using $wire from the parent element
-                        if (!wireComponent) {
-                            console.log('Trying to access $wire from DOM');
-                            const element = document.querySelector(`[wire\\:id="${this.wireId}"]`);
-                            if (element && element.__livewire) {
-                                wireComponent = element.__livewire;
-                            }
-                        }
+                        const wireComponent = Livewire.find(this.wireId);
+                        console.log('wireComponent found:', wireComponent);
                         
                         if (wireComponent) {
                             console.log('Calling clearSound on Livewire component');
-                            try {
-                                await wireComponent.call('clearSound');
-                            } catch (error) {
-                                console.error('Error calling clearSound:', error);
-                            }
+                            wireComponent.clearSound();
                         } else {
-                            console.error('Livewire component not found:', this.wireId);
+                            console.error('Livewire component not found with ID:', this.wireId);
+                            console.log('Available Livewire components:', Object.keys(Livewire.all()));
                         }
                     },
 
