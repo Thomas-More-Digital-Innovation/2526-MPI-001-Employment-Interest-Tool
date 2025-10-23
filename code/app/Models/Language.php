@@ -20,7 +20,7 @@ class Language extends Model
     // Get languages that are enabled
     public static function getEnabledLanguages()
     {
-        return self::where('enabled', true)->get();
+        return self::where('enabled', true)->get()->sortBy('language_name');
     }
 
     // Relationships

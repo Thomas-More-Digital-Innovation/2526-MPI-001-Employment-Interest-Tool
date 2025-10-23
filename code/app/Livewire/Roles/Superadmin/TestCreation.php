@@ -48,7 +48,7 @@ class TestCreation extends Component
         $this->interestFields = InterestField::all();
         
         // Fetch all enabled languages
-        $this->languages = Language::getEnabledLanguages();
+        $this->languages = Language::getEnabledLanguages()->where('language_code', '!=', 'nl');
         
         // Set default selected language to the first enabled language
         $this->selectedLanguage = $this->languages->first()?->language_id;
