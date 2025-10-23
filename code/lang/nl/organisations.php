@@ -32,4 +32,7 @@ return [
     'expired' => 'Verlopen',
     'actions' => 'Acties',
     'tests' => 'Testen'
+    ,
+    // totals
+    'totals' => '{0}Geen organisaties|{1}:count organisatie|[2,*]:count organisaties',
 ];

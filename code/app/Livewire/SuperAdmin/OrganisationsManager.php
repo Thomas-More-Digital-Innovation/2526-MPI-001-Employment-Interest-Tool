@@ -19,6 +19,8 @@ class OrganisationsManager extends BaseCrudComponent
      * @var \Illuminate\Database\Eloquent\Collection|array
      */
     public $availableTests = [];
+    // cached counts for view (computed on render)
+    public int $totalOrganisations = 0;
 
     protected function view(): string
     {
@@ -107,7 +109,8 @@ class OrganisationsManager extends BaseCrudComponent
     public function toggleShowInactivated(): void
     {
         $this->showInactivated = ! $this->showInactivated;
-        $this->resetPage();
+        $this->resetPage('activePage');
+        $this->resetPage('inactivePage');
     }
 
     /**
@@ -119,11 +122,19 @@ class OrganisationsManager extends BaseCrudComponent
     }
 
     /**
+     * Paginated active records with search applied.
+     */
+    public function getRecordsProperty()
+    {
+        return $this->applySearch($this->baseQuery())->paginate($this->perPage(), ['*'], 'activePage');
+    }
+
+    /**
      * Paginated inactive records with search applied.
      */
     public function getInactivatedRecordsProperty()
     {
-        return $this->applySearch($this->inactivatedQuery())->paginate($this->perPage());
+        return $this->applySearch($this->inactivatedQuery())->paginate($this->perPage(), ['*'], 'inactivePage');
     }
 
     protected function findRecord(int $id)
@@ -152,6 +163,18 @@ class OrganisationsManager extends BaseCrudComponent
             'expire_date' => $record->expire_date ? $record->expire_date->format('Y-m-d') : null,
             'tests' => $testsMap,
         ];
+    }
+
+    /**
+     * Compute totals used by the view. Called by the view layer.
+     */
+    protected function viewData(): array
+    {
+        $this->totalOrganisations = Organisation::query()->count();
+
+        return array_merge(parent::viewData(), [
+            'totalOrganisations' => $this->totalOrganisations,
+        ]);
     }
 
     protected function rules(): array

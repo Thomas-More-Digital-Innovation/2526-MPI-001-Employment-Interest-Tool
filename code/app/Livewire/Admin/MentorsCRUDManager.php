@@ -114,32 +114,12 @@ class MentorsCRUDManager extends BaseCrudComponent
 
     public function startCreate(): void
     {
-        $this->ensureMentorContext();
-
-        $this->resetFormState();
-        $this->formModalMode = 'create';
-        $this->formModalVisible = true;
-
-        $this->dispatch('modal-open', name: 'mentor-client-form');
-
-        $this->dispatch('crud-form-opened', mode: 'create');
+        $this->dispatch('open-mentor-form');
     }
 
     public function startEdit(int $recordId): void
     {
-        $this->ensureMentorContext();
-
-        $record = $this->findRecord($recordId);
-        $this->editingId = $recordId;
-        $this->form = $this->transformRecordToForm($record);
-        $this->formModalMode = 'edit';
-        $this->formModalVisible = true;
-
-        $this->resetErrorBag();
-        $this->resetValidation();
-
-        $this->dispatch('modal-open', name: 'mentor-client-form');
-        $this->dispatch('crud-form-opened', mode: 'edit');
+        $this->dispatch('open-mentor-form', mentorId: $recordId);
     }
 
     public function cancelForm(): void
@@ -151,7 +131,7 @@ class MentorsCRUDManager extends BaseCrudComponent
     public function closeFormModal(): void
     {
         $this->resetFormState();
-        $this->dispatch('modal-close', name: 'mentor-client-form');
+        $this->dispatch('modal-close', name: 'admin-mentor-form');
     }
 
     /**

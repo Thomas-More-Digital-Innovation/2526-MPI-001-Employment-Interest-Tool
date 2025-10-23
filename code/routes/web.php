@@ -5,6 +5,7 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Test\Test;
+use App\Livewire\joinus;
 use App\Livewire\Test\TestContentOverview;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,8 @@ Route::get('/login', function () {
     // reroute to home page
     return redirect()->route('home');
 });
+
+Route::get('/organisation/join', joinus::class)->name('organisation.joinus');
 
 
 Route::get('/locale/{locale}', function ($locale) {

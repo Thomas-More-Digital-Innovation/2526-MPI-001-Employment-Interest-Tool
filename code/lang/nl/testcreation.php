@@ -24,6 +24,7 @@ return [
     'uploading' => 'Bezig met uploaden...',
     'submit' => 'Verzenden',
     'questions' => 'Vragen',
+    'randomize_questions' => 'Vragen Willekeurig',
     'untitled' => 'Zonder titel',
     'question_title' => ':number - :title',
     'question_undefined' => ':number - Niet gedefinieerd',

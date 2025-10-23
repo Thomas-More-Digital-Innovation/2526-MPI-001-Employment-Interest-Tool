@@ -200,11 +200,12 @@ class AdminClientsManager extends MentorClientsManager
     {
         return $clients
             ->groupBy(fn(User $client) => $client->mentor_id ?? 0)
-            ->map(function (Collection $group): array {
+            ->map(function (Collection $group, $mentorId): array {
                 /** @var User|null $mentor */
                 $mentor = $group->first()->mentor;
 
                 return [
+                    'mentor_id' => $mentorId,
                     'mentor' => $mentor,
                     'mentor_name' => $mentor
                         ? $this->displayNameForUser($mentor)

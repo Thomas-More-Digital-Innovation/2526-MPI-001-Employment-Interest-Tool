@@ -15,5 +15,6 @@ return [
     'editResearcher' => 'Wijzig onderzoeker',
     'researcherCanSignIn' => 'Onderzoeker kan inloggen',
     'createResearcher' => 'Maak onderzoeker',
-    'deleteResearcher' => 'Verwijder onderzoeker'
+    'deleteResearcher' => 'Verwijder onderzoeker',
+    'ResearcherCanSignIn' => 'Onderzoeker kan inloggen',
 ];

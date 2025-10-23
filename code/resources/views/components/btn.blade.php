@@ -10,6 +10,7 @@
     $variants = [
         'primary-user' => "bg-mpi hover:bg-mpi-500 text-white text-2xl px-6 py-4",
         'secondary-user' => "bg-mpi hover:bg-mpi-500 text-white text-xl px-6 py-4",
+        'secondary-admin' => "bg-mpi hover:bg-mpi-400 text-white text-xl px-6 py-4",
     ];
 
     $classes = $baseClasses . ' ' . ($variants[$variant] ?? $variants['primary']);
