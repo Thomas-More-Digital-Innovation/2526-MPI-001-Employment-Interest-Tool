@@ -112,6 +112,19 @@ class AdminClientFormModal extends Component
         $this->dispatch('modal-close', name: 'admin-client-form');
     }
 
+    public function requestDelete(): void
+    {
+        if (!$this->editingId) {
+            return;
+        }
+
+        // Close the form modal
+        $this->dispatch('modal-close', name: 'admin-client-form');
+        
+        // Notify parent to show delete confirmation
+        $this->dispatch('request-client-delete', clientId: $this->editingId);
+    }
+
     protected function resetForm(): void
     {
         $defaultLanguageId = Language::where('language_code', 'nl')->first()?->language_id
