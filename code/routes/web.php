@@ -91,6 +91,8 @@ Route::middleware(['auth'])->group(function () {
         Route::view('superadmin/interest-field-manager', view: 'roles.superadmin.interest-field-manager')->name('superadmin.interest-field-manager');
         Route::view('superadmin/organisations-manager', view: 'roles.superadmin.organisations-manager')->name('superadmin.organisations-manager');
         Route::view('superadmin/admins-manager', view: 'roles.superadmin.admins-manager')->name('superadmin.admins-manager');
+        Route::view('superadmin/faq-manager', view: 'roles.superadmin.faq-manager')->name('superadmin.faq-manager');
+
         Route::view('superadmin/languages-manager', view: 'roles.superadmin.languages-manager')->name('superadmin.languages-manager');
     });
 

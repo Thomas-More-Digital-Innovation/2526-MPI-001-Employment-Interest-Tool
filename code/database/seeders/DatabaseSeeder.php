@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Faq;
+use App\Models\FaqTranslation;
 use App\Models\Role;
 use App\Models\OrganisationTest;
 use Illuminate\Database\Seeder;
@@ -130,36 +131,65 @@ class DatabaseSeeder extends Seeder
         ]);
         $client->roles()->attach($clientRole);
 
-        Faq::factory()->create(
-            [
-                'question' => 'Wat is de intrestetest?',
-                'answer' => 'De interesse test is een hulpmiddel om de interesses en voorkeuren van een persoon in kaart te brengen.'
-            ]
-        );
-        Faq::factory()->create(
-            [
-                'question' => 'Voor wie is de test bedoeld?',
-                'answer' => 'De test is hoofdzakelijk bedoeld voor personen met een intellectuele beperking.'
-            ]
-        );
-        Faq::factory()->create(
-            [
-                'question' => 'Waarom zou ik deze test doen?',
-                'answer' => 'De test helpt bij het identificeren van carrièremogelijkheden.'
-            ]
-        );
-        Faq::factory()->create(
-            [
-                'question' => 'Hoe kan ik mij registreren als organisatie?',
-                'answer' => 'Neem contact op met Raf.Hensbergen@mpi-oosterlo.be voor een overleg voor een registratie.'
-            ]
-        );
-        Faq::factory()->create(
-            [
-                'question' => 'Hoe kan ik mij registreren als gebruiker?',
-                'answer' => 'Vraag je mentor of begeleider om een account voor jou aan te maken.'
-            ]
-        );
+        $faq1 = Faq::factory()->create([
+            'question' => 'Wat is de intrestetest?',
+            'answer' => 'De interesse test is een hulpmiddel om de interesses en voorkeuren van een persoon in kaart te brengen.'
+        ]);
+
+        FaqTranslation::create([
+            'frequently_asked_question_id' => $faq1->frequently_asked_question_id,
+            'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
+            'question' => 'What is the interest test?',
+            'answer' => 'The interest test is a tool to map a person\'s interests and preferences.'
+        ]);
+
+        $faq2 = Faq::factory()->create([
+            'question' => 'Voor wie is de test bedoeld?',
+            'answer' => 'De test is hoofdzakelijk bedoeld voor personen met een intellectuele beperking.'
+        ]);
+
+        FaqTranslation::create([
+            'frequently_asked_question_id' => $faq2->frequently_asked_question_id,
+            'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
+            'question' => 'Who is the test intended for?',
+            'answer' => 'The test is primarily intended for people with an intellectual disability.'
+        ]);
+
+        $faq3 = Faq::factory()->create([
+            'question' => 'Waarom zou ik deze test doen?',
+            'answer' => 'De test helpt bij het identificeren van carrièremogelijkheden.'
+        ]);
+
+        FaqTranslation::create([
+            'frequently_asked_question_id' => $faq3->frequently_asked_question_id,
+            'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
+            'question' => 'Why should I take this test?',
+            'answer' => 'The test helps in identifying career opportunities.'
+        ]);
+
+        $faq4 = Faq::factory()->create([
+            'question' => 'Hoe kan ik mij registreren als organisatie?',
+            'answer' => 'Neem contact op met Raf.Hensbergen@mpi-oosterlo.be voor een overleg voor een registratie.'
+        ]);
+
+        FaqTranslation::create([
+            'frequently_asked_question_id' => $faq4->frequently_asked_question_id,
+            'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
+            'question' => 'How can I register as an organisation?',
+            'answer' => 'Contact Raf.Hensbergen@mpi-oosterlo.be to discuss registration.'
+        ]);
+
+        $faq5 = Faq::factory()->create([
+            'question' => 'Hoe kan ik mij registreren als gebruiker?',
+            'answer' => 'Vraag je mentor of begeleider om een account voor jou aan te maken.'
+        ]);
+
+        FaqTranslation::create([
+            'frequently_asked_question_id' => $faq5->frequently_asked_question_id,
+            'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
+            'question' => 'How can I register as a user?',
+            'answer' => 'Ask your mentor or caregiver to create an account for you.'
+        ]);
 
         // Run the TestSeeder to populate test and question data
         $this->call(TestSeederOne::class);

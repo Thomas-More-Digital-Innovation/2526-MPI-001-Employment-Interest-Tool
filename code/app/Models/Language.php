@@ -33,4 +33,8 @@ class Language extends Model
     {
         return $this->hasMany(InterestFieldTranslation::class, 'language_id', 'language_id');
     }
+    public function faqTranslations()
+    {
+    return $this->hasMany(FrequentlyAskedQuestionTranslation::class, 'language_id');
+    }
 }
