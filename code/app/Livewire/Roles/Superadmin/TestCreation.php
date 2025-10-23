@@ -9,10 +9,16 @@ use App\Models\InterestField;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 
 class TestCreation extends Component
 {
     use WithFileUploads; // Added the WithFileUploads trait to handle file uploads
+
+    protected $listeners = [
+        'sound-updated' => 'handleSoundUpdated',
+        'sound-cleared' => 'handleSoundCleared',
+    ];
 
     // Creating a placeholder variable to pass interest fields to the test-creation page
     public $interestFields;
@@ -332,6 +338,49 @@ class TestCreation extends Component
 
         // Keep selectedQuestion an int
         $this->selectedQuestion = $newSelectedIndex;
+    }
+
+    /**
+     * Handle sound updated event from AudioRecorder component
+     */
+    public function handleSoundUpdated($data): void
+    {
+        $wireModel = $data['wireModel'] ?? null;
+        $filename = $data['filename'] ?? null;
+
+        if (!$wireModel || !$filename) return;
+
+        // Extract question index from wire model (e.g., "questions.0.uploaded_sound")
+        if (preg_match('/questions\.(\d+)\.uploaded_sound/', $wireModel, $matches)) {
+            $index = (int) $matches[1];
+            
+            if (isset($this->questions[$index])) {
+                $this->questions[$index]['sound_link'] = $filename;
+                $this->questions[$index]['has_audio'] = true;
+                $this->updateCircleFill($index);
+            }
+        }
+    }
+
+    /**
+     * Handle sound cleared event from AudioRecorder component
+     */
+    public function handleSoundCleared($data): void
+    {
+        $wireModel = $data['wireModel'] ?? null;
+
+        if (!$wireModel) return;
+
+        // Extract question index from wire model
+        if (preg_match('/questions\.(\d+)\.uploaded_sound/', $wireModel, $matches)) {
+            $index = (int) $matches[1];
+            
+            if (isset($this->questions[$index])) {
+                $this->questions[$index]['sound_link'] = null;
+                $this->questions[$index]['has_audio'] = false;
+                $this->updateCircleFill($index);
+            }
+        }
     }
 
     public function clearSound(int $index): void

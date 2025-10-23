@@ -65,69 +65,23 @@
                                 </flux:modal.trigger>
                             </div>
                         </div>
-                        {{-- audio box --}}
+                        {{-- Audio Recorder Component --}}
                         @php
-                            // Retrieve the sound name (the filename stored in DB)
+                            // Retrieve the sound name (the filename stored in DB) - only for initial load
                             $soundName = $questions[$selectedQuestion]['sound_link'] ?? null;
                             // Generate the full URL to the sound file if the name is set exists
                             $soundUrl = $soundName ? route('question.sound', ['filename' => $soundName]) : null;
-                            // Create a unique key that includes both the question index and whether it has audio
-                            $recorderKey = "recorder-{$selectedQuestion}-" . ($soundUrl ? 'audio' : 'noaudio');
+                            // Create a stable unique key that only depends on the question index
+                            $recorderKey = "recorder-{$selectedQuestion}";
                         @endphp
-                        <div x-data="recorder({ qid: {{ $selectedQuestion }}, existingUrl: @js($soundUrl) })" x-init="init()"
-                            wire:key="{{ $recorderKey }}" wire:ignore>
+                        <div>
+                            {{-- Component uses existingAudioUrl only on mount, then events for updates --}}
+                            <livewire:components.audio-recorder 
+                                :key="$recorderKey"
+                                :existingAudioUrl="$soundUrl"
+                                :wireModel="'questions.'.$selectedQuestion.'.uploaded_sound'"
+                                :recorderId="$recorderKey" />
 
-                            {{-- The container for the recorder, initialises the recorder in alpine --}}
-                            <div class="flex items-center mt-3 w-full gap-2 inline-flex flex-wrap">
-                                <div>
-                                    <!-- Record controls -->
-                                    <flux:button type="button" @click="start" x-show="canRecord && !isRecording"
-                                        variant="primary" color="red" icon="microphone">
-                                        {{ __('testcreation.record') }}
-                                    </flux:button>
-
-                                    <flux:button type="button" @click="stop" x-show="canRecord && isRecording"
-                                        variant="primary" icon="stop">
-                                        {{ __('testcreation.stop') }}
-                                    </flux:button>
-
-                                    <!-- Play/Pause -->
-                                    <flux:button type="button" @click="togglePlay" x-show="hasAudio && !isPlaying"
-                                        variant="primary" color="blue" icon="play">
-                                        {{ __('testcreation.play') }}
-                                    </flux:button>
-
-                                    <flux:button type="button" @click="togglePlay" x-show="hasAudio && isPlaying"
-                                        variant="primary" color="blue" icon="pause">
-                                        {{ __('testcreation.pause') }}
-                                    </flux:button>
-
-                                    <!-- Clear the sound (re-enables recording) -->
-                                    <flux:button type="button" @click="clearAll" x-show="hasAudio || !canRecord"
-                                        icon="trash">
-                                        {{ __('testcreation.clear') }}
-                                    </flux:button>
-                                    <!-- Status/Error label -->
-                                    {{-- <span class="text-sm text-gray-600 dark:text-gray-300 ml-3" x-text="label"></span> --}}
-                                    <!-- Hidden audio element for making playing audio possible -->
-                                    <audio x-ref="audio" preload="metadata"></audio>
-                                </div>
-                                <span> {{ __('testcreation.or') }}</span>
-                                <div>
-                                    <flux:button type="button" icon="speaker-wave"
-                                        onclick="document.getElementById('Audio-Uploader').click()">
-                                        {{ __('testcreation.choose_sound') }}
-                                    </flux:button>
-                                    <input id="Audio-Uploader" type="file"
-                                        wire:model="questions.{{ $selectedQuestion }}.uploaded_sound"
-                                        accept=".mp3,audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm"
-                                        class="hidden" x-on:change="label = '{{ __('testcreation.uploading') }}';"
-                                        {{-- x-bind:disabled="!canRecord"> --}} />
-                                    @error('questions.' . $selectedQuestion . '.uploaded_sound')
-                                        <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
 
                             {{-- Container for uploading media --}}
 
@@ -369,181 +323,8 @@
             </div>
         </div>
     </flux:modal>
-
-    @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
-        <script>
-            function recorder(cfg) {
-                return {
-                    qid: cfg.qid,
-                    existingUrl: cfg.existingUrl ?? null,
-
-                    isRecording: false,
-                    isPlaying: false,
-                    hasAudio: false,
-                    canRecord: true,
-
-                    label: @js(__('testcreation.can_record')),
-
-
-                    _stream: null,
-                    _rec: null,
-                    _chunks: [],
-
-                    init() {
-                        // Logic for loading existing audio if available in the DB
-                        if (this.existingUrl) {
-                            this._setAudio(this.existingUrl);
-                            this.label = @js(__('testcreation.audio_loaded'));
-                            this.hasAudio = true;
-                            this.canRecord = false;
-                        } else {
-                            this.hasAudio = false;
-                            this.canRecord = true;
-                        }
-
-
-                        document.addEventListener('livewire:load', () => this._wireEvents());
-                        this._wireEvents();
-                    },
-
-                    _wireEvents() {
-                        // Avoid binding multiple times
-                        window.removeEventListener('sound-updated', this._onSoundUpdatedBound);
-                        window.removeEventListener('sound-cleared', this._onSoundClearedBound);
-                        // Bind the events
-                        this._onSoundUpdatedBound = (e) => {
-                            const {
-                                index,
-                                url
-                            } = e.detail || {};
-                            if (index === this.qid && url) {
-                                this._setAudio(url);
-                                this.label = @js(__('testcreation.audio_ready'));
-                                this.hasAudio = true;
-                                this.canRecord = false;
-                            }
-                        };
-                        // Clear event
-                        this._onSoundClearedBound = (e) => {
-                            const {
-                                index
-                            } = e.detail || {};
-                            if (index === this.qid) {
-                                this._clearAudioEl();
-                                this.label = @js(__('testcreation.record_cleared'));
-                                this.hasAudio = false;
-                                this.canRecord = true;
-                            }
-                        };
-                        // Add the event listeners
-                        window.addEventListener('sound-updated', this._onSoundUpdatedBound);
-                        window.addEventListener('sound-cleared', this._onSoundClearedBound);
-                    },
-                    // Start recording
-                    async start() {
-                        if (!this.canRecord || this.isRecording) return;
-                        // Different sound bytes are combined into this array/blob :)
-                        this._chunks = [];
-                        const stream = await navigator.mediaDevices.getUserMedia({
-                            audio: true
-                        });
-                        this._stream = stream;
-                        // Audio recording magic
-                        this._rec = new MediaRecorder(stream);
-                        this._rec.ondataavailable = (ev) => {
-                            if (ev.data.size) this._chunks.push(ev.data);
-                        };
-                        this._rec.onstop = () => {
-                            this._onStopRecording();
-                        };
-                        this._rec.start();
-                        this.isRecording = true;
-                        this.label = @js(__('testcreation.recording'));
-                    },
-                    // Stop recording
-                    stop() {
-                        if (!this.isRecording) return;
-                        this._rec.stop();
-                        this._stream.getTracks().forEach(t => t.stop());
-                        this.isRecording = false;
-                    },
-                    // Listener, after recording is stopped, save everything in a blob and upload it
-                    _onStopRecording() {
-                        const blob = new Blob(this._chunks, {
-                            type: 'audio/webm'
-                        });
-
-                        const localUrl = URL.createObjectURL(blob);
-                        this._setAudio(localUrl);
-                        this.hasAudio = true;
-                        this.isPlaying = false;
-
-
-                        const file = new File([blob], `rec_${Date.now()}.webm`, {
-                            type: 'audio/webm'
-                        });
-
-                        this.canRecord = false;
-                        this.label = @js(__('testcreation.uploading'));
-
-
-                        this.$wire.upload(`questions.${this.qid}.uploaded_sound`, file,
-                            () => {
-
-                                this.label = @js(__('testcreation.uploaded'));
-                            },
-                            (err) => {
-
-                                this.label = @js(__('testcreation.upload_failed'));
-                                this.canRecord = true;
-                                this.hasAudio = false;
-                                this._clearAudioEl();
-                                console.error(err);
-                            }
-                        );
-                    },
-                    // Play or pause the audio
-                    togglePlay() {
-                        const a = this.$refs.audio;
-                        if (!a || !this.hasAudio || !a.src) return;
-                        if (a.paused) {
-                            a.play();
-                            this.isPlaying = true;
-                            a.onended = () => {
-                                this.isPlaying = false;
-                            };
-                        } else {
-                            a.pause();
-                            this.isPlaying = false;
-                        }
-                    },
-                    // Clear the audio, re-enable recording
-                    async clearAll() {
-
-                        this.label = @js(__('testcreation.clearing'));
-                        await this.$wire.call('clearSound', this.qid);
-
-                    },
-                    // Set the audio element's source to the given URL (if gbiven)
-                    _setAudio(url) {
-                        const a = this.$refs.audio;
-                        if (!a) return;
-                        a.src = url;
-                        a.load();
-                        this.hasAudio = true;
-                    },
-                    // Clear the audio element's source and stop playback (edgecase i found)
-                    _clearAudioEl() {
-                        const a = this.$refs.audio;
-                        if (!a) return;
-                        a.pause();
-                        a.removeAttribute('src');
-                        a.load();
-                        this.isPlaying = false;
-                    },
-                }
-            }
-        </script>
-    @endpush
 </div>
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
+@endpush
