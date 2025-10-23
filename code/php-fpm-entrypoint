@@ -9,7 +9,7 @@ main() {
         prepare_storage
         wait_for_db
         run_migrations
-        optimize_app
+        apply_caches
         run_server "$@"
     fi
 }
@@ -56,9 +56,11 @@ run_migrations() {
     ./artisan migrate
 }
 
-optimize_app() {
-    ./artisan optimize:clear
-    ./artisan optimize
+apply_caches() {
+    ./artisan config:cache
+    ./artisan event:cache
+    ./artisan route:cache
+    # DO NOT cache views, this cause weird issues in deployment
 }
 
 run_server() {
