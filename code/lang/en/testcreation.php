@@ -51,4 +51,5 @@ return [
     'translated_description_label' => 'Translated Description',
     'translated_description_placeholder' => 'Enter translated description',
     'translated_audio_label' => 'Translated Audio',
+    'no_translation' => 'No translation yet',
 ];

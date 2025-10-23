@@ -51,4 +51,5 @@ return [
     'translated_description_label' => 'Vertaalde Beschrijving',
     'translated_description_placeholder' => 'Voer vertaalde beschrijving in',
     'translated_audio_label' => 'Vertaalde Audio',
+    'no_translation' => 'Nog geen vertaling',
 ];

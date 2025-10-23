@@ -87,55 +87,99 @@
                         <div class="mt-6 border-t border-zinc-300 dark:border-zinc-600 pt-4">
                             <flux:heading size="md" class="mb-3">{{ __('testcreation.translations') }}</flux:heading>
                             
-                            {{-- Language Tabs --}}
-                            <div class="flex gap-2 mb-4 border-b border-zinc-300 dark:border-zinc-600">
+                            {{-- Expandable Language Cards --}}
+                            <div class="space-y-3" x-data="{ 
+                                openLanguages: @js($languages->pluck('language_id')->toArray()) 
+                            }">
                                 @foreach($languages as $language)
-                                    <button
-                                        type="button"
-                                        wire:click="selectLanguage({{ $language->language_id }})"
-                                        class="px-4 py-2 -mb-px transition-colors
-                                            {{ $selectedLanguage == $language->language_id 
-                                                ? 'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold' 
-                                                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100' }}">
-                                        {{ $language->language_name }} ({{ strtoupper($language->language_code) }})
-                                    </button>
-                                @endforeach
-                            </div>
+                                    @php
+                                        $translationData = $questions[$selectedQuestion]['translations'][$language->language_id] ?? [];
+                                        $hasTitle = !empty($translationData['title']);
+                                        $hasDescription = !empty($translationData['description']);
+                                        $hasAudio = !empty($translationData['sound_link']);
+                                        $hasContent = $hasTitle || $hasDescription || $hasAudio;
+                                    @endphp
+                                    <div class="border border-zinc-300 dark:border-zinc-600 rounded-lg overflow-hidden">
+                                        {{-- Language Header (Always Visible) --}}
+                                        <button
+                                            type="button"
+                                            @click="openLanguages.includes({{ $language->language_id }}) 
+                                                ? openLanguages = openLanguages.filter(id => id !== {{ $language->language_id }})
+                                                : openLanguages.push({{ $language->language_id }})"
+                                            class="w-full px-4 py-3 flex items-center justify-between bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors">
+                                            <div class="flex items-center gap-3">
+                                                {{-- Language Flag/Icon --}}
+                                                <div class="w-8 h-8 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                                                    {{ strtoupper(substr($language->language_code, 0, 2)) }}
+                                                </div>
+                                                {{-- Language Name --}}
+                                                <div class="text-left">
+                                                    <div class="font-semibold text-zinc-900 dark:text-zinc-100">
+                                                        {{ $language->language_name }}
+                                                    </div>
+                                                    <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                                                        @if($hasContent)
+                                                            <span class="text-green-600 dark:text-green-400">
+                                                                ✓ 
+                                                                @if($hasTitle) {{ __('testcreation.title_label') }} @endif
+                                                                @if($hasDescription)@if($hasTitle), @endif {{ __('testcreation.description_label') }} @endif
+                                                                @if($hasAudio)@if($hasTitle || $hasDescription), @endif {{ __('testcreation.translated_audio_label') }} @endif
+                                                            </span>
+                                                        @else
+                                                            <span class="text-zinc-400">{{ __('testcreation.no_translation') }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- Expand/Collapse Icon --}}
+                                            <svg 
+                                                class="w-5 h-5 text-zinc-500 dark:text-zinc-400 transition-transform duration-200"
+                                                :class="{ 'rotate-180': openLanguages.includes({{ $language->language_id }}) }"
+                                                fill="none" 
+                                                stroke="currentColor" 
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                            </svg>
+                                        </button>
 
-                            {{-- Translation Content for Selected Language --}}
-                            @foreach($languages as $language)
-                                @if($selectedLanguage == $language->language_id)
-                                    <div class="space-y-3" wire:key="translation-{{ $selectedQuestion }}-{{ $language->language_id }}">
-                                        {{-- Translated Title --}}
-                                        <flux:input
-                                            wire:model.live.debounce.300ms="questions.{{ $selectedQuestion }}.translations.{{ $language->language_id }}.title"
-                                            placeholder="{{ __('testcreation.translated_title_placeholder') }}"
-                                            label="{{ __('testcreation.translated_title_label') }} ({{ $language->language_name }})"
-                                            type="text" />
-                                        
-                                        {{-- Translated Description --}}
-                                        <flux:textarea
-                                            wire:model.live.debounce.300ms="questions.{{ $selectedQuestion }}.translations.{{ $language->language_id }}.description"
-                                            placeholder="{{ __('testcreation.translated_description_placeholder') }}"
-                                            label="{{ __('testcreation.translated_description_label') }} ({{ $language->language_name }})" />
-                                        
-                                        {{-- Translated Audio Recorder --}}
-                                        @php
-                                            $translationSoundName = $questions[$selectedQuestion]['translations'][$language->language_id]['sound_link'] ?? null;
-                                            $translationSoundUrl = $translationSoundName ? route('question.sound', ['filename' => $translationSoundName]) : null;
-                                            $translationRecorderKey = "recorder-{$selectedQuestion}-lang-{$language->language_id}";
-                                        @endphp
-                                        <div>
-                                            <flux:label>{{ __('testcreation.translated_audio_label') }} ({{ $language->language_name }})</flux:label>
-                                            <livewire:components.audio-recorder 
-                                                :key="$translationRecorderKey"
-                                                :existingAudioUrl="$translationSoundUrl"
-                                                :wireModel="'questions.'.$selectedQuestion.'.translations.'.$language->language_id.'.uploaded_sound'"
-                                                :recorderId="$translationRecorderKey" />
+                                        {{-- Language Content (Collapsible) --}}
+                                        <div 
+                                            x-show="openLanguages.includes({{ $language->language_id }})"
+                                            x-collapse
+                                            class="p-4 bg-white dark:bg-zinc-800 space-y-3"
+                                            wire:key="translation-{{ $selectedQuestion }}-{{ $language->language_id }}">
+                                            
+                                            {{-- Translated Title --}}
+                                            <flux:input
+                                                wire:model.live.debounce.300ms="questions.{{ $selectedQuestion }}.translations.{{ $language->language_id }}.title"
+                                                placeholder="{{ __('testcreation.translated_title_placeholder') }}"
+                                                label="{{ __('testcreation.translated_title_label') }}"
+                                                type="text" />
+                                            
+                                            {{-- Translated Description --}}
+                                            <flux:textarea
+                                                wire:model.live.debounce.300ms="questions.{{ $selectedQuestion }}.translations.{{ $language->language_id }}.description"
+                                                placeholder="{{ __('testcreation.translated_description_placeholder') }}"
+                                                label="{{ __('testcreation.translated_description_label') }}" />
+                                            
+                                            {{-- Translated Audio Recorder --}}
+                                            @php
+                                                $translationSoundName = $questions[$selectedQuestion]['translations'][$language->language_id]['sound_link'] ?? null;
+                                                $translationSoundUrl = $translationSoundName ? route('question.sound', ['filename' => $translationSoundName]) : null;
+                                                $translationRecorderKey = "recorder-{$selectedQuestion}-lang-{$language->language_id}";
+                                            @endphp
+                                            <div>
+                                                <flux:label>{{ __('testcreation.translated_audio_label') }}</flux:label>
+                                                <livewire:components.audio-recorder 
+                                                    :key="$translationRecorderKey"
+                                                    :existingAudioUrl="$translationSoundUrl"
+                                                    :wireModel="'questions.'.$selectedQuestion.'.translations.'.$language->language_id.'.uploaded_sound'"
+                                                    :recorderId="$translationRecorderKey" />
+                                            </div>
                                         </div>
                                     </div>
-                                @endif
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
 
                         <div class="mt-4">
