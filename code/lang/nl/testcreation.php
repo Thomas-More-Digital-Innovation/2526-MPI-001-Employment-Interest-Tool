@@ -45,4 +45,10 @@ return [
     'incomplete_questions_list' => 'Onvolledige Vragen:',
     'question' => 'Vraag',
     'save_complete_questions' => 'Volledige Vragen Opslaan',
+    'translations' => 'Vertalingen',
+    'translated_title_label' => 'Vertaalde Titel',
+    'translated_title_placeholder' => 'Voer vertaalde titel in',
+    'translated_description_label' => 'Vertaalde Beschrijving',
+    'translated_description_placeholder' => 'Voer vertaalde beschrijving in',
+    'translated_audio_label' => 'Vertaalde Audio',
 ];

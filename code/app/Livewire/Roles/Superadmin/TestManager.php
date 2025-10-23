@@ -40,10 +40,28 @@ class TestManager extends Component
 
     public function loadTest(int $id)
     {
-        $test = Test::with('questions')->findOrFail($id);
+        $test = Test::with(['questions', 'questions.questionTranslations'])->findOrFail($id);
+
+        // Get all enabled languages to initialize empty translations
+        $languages = \App\Models\Language::getEnabledLanguages();
 
         // prepare array like TestCreation expects
-        $questions = $test->questions->map(function ($q, $i) {
+        $questions = $test->questions->map(function ($q, $i) use ($languages) {
+            // Initialize translations for all enabled languages
+            $translations = [];
+            foreach ($languages as $language) {
+                // Find existing translation for this language
+                $existingTranslation = $q->questionTranslations->firstWhere('language_id', $language->language_id);
+                
+                $translations[$language->language_id] = [
+                    'title' => $existingTranslation->question ?? '',
+                    'description' => $existingTranslation->image_description ?? '',
+                    'media_link' => $existingTranslation->media_link ?? null,
+                    'sound_link' => $existingTranslation->sound_link ?? null,
+                    'has_audio' => !empty($existingTranslation->sound_link),
+                ];
+            }
+
             return [
                 'question_number' => $i + 1,
                 'title' => $q->question ?? '',
@@ -52,6 +70,7 @@ class TestManager extends Component
                 'circleFill' => 'green',
                 'media_link' => $q->media_link ?? null,
                 'sound_link' => $q->sound_link ?? null,
+                'translations' => $translations,
             ];
         })->toArray();
 

@@ -81,8 +81,64 @@
                                 :existingAudioUrl="$soundUrl"
                                 :wireModel="'questions.'.$selectedQuestion.'.uploaded_sound'"
                                 :recorderId="$recorderKey" />
+                        </div>
 
+                        {{-- Language Translations Section --}}
+                        <div class="mt-6 border-t border-zinc-300 dark:border-zinc-600 pt-4">
+                            <flux:heading size="md" class="mb-3">{{ __('testcreation.translations') }}</flux:heading>
+                            
+                            {{-- Language Tabs --}}
+                            <div class="flex gap-2 mb-4 border-b border-zinc-300 dark:border-zinc-600">
+                                @foreach($languages as $language)
+                                    <button
+                                        type="button"
+                                        wire:click="selectLanguage({{ $language->language_id }})"
+                                        class="px-4 py-2 -mb-px transition-colors
+                                            {{ $selectedLanguage == $language->language_id 
+                                                ? 'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold' 
+                                                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100' }}">
+                                        {{ $language->language_name }} ({{ strtoupper($language->language_code) }})
+                                    </button>
+                                @endforeach
+                            </div>
 
+                            {{-- Translation Content for Selected Language --}}
+                            @foreach($languages as $language)
+                                @if($selectedLanguage == $language->language_id)
+                                    <div class="space-y-3" wire:key="translation-{{ $selectedQuestion }}-{{ $language->language_id }}">
+                                        {{-- Translated Title --}}
+                                        <flux:input
+                                            wire:model.live.debounce.300ms="questions.{{ $selectedQuestion }}.translations.{{ $language->language_id }}.title"
+                                            placeholder="{{ __('testcreation.translated_title_placeholder') }}"
+                                            label="{{ __('testcreation.translated_title_label') }} ({{ $language->language_name }})"
+                                            type="text" />
+                                        
+                                        {{-- Translated Description --}}
+                                        <flux:textarea
+                                            wire:model.live.debounce.300ms="questions.{{ $selectedQuestion }}.translations.{{ $language->language_id }}.description"
+                                            placeholder="{{ __('testcreation.translated_description_placeholder') }}"
+                                            label="{{ __('testcreation.translated_description_label') }} ({{ $language->language_name }})" />
+                                        
+                                        {{-- Translated Audio Recorder --}}
+                                        @php
+                                            $translationSoundName = $questions[$selectedQuestion]['translations'][$language->language_id]['sound_link'] ?? null;
+                                            $translationSoundUrl = $translationSoundName ? route('question.sound', ['filename' => $translationSoundName]) : null;
+                                            $translationRecorderKey = "recorder-{$selectedQuestion}-lang-{$language->language_id}";
+                                        @endphp
+                                        <div>
+                                            <flux:label>{{ __('testcreation.translated_audio_label') }} ({{ $language->language_name }})</flux:label>
+                                            <livewire:components.audio-recorder 
+                                                :key="$translationRecorderKey"
+                                                :existingAudioUrl="$translationSoundUrl"
+                                                :wireModel="'questions.'.$selectedQuestion.'.translations.'.$language->language_id.'.uploaded_sound'"
+                                                :recorderId="$translationRecorderKey" />
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+
+                        <div class="mt-4">
                             {{-- Container for uploading media --}}
 
                             <div class="flex items-center mt-3 w-full gap-2 inline-flex flex-wrap md:flex-nowrap">

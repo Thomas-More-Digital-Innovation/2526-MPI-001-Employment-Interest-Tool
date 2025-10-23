@@ -6,6 +6,8 @@ use App\Models\Test;
 use Livewire\Component;
 use App\Models\Question;
 use App\Models\InterestField;
+use App\Models\Language;
+use App\Models\QuestionTranslation;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -22,6 +24,10 @@ class TestCreation extends Component
 
     // Creating a placeholder variable to pass interest fields to the test-creation page
     public $interestFields;
+    // Available languages for translations
+    public $languages;
+    // Currently selected language for editing translations
+    public $selectedLanguage;
     // For restoring the test on the edit part
     public $test_id;
     // Where the name for the whole test will be stored, initialized as empty.
@@ -32,7 +38,7 @@ class TestCreation extends Component
     public string $interestFieldSearch = '';
 
     // Array where the questions are stored temporarily
-    /** @var array<int,array{question_number:int,title:string,description:string,interest:int|string|null,circleFill:string}> */
+    /** @var array<int,array{question_number:int,title:string,description:string,interest:int|string|null,circleFill:string,translations:array}> */
     public array $questions = [];
 
     // Runs on page start, sends needed information (interestfields from db + an array for the questions and an initial blank question)
@@ -40,6 +46,13 @@ class TestCreation extends Component
     {
         // Fetch all interest fields from the database
         $this->interestFields = InterestField::all();
+        
+        // Fetch all enabled languages
+        $this->languages = Language::getEnabledLanguages();
+        
+        // Set default selected language to the first enabled language
+        $this->selectedLanguage = $this->languages->first()?->language_id;
+        
         // retrieve from the session (possible) given data by
         $editId = session()->pull('edit_test_id');
         $editName = session()->pull('edit_test_name');
@@ -48,7 +61,26 @@ class TestCreation extends Component
         if ($editId !== null) {
             $this->test_id = $editId;
             $this->test_name = $editName ?? '';
-            $this->questions = is_array($editQuestions) ? array_values($editQuestions) : [];
+            
+            // Ensure all questions have translations initialized
+            $loadedQuestions = is_array($editQuestions) ? array_values($editQuestions) : [];
+            foreach ($loadedQuestions as &$question) {
+                if (!isset($question['translations']) || !is_array($question['translations'])) {
+                    $question['translations'] = [];
+                    foreach ($this->languages as $language) {
+                        $question['translations'][$language->language_id] = [
+                            'title' => '',
+                            'description' => '',
+                            'media_link' => null,
+                            'uploaded_sound' => null,
+                            'sound_link' => null,
+                        ];
+                    }
+                }
+            }
+            unset($question);
+            
+            $this->questions = $loadedQuestions;
         } else {
             $this->questions[] = $this->blankQuestion();
         }
@@ -139,7 +171,7 @@ class TestCreation extends Component
             $test = Test::findOrFail($this->test_id);
             // update the test name
             $test->update(['test_name' => $this->test_name]);
-            // remove all questions for said test
+            // remove all questions for said test (this will cascade delete translations)
             Question::where('test_id', $test->test_id)->delete();
         } else {
             // otherwise safe to create
@@ -152,7 +184,7 @@ class TestCreation extends Component
         // Save only the complete (green) questions
         foreach ($questionsToSave as $index => $question) {
             // create new questions for the test
-            Question::create([
+            $newQuestion = Question::create([
                 'test_id' => $test->test_id,
                 'interest_field_id' => $question['interest'],
                 'question_number' => $question['question_number'],
@@ -161,6 +193,23 @@ class TestCreation extends Component
                 'media_link' => $question['media_link'] ?? null,
                 'sound_link' => $question['sound_link'] ?? null,
             ]);
+            
+            // Save translations for each language
+            if (isset($question['translations']) && is_array($question['translations'])) {
+                foreach ($question['translations'] as $languageId => $translation) {
+                    // Only save translations that have at least title or description filled
+                    if (!empty($translation['title']) || !empty($translation['description']) || !empty($translation['sound_link'])) {
+                        QuestionTranslation::create([
+                            'question_id' => $newQuestion->question_id,
+                            'language_id' => $languageId,
+                            'question' => $translation['title'] ?? '',
+                            'image_description' => $translation['description'] ?? '',
+                            'media_link' => $translation['media_link'] ?? null,
+                            'sound_link' => $translation['sound_link'] ?? null,
+                        ]);
+                    }
+                }
+            }
         }
         
         $this->clearSession();
@@ -185,7 +234,7 @@ class TestCreation extends Component
     public function updated(string $name, $value)
     {
         // do not run if inputting test_name as that is test global, not question specific
-        if ($name === "test_name" || $name == "selectedQuestion") {
+        if ($name === "test_name" || $name == "selectedQuestion" || $name == "selectedLanguage") {
             return;
         }
 
@@ -205,8 +254,20 @@ class TestCreation extends Component
         if (str_contains($name, '.uploaded_sound')) {
             $parts = explode('.', $name);
             $index = (int) $parts[1];
-            if (isset($this->questions[$index]['uploaded_sound'])) {
-                $this->uploadSound($index);
+            
+            // Check if it's a translation sound upload
+            if (str_contains($name, '.translations.')) {
+                if (preg_match('/questions\.(\d+)\.translations\.(\d+)\.uploaded_sound/', $name, $matches)) {
+                    $questionIndex = (int) $matches[1];
+                    $languageId = (int) $matches[2];
+                    if (isset($this->questions[$questionIndex]['translations'][$languageId]['uploaded_sound'])) {
+                        $this->uploadTranslationSound($questionIndex, $languageId);
+                    }
+                }
+            } else {
+                if (isset($this->questions[$index]['uploaded_sound'])) {
+                    $this->uploadSound($index);
+                }
             }
             return;
         }
@@ -224,6 +285,18 @@ class TestCreation extends Component
     // Defining the initial blank question as a function so it does not have to be rewritten
     protected function blankQuestion(): array
     {
+        // Initialize translations for all enabled languages
+        $translations = [];
+        foreach ($this->languages as $language) {
+            $translations[$language->language_id] = [
+                'title' => '',
+                'description' => '',
+                'media_link' => null,
+                'uploaded_sound' => null,
+                'sound_link' => null,
+            ];
+        }
+        
         return [
             'question_number' => count($this->questions) + 1,
             'title' => '',
@@ -233,6 +306,7 @@ class TestCreation extends Component
             'media_link' => null,
             'uploaded_sound' => null,
             'sound_link' => null,
+            'translations' => $translations,
         ];
     }
 
@@ -251,6 +325,12 @@ class TestCreation extends Component
         }
     }
 
+    // Switch to a different language for editing translations
+    public function selectLanguage(int $languageId): void
+    {
+        $this->selectedLanguage = $languageId;
+    }
+
     // Removing a question,
     public function removeQuestion(int $index): void
     {
@@ -261,6 +341,16 @@ class TestCreation extends Component
         $filename = $this->questions[$index]['sound_link'] ?? null;
         if ($filename && Storage::disk('public')->exists($filename)) {
             Storage::disk('public')->delete($filename);
+        }
+
+        // Clean up translation audio files
+        if (isset($this->questions[$index]['translations'])) {
+            foreach ($this->questions[$index]['translations'] as $translation) {
+                $translationSound = $translation['sound_link'] ?? null;
+                if ($translationSound && Storage::disk('public')->exists($translationSound)) {
+                    Storage::disk('public')->delete($translationSound);
+                }
+            }
         }
 
         // Removing the question from the array
@@ -350,8 +440,18 @@ class TestCreation extends Component
 
         if (!$wireModel || !$filename) return;
 
+        // Check if it's a translation sound (e.g., "questions.0.translations.1.uploaded_sound")
+        if (preg_match('/questions\.(\d+)\.translations\.(\d+)\.uploaded_sound/', $wireModel, $matches)) {
+            $questionIndex = (int) $matches[1];
+            $languageId = (int) $matches[2];
+            
+            if (isset($this->questions[$questionIndex]['translations'][$languageId])) {
+                $this->questions[$questionIndex]['translations'][$languageId]['sound_link'] = $filename;
+                $this->questions[$questionIndex]['translations'][$languageId]['has_audio'] = true;
+            }
+        }
         // Extract question index from wire model (e.g., "questions.0.uploaded_sound")
-        if (preg_match('/questions\.(\d+)\.uploaded_sound/', $wireModel, $matches)) {
+        else if (preg_match('/questions\.(\d+)\.uploaded_sound/', $wireModel, $matches)) {
             $index = (int) $matches[1];
             
             if (isset($this->questions[$index])) {
@@ -371,8 +471,23 @@ class TestCreation extends Component
 
         if (!$wireModel) return;
 
+        // Check if it's a translation sound
+        if (preg_match('/questions\.(\d+)\.translations\.(\d+)\.uploaded_sound/', $wireModel, $matches)) {
+            $questionIndex = (int) $matches[1];
+            $languageId = (int) $matches[2];
+            
+            if (isset($this->questions[$questionIndex]['translations'][$languageId])) {
+                $oldFile = $this->questions[$questionIndex]['translations'][$languageId]['sound_link'] ?? null;
+                if ($oldFile && Storage::disk('public')->exists($oldFile)) {
+                    Storage::disk('public')->delete($oldFile);
+                }
+                
+                $this->questions[$questionIndex]['translations'][$languageId]['sound_link'] = null;
+                $this->questions[$questionIndex]['translations'][$languageId]['has_audio'] = false;
+            }
+        }
         // Extract question index from wire model
-        if (preg_match('/questions\.(\d+)\.uploaded_sound/', $wireModel, $matches)) {
+        else if (preg_match('/questions\.(\d+)\.uploaded_sound/', $wireModel, $matches)) {
             $index = (int) $matches[1];
             
             if (isset($this->questions[$index])) {
@@ -454,6 +569,61 @@ class TestCreation extends Component
             unset($this->questions[$index]['uploaded_sound']);
             throw \Illuminate\Validation\ValidationException::withMessages([
                 "questions.$index.uploaded_sound" => 'Failed to upload the sound.',
+            ]);
+        }
+    }
+
+    public function uploadTranslationSound(int $questionIndex, int $languageId): void
+    {
+        // Check if file was uploaded
+        if (!isset($this->questions[$questionIndex]['translations'][$languageId]['uploaded_sound'])) {
+            $this->addError("questions.$questionIndex.translations.$languageId.uploaded_sound", 'No file uploaded.');
+            return;
+        }
+        
+        /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile $uploadedFile */
+        $uploadedFile = $this->questions[$questionIndex]['translations'][$languageId]['uploaded_sound'];
+
+        try {
+            // Validate the uploaded file
+            $this->validate([
+                "questions.$questionIndex.translations.$languageId.uploaded_sound" => "required|file|mimetypes:audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/webm,video/webm,audio/mp4,audio/x-m4a,audio/aac|max:5120",
+            ]);
+            
+            if (!$uploadedFile->isValid()) {
+                throw new \RuntimeException('Invalid upload.');
+            }
+            
+            $extension = strtolower($uploadedFile->getClientOriginalExtension() ?: 'webm');
+
+            // unique filename with language identifier
+            do {
+                $filename = uniqid('q'.$questionIndex.'_lang'.$languageId.'_').'.'.$extension;
+                $exists = Storage::disk('public')->exists($filename);
+            } while ($exists);
+
+            // Store the file
+            $path = $uploadedFile->storeAs('', $filename, 'public');
+            if (!$path) {
+                throw new \RuntimeException('Failed storing file.');
+            }
+
+            // Save filename in translation state
+            $this->questions[$questionIndex]['translations'][$languageId]['sound_link'] = $filename;
+            $this->questions[$questionIndex]['translations'][$languageId]['has_audio'] = true;
+
+            // notify front-end
+            $url = route('question.sound', ['filename' => $filename]);
+            $wireModel = "questions.{$questionIndex}.translations.{$languageId}.uploaded_sound";
+            $this->dispatch('sound-updated', wireModel: $wireModel, filename: $filename, url: $url);
+
+            // clear temp
+            unset($this->questions[$questionIndex]['translations'][$languageId]['uploaded_sound']);
+
+        } catch (\Throwable $e) {
+            unset($this->questions[$questionIndex]['translations'][$languageId]['uploaded_sound']);
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                "questions.$questionIndex.translations.$languageId.uploaded_sound" => 'Failed to upload the translation sound.',
             ]);
         }
     }

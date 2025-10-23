@@ -45,4 +45,10 @@ return [
     'incomplete_questions_list' => 'Incomplete Questions:',
     'question' => 'Question',
     'save_complete_questions' => 'Save Complete Questions',
+    'translations' => 'Translations',
+    'translated_title_label' => 'Translated Title',
+    'translated_title_placeholder' => 'Enter translated title',
+    'translated_description_label' => 'Translated Description',
+    'translated_description_placeholder' => 'Enter translated description',
+    'translated_audio_label' => 'Translated Audio',
 ];
