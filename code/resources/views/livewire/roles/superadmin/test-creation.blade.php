@@ -233,7 +233,7 @@ $isExternalLink =
                                                 $translationRecorderKey = "recorder-{$selectedQuestion}-lang-{$language->language_id}";
                                             @endphp
                                             <div>
-                                                <flux:label>{{ __('testcreation.translated_audio_label') }}
+                                                <flux:label class="pb-2">{{ __('testcreation.translated_audio_label') }}
                                                 </flux:label>
                                                 <livewire:components.audio-recorder :key="$translationRecorderKey" :existingAudioUrl="$translationSoundUrl"
                                                     :wireModel="'questions.' .

@@ -9,7 +9,7 @@
         x-init="init()">
     
     {{-- Recording Controls Container --}}
-    <div class="flex items-center mt-3 w-full gap-2 inline-flex flex-wrap">
+    <div class="flex items-center w-full gap-2 inline-flex flex-wrap">
         <div>
             <!-- Record Button -->
             <flux:button 
