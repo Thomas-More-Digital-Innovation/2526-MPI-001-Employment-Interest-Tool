@@ -15,5 +15,6 @@ return [
     'editResearcher' => 'Edit researcher',
     'researcherCanSignIn' => 'Researcher can sign in',
     'createResearcher' => 'Create researcher',
-    'deleteResearcher' => 'Delete researcher'
+    'deleteResearcher' => 'Delete researcher',
+    'ResearcherCanSignIn' => 'Researcher can sign in',
 ];
