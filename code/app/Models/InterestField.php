@@ -64,4 +64,13 @@ class InterestField extends Model
         $translation = $this->getTranslation($languageCode);
         return $translation && $translation->description ? $translation->description : $this->description;
     }
+
+    public function getSoundLink($languageCode = null)
+    {
+        if (!$languageCode) {
+            return $this->sound_link;
+        }
+        $translation = $this->getTranslation($languageCode);
+        return $translation && $translation->sound_link ? $translation->sound_link : $this->sound_link;
+    }
 }

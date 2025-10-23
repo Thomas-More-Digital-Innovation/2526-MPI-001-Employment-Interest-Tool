@@ -84,6 +84,9 @@ class TestResults extends Component
                     'interest_field_name' => $field->getName($locale),
                     'interest_field_description' => $field->getDescription($locale),
                     'total'               => (int) ($selectedCounts[$id] ?? 0),
+                    'sound_link' => ($sound = $field->getSoundLink($locale))
+                        ? route('question.sound', ['filename' => $sound])
+                        : null,
                 ];
             })
             ->values();
