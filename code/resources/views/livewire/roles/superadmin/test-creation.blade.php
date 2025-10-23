@@ -256,7 +256,7 @@ $isExternalLink =
         <div class="my-3 flex mt-4 items-center justify-end w-full gap-4" wire:key="upload-{{ $selectedQuestion }}">
             {{-- Submit button --}}
             <div>
-                <flux:button wire:click="uploadTest" variant="primary" class="bg-mpi">{{ __('Save') }}</flux:button>
+                <flux:button wire:click="uploadTest" variant="primary" class="bg-color-mpi">{{ __('Save') }}</flux:button>
             </div>
         </div>
     </main>
