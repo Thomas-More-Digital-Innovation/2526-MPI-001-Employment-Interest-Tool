@@ -1,12 +1,12 @@
-<div 
-    x-data="audioRecorder({ 
-        recorderId: @js($recorderId), 
-        existingUrl: @js($this->audioUrl),
-        wireId: @js($this->getId())
-    })" 
-    x-init="init()"
-    wire:key="{{ $recorderId }}"
-    class="audio-recorder-component">
+<div class="audio-recorder-component">
+    <div 
+        wire:ignore
+        x-data="audioRecorder({ 
+            recorderId: @js($recorderId), 
+            existingUrl: @js($this->audioUrl),
+            wireId: @js($this->getId())
+        })" 
+        x-init="init()">
     
     {{-- Recording Controls Container --}}
     <div class="flex items-center mt-3 w-full gap-2 inline-flex flex-wrap">
@@ -74,22 +74,22 @@
             <flux:button 
                 type="button" 
                 icon="speaker-wave"
-                onclick="document.getElementById('audio-uploader-{{ $recorderId }}').click()">
+                @click="$refs.fileInput.click()">
                 {{ __('testcreation.choose_sound') }}
             </flux:button>
             
             <!-- Hidden file input -->
             <input 
+                x-ref="fileInput"
                 id="audio-uploader-{{ $recorderId }}" 
                 type="file"
-                wire:model="uploadedSound"
+                @change="handleFileUpload($event)"
                 accept="{{ $acceptedFormats }}"
                 class="hidden" />
             
-            @error('uploadedSound')
-                <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
-            @enderror
+            <span x-show="uploadError" x-text="uploadError" class="text-red-600 text-sm mt-1 block"></span>
         </div>
+    </div>
     </div>
 </div>
 
@@ -113,6 +113,7 @@
                     hasAudio: false,
                     canRecord: true,
                     label: '',
+                    uploadError: null,
 
                     // Private properties for MediaRecorder
                     _stream: null,
@@ -124,6 +125,8 @@
                      * Initialize the component
                      */
                     init() {
+                        console.log('AudioRecorder init', { recorderId: this.recorderId, wireId: this.wireId, existingUrl: this.existingUrl });
+                        
                         // Load existing audio if available
                         if (this.existingUrl) {
                             this._setAudio(this.existingUrl);
@@ -136,6 +139,10 @@
 
                         // Bind Livewire events
                         this._bindLivewireEvents();
+                        
+                        // Verify Livewire component exists
+                        const wireComponent = Livewire.find(this.wireId);
+                        console.log('Livewire component found:', wireComponent ? 'YES' : 'NO');
                     },
 
                     /**
@@ -151,15 +158,22 @@
                                 this._setAudio(data.url);
                                 this.hasAudio = true;
                                 this.canRecord = false;
+                                // Clear the file input after successful upload
+                                this._clearFileInput();
                             }
                         });
 
                         // Listen for sound cleared event
                         Livewire.on('audio-recorder-cleared', (data) => {
+                            console.log('audio-recorder-cleared event received', data);
                             if (data.recorderId === this.recorderId) {
                                 this._clearAudioEl();
                                 this.hasAudio = false;
                                 this.canRecord = true;
+                                this.uploadError = null;
+                                // Also clear file input when clearing audio
+                                this._clearFileInput();
+                                console.log('Audio cleared, state updated', { hasAudio: this.hasAudio, canRecord: this.canRecord });
                             }
                         });
                     },
@@ -244,6 +258,58 @@
                     },
 
                     /**
+                     * Handle file upload from input
+                     */
+                    handleFileUpload(event) {
+                        const file = event.target.files[0];
+                        if (!file) return;
+
+                        this.uploadError = null;
+
+                        // Validate file type
+                        const validTypes = ['audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/ogg', 'audio/webm', 'video/webm', 'audio/mp4', 'audio/x-m4a', 'audio/aac'];
+                        if (!validTypes.includes(file.type)) {
+                            this.uploadError = 'Invalid file type. Please upload an audio file.';
+                            this._clearFileInput();
+                            return;
+                        }
+
+                        // Validate file size (5MB = 5120KB)
+                        const maxSize = 5120 * 1024; // Convert to bytes
+                        if (file.size > maxSize) {
+                            this.uploadError = 'File is too large. Maximum size is 5MB.';
+                            this._clearFileInput();
+                            return;
+                        }
+
+                        // Set audio for immediate playback
+                        const localUrl = URL.createObjectURL(file);
+                        this._setAudio(localUrl);
+                        this.hasAudio = true;
+                        this.canRecord = false;
+
+                        // Upload file to Livewire component
+                        const wireComponent = Livewire.find(this.wireId);
+                        if (wireComponent) {
+                            wireComponent.upload('uploadedSound', file,
+                                () => {
+                                    // Upload completed successfully
+                                    console.log('Audio file uploaded successfully');
+                                },
+                                (error) => {
+                                    // Upload failed
+                                    console.error('Audio file upload failed:', error);
+                                    this.uploadError = 'Failed to upload file. Please try again.';
+                                    this.canRecord = true;
+                                    this.hasAudio = false;
+                                    this._clearAudioEl();
+                                    this._clearFileInput();
+                                }
+                            );
+                        }
+                    },
+
+                    /**
                      * Toggle audio playback
                      */
                     togglePlay() {
@@ -266,9 +332,29 @@
                      * Clear all audio data
                      */
                     async clearAll() {
-                        const wireComponent = Livewire.find(this.wireId);
+                        console.log('clearAll called');
+                        
+                        // Try to find the Livewire component
+                        let wireComponent = Livewire.find(this.wireId);
+                        
+                        // If not found, try using $wire from the parent element
+                        if (!wireComponent) {
+                            console.log('Trying to access $wire from DOM');
+                            const element = document.querySelector(`[wire\\:id="${this.wireId}"]`);
+                            if (element && element.__livewire) {
+                                wireComponent = element.__livewire;
+                            }
+                        }
+                        
                         if (wireComponent) {
-                            await wireComponent.call('clearSound');
+                            console.log('Calling clearSound on Livewire component');
+                            try {
+                                await wireComponent.call('clearSound');
+                            } catch (error) {
+                                console.error('Error calling clearSound:', error);
+                            }
+                        } else {
+                            console.error('Livewire component not found:', this.wireId);
                         }
                     },
 
@@ -295,6 +381,16 @@
                         audio.removeAttribute('src');
                         audio.load();
                         this.isPlaying = false;
+                    },
+
+                    /**
+                     * Clear the file input value
+                     */
+                    _clearFileInput() {
+                        const fileInput = document.getElementById(`audio-uploader-${this.recorderId}`);
+                        if (fileInput) {
+                            fileInput.value = '';
+                        }
                     }
                 }
             };

@@ -67,19 +67,20 @@
                         </div>
                         {{-- Audio Recorder Component --}}
                         @php
-                            // Retrieve the sound name (the filename stored in DB)
+                            // Retrieve the sound name (the filename stored in DB) - only for initial load
                             $soundName = $questions[$selectedQuestion]['sound_link'] ?? null;
                             // Generate the full URL to the sound file if the name is set exists
                             $soundUrl = $soundName ? route('question.sound', ['filename' => $soundName]) : null;
-                            // Create a unique key that includes both the question index and whether it has audio
-                            $recorderKey = "recorder-{$selectedQuestion}-" . ($soundUrl ? 'audio' : 'noaudio');
+                            // Create a stable unique key that only depends on the question index
+                            $recorderKey = "recorder-{$selectedQuestion}";
                         @endphp
                         <div>
+                            {{-- Component uses existingAudioUrl only on mount, then events for updates --}}
                             <livewire:components.audio-recorder 
+                                :key="$recorderKey"
                                 :existingAudioUrl="$soundUrl"
                                 :wireModel="'questions.'.$selectedQuestion.'.uploaded_sound'"
-                                :recorderId="$recorderKey"
-                                :key="$recorderKey" />
+                                :recorderId="$recorderKey" />
 
 
                             {{-- Container for uploading media --}}

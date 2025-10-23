@@ -5,14 +5,20 @@ namespace App\Livewire\Components;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\Locked;
 
 class AudioRecorder extends Component
 {
     use WithFileUploads;
 
     // Public properties
+    #[Locked]
     public $wireModel;              // The wire:model path for parent component integration
-    public $existingAudioUrl = null; // URL to existing audio file
+    
+    #[Locked]
+    public $existingAudioUrl = null; // URL to existing audio file - only used on mount
+    
+    #[Locked]
     public $recorderId;              // Unique identifier for this recorder instance
     
     // Internal state
@@ -34,14 +40,23 @@ class AudioRecorder extends Component
      */
     public function mount(?string $existingAudioUrl = null, ?string $wireModel = null, ?string $recorderId = null)
     {
-        $this->existingAudioUrl = $existingAudioUrl;
+        // Store initial URL separately to avoid reactive updates
+        $initialUrl = $existingAudioUrl;
+        
         $this->wireModel = $wireModel;
         $this->recorderId = $recorderId ?? 'recorder-' . uniqid();
-        $this->hasAudio = !empty($existingAudioUrl);
+        $this->hasAudio = !empty($initialUrl);
         
         // If there's an existing sound link in the parent, extract it
-        if ($existingAudioUrl) {
-            $this->soundLink = basename($existingAudioUrl);
+        if ($initialUrl) {
+            $this->soundLink = basename($initialUrl);
+            $this->existingAudioUrl = $initialUrl;
+            
+            // Dispatch initial state to Alpine.js
+            $this->dispatch('audio-recorder-updated', [
+                'recorderId' => $this->recorderId,
+                'url' => $initialUrl
+            ]);
         }
     }
 
