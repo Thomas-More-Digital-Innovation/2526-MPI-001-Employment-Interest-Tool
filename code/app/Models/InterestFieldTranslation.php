@@ -17,6 +17,7 @@ class InterestFieldTranslation extends Model
         'language_id',
         'name',
         'description',
+        'sound_link',
     ];
 
     // Relationships

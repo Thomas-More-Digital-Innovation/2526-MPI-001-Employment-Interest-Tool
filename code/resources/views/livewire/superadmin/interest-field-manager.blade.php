@@ -242,7 +242,7 @@
                         @enderror
                     </div>
 
-                    <div>
+                    <div class="pb-0">
                         <flux:checkbox
                             id="interest-field-active"
                             wire:model.defer="form.active"
@@ -255,6 +255,19 @@
 
                     @if ($editingId)
                         <div>
+                            <!-- Top-level audio recorder for the interest field (default) -->
+                            <div class="mb-4">
+                                @php
+                                    $recorderKeyBase = 'interest-field-' . ($editingId ?? 'new') . '-recorder-base';
+                                    $baseSoundUrl = $form['sound_link'] ?? null;
+                                @endphp
+
+                                <livewire:components.audio-recorder
+                                    :key="$recorderKeyBase"
+                                    :existing-audio-url="$baseSoundUrl ? route('question.sound', ['filename' => $baseSoundUrl]) : null"
+                                    :wire-model="'form.uploaded_sound'"
+                                    :recorder-id="$recorderKeyBase" />
+                            </div>
                             <h1>{{ __('interestfield.add_translation') }}</h1>
                             <div class="flex justify-end items-center gap-2">
                                 <flux:select
@@ -329,6 +342,23 @@
                                         @error('form.translations.' . $languageCode . '.description')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                         @enderror
+                                    </div>
+                                    <!-- Audio recorder for this translation -->
+                                    <div class="mt-4">
+                                        @php
+                                            $recorderKey = 'interest-field-' . ($editingId ?? 'new') . '-recorder-' . $languageCode;
+                                            // Determine existing sound URL if available on the interest field translations
+                                            $soundUrl = null;
+                                            if (isset($form['translations'][$languageCode]['sound_link']) && $form['translations'][$languageCode]['sound_link']) {
+                                                $soundUrl = route('question.sound', ['filename' => $form['translations'][$languageCode]['sound_link']]);
+                                            }
+                                        @endphp
+
+                                        <livewire:components.audio-recorder
+                                            :key="$recorderKey"
+                                            :existing-audio-url="$soundUrl"
+                                            :wire-model="'form.translations.' . $languageCode . '.uploaded_sound'"
+                                            :recorder-id="$recorderKey" />
                                     </div>
                                 </div>
                             </div>

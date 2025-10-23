@@ -17,6 +17,7 @@ class InterestField extends Model
         'name',
         'description',
         'active',
+        'sound_link',
     ];
 
     protected $casts = [

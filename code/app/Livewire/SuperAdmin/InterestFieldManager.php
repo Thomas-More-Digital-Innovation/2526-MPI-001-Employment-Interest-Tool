@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class InterestFieldManager extends BaseCrudComponent
 {
+    protected $listeners = [
+        'sound-updated' => 'handleSoundUpdated',
+        'sound-cleared' => 'handleSoundCleared',
+    ];
+
     public string $newTranslationLanguage = '';
 
     public array $availableLanguages = [];
@@ -48,6 +53,7 @@ class InterestFieldManager extends BaseCrudComponent
                 'name' => $this->form['name'],
                 'description' => $this->form['description'],
                 'active' => $this->form['active'] ?? true,
+                'sound_link' => $this->form['sound_link'] ?? null,
             ]);
 
             // Update translations
@@ -59,12 +65,18 @@ class InterestFieldManager extends BaseCrudComponent
                     ->first();
 
                 if ($interestFieldTranslation) {
-                    $interestFieldTranslation->update($translation);
+                    // Allow updating sound_link if provided in the translation form
+                    $updateData = $translation;
+                    if (isset($translation['sound_link'])) {
+                        $updateData['sound_link'] = $translation['sound_link'];
+                    }
+                    $interestFieldTranslation->update($updateData);
                 } else {
                     $interestField->interestFieldTranslations()->create([
                         'language_code' => $languageCode,
                         'name' => $translation['name'],
                         'description' => $translation['description'],
+                        'sound_link' => $translation['sound_link'] ?? null,
                     ]);
                 }
             }
@@ -74,6 +86,7 @@ class InterestFieldManager extends BaseCrudComponent
                 'name' => $this->form['name'],
                 'description' => $this->form['description'],
                 'active' => $this->form['active'] ?? true,
+                'sound_link' => $this->form['sound_link'] ?? null,
             ]);
 
             $wasActive = null; // newly created
@@ -101,6 +114,67 @@ class InterestFieldManager extends BaseCrudComponent
 
         $this->resetFormState();
         $this->dispatch('modal-close', name: 'create-interest-field-form');
+    }
+
+    /**
+     * Handle sound updated event from AudioRecorder component
+     * Expected $data contains 'wireModel' => string and 'filename' => string
+     */
+    public function handleSoundUpdated($data): void
+    {
+        $wireModel = $data['wireModel'] ?? null;
+        $filename = $data['filename'] ?? null;
+
+        if (! $wireModel || ! $filename) {
+            return;
+        }
+
+        // Expecting wireModel like: form.translations.en.uploaded_sound OR form.uploaded_sound
+        if (preg_match('/form\.translations\.([a-zA-Z_-]+)\.uploaded_sound/', $wireModel, $matches)) {
+            $lang = $matches[1];
+            if (! isset($this->form['translations'][$lang])) {
+                // Ensure structure exists
+                $this->form['translations'][$lang] = [
+                    'name' => '',
+                    'description' => '',
+                    'sound_link' => null,
+                ];
+            }
+
+            $this->form['translations'][$lang]['sound_link'] = $filename;
+            return;
+        }
+
+        // Base interest field audio
+        if (preg_match('/form\.uploaded_sound/', $wireModel)) {
+            $this->form['sound_link'] = $filename;
+            return;
+        }
+    }
+
+    /**
+     * Handle sound cleared event from AudioRecorder component
+     */
+    public function handleSoundCleared($data): void
+    {
+        $wireModel = $data['wireModel'] ?? null;
+
+        if (! $wireModel) {
+            return;
+        }
+
+        if (preg_match('/form\.translations\.([a-zA-Z_-]+)\.uploaded_sound/', $wireModel, $matches)) {
+            $lang = $matches[1];
+            if (isset($this->form['translations'][$lang])) {
+                $this->form['translations'][$lang]['sound_link'] = null;
+            }
+            return;
+        }
+
+        if (preg_match('/form\.uploaded_sound/', $wireModel)) {
+            $this->form['sound_link'] = null;
+            return;
+        }
     }
 
     protected function view(): string
@@ -143,6 +217,7 @@ class InterestFieldManager extends BaseCrudComponent
             'name' => $record->name,
             'description' => $record->description,
             'active' => $record->active ?? true,
+            'sound_link' => $record->sound_link ?? null,
             'translations' => [],
         ];
 
@@ -150,6 +225,7 @@ class InterestFieldManager extends BaseCrudComponent
             $form['translations'][$translation->language->language_code] = [
                 'name' => $translation->name,
                 'description' => $translation->description,
+                'sound_link' => $translation->sound_link ?? null,
             ];
         }
 
