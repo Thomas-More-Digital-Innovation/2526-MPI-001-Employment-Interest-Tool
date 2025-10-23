@@ -9,7 +9,7 @@ main() {
         prepare_storage
         wait_for_db
         run_migrations
-        optimize_app
+        # optimize_app
         run_server "$@"
     fi
 }
