@@ -6,7 +6,6 @@
         <flux:navlist.item icon="user-group" :href="route('superadmin.interest-field-manager')" :current="request()->routeIs('superadmin.interest-field-manager')" wire:navigate>{{ __('interestfield.manager') }}</flux:navlist.item>
         <flux:navlist.item icon="presentation-chart-bar" :href="route('superadmin.manage-researchers')" :current="request()->routeIs('superadmin.manage-researchers')" wire:navigate>{{ __('manage-researchers.manage_researchers') }}</flux:navlist.item>
         <flux:navlist.item icon="building" :href="route('superadmin.organisations-manager')" :current="request()->routeIs('superadmin.organisations-manager')" wire:navigate>{{ __('organisations.sidebar') }}</flux:navlist.item>
-        <flux:navlist.item icon="user" :href="route('superadmin.admins-manager')" :current="request()->routeIs('superadmin.admins-manager')" wire:navigate>{{ __('admins.manager') }}</flux:navlist.item>
         <flux:navlist.item icon="circle-question-mark" :href="route('superadmin.faq-manager')" :current="request()->routeIs('superadmin.faq-manager')" wire:navigate>{{ __('faq.manager') }}</flux:navlist.item>
         <flux:navlist.item icon="language" :href="route('superadmin.languages-manager')" :current="request()->routeIs('superadmin.languages-manager')" wire:navigate>{{ __('languages.manager') }}</flux:navlist.item>
     </flux:navlist.group>
