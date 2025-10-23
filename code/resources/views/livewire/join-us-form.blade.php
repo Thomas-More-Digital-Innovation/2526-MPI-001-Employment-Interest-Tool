@@ -15,8 +15,8 @@
                 size="sm"
                 name="organisation"
                 id="organisation"
-                wire:model.live="organisation"
-                placeholder="{{ __('joinrequest.organization') }} {{ __('Name') }}"
+                wire:model="organisation"
+                placeholder="{{ __('joinrequest.organization_placeholder') }}"
                 required
                 class="w-full"
             />
@@ -29,8 +29,8 @@
                 size="sm"
                 name="fullName"
                 id="fullName"
-                wire:model.live="fullName"
-                placeholder="{{ __('user.first_name') }} {{ __('user.last_name') }}"
+                wire:model="fullName"
+                placeholder="{{ __('joinrequest.full_name_placeholder') }}"
                 required
                 class="w-full"
             />
@@ -43,8 +43,8 @@
                 size="sm"
                 name="emailAddress"
                 id="emailAddress"
-                wire:model.live="emailAddress"
-                placeholder="email@example.com"
+                wire:model="emailAddress"
+                placeholder="{{ __('joinrequest.email_placeholder') }}"
                 required
                 class="w-full"
             />
@@ -57,7 +57,8 @@
                 size="sm"
                 name="heardFrom"
                 id="heardFrom"
-                wire:model.live="heardFrom"
+                wire:model="heardFrom"
+                placeholder="{{ __('joinrequest.where_have_you_heard_about_us_placeholder') }}"
                 class="w-full"
             />
         </div>
@@ -68,7 +69,8 @@
                 size="sm"
                 name="joinUs"
                 id="joinUs"
-                wire:model.live="joinUs"
+                wire:model="joinUs"
+                placeholder="{{ __('joinrequest.why_join_us_placeholder') }}"
                 class="w-full min-h-28"
             />
         </div>

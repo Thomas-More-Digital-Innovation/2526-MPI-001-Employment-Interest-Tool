@@ -63,7 +63,7 @@
 
                         <div class="flex justify-end gap-3 pt-3 pb-3">
                             <flux:button
-                                href="{{ route('organisation.joinUs') }}"
+                                href="{{ route('organisation.joinus') }}"
                                 class="!bg-mpi !text-white">
                                 {{ __('Continue') }}
                             </flux:button>

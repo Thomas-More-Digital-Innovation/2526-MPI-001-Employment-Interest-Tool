@@ -2,9 +2,8 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('partials.head')
-    
 </head>
-<body class="min-h-screen {{ strtolower(auth()->user()->vision_type) ?? 'normal' }}">
+<body class="min-h-screen {{ strtolower(optional(auth()->user())->vision_type ?? 'normal') }}">
 <livewire:svg-colorblindness/>
 {{ $slot }}
 
