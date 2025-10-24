@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FaqTranslation extends Model
 {
     protected $table = 'frequently_asked_question_translation';
-    protected $primaryKey = 'frequently_asked_question_translation_id';
+    protected $primaryKey = 'faq_translation_id';
 
     protected $fillable = [
         'frequently_asked_question_id',
