@@ -38,13 +38,13 @@ class SendFeedbackTest extends Component
                     ->subject("Onduidelijke vraag gemeld");
             });
 
-            $this->message = 'De mail is verzonden naar uw mentor.';
+            $this->message = __('test.send_success');
             $this->type = 'Success';
 
         } catch (\Exception $e) {
             //Catch the error + error message.
-            $this->message = 'De mail is niet verzonden.';
-            $this->type = 'Fout';
+            $this->message = __('test.send_error');
+            $this->type = __('test.error');
         }
     }
 
