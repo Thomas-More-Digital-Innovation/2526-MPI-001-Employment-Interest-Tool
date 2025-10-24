@@ -57,14 +57,11 @@
                     @enderror
                 </div>
 
-                <div class="md:col-span-2">
-                    <flux:checkbox
-                        id="client-sound"
-                        wire:model.defer="form.is_sound_on"
-                        :label="$form['is_sound_on'] ? __('user.sound_on') : __('user.sound_off')" />
-                    @error('form.is_sound_on')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                <div x-data="{ soundOn: @entangle('form.is_sound_on') }" class="flex items-center space-x-3">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <flux:checkbox wire:model="form.is_sound_on" :label="''" type="checkbox" required autofocus class="!p-0" />
+                        <span class="select-none" x-text="soundOn ? @js(__('user.sound_on')) : @js(__('user.sound_off'))"></span>
+                    </label>
                 </div>
 
                 <div class="md:col-span-2">
