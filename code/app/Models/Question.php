@@ -87,7 +87,18 @@ class Question extends Model
         }
 
         $translation = $this->getTranslation($languageCode);
-        return $translation && $translation->sound_link ? $translation->sound_link : $this->sound_link;
+        $soundLink = $translation && $translation->sound_link ? $translation->sound_link : $this->sound_link;
+        
+        if (!$soundLink) {
+            return null;
+        }
+        
+        // Check if it's already a full URL
+        if (filter_var($soundLink, FILTER_VALIDATE_URL)) {
+            return $soundLink;
+        }
+        
+        return route('question.sound', ['filename' => $soundLink]);
     }
 
     public function getImageDescription($languageCode = null)
