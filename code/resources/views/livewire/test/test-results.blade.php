@@ -56,7 +56,7 @@
                         style="width:400px;height:auto;object-fit:cover;"
                     />
                     @if(!empty($mainInterest['sound_link']))
-                        <div class="mt-2">
+                        <div class="mt-2 w-full flex justify-center">
                             <button class="text-2xl" @click="playAudio('main-audio')">
                                 <flux:icon.speaker-wave class="size-8 md:size-24" />
                             </button>
@@ -89,7 +89,7 @@
                         style="width:350px;height:auto;object-fit:cover;"
                     />
                     @if(!empty($secondInterest['sound_link']))
-                        <div class="mt-2">
+                        <div class="mt-2 w-full flex justify-center">
                             <button class="text-2xl" @click="playAudio('second-audio')">
                                 <flux:icon.speaker-wave class="size-8 md:size-24" />
                             </button>
@@ -122,7 +122,7 @@
                         style="width:300px;height:auto;object-fit:cover;"
                     />
                     @if(!empty($lastInterest['sound_link']))
-                        <div class="mt-2">
+                        <div class="mt-2 w-full flex justify-center">
                             <button class="text-2xl" @click="playAudio('last-audio')">
                                 <flux:icon.speaker-wave class="size-8 md:size-24" />
                             </button>
