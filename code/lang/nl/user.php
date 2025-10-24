@@ -39,4 +39,5 @@ return [
     'attempted_at' => 'Poging op',
     'return_to_dashboard' => 'Terug naar dashboard',
     'view_results' => 'Bekijk resultaten',
+    'chooseNewPassword' => 'Kies uw wachtwoord',
 ];
