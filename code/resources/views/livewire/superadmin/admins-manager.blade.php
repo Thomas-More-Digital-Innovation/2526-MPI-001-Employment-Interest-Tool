@@ -72,9 +72,6 @@
                                 :label="__('user.first_name')"
                                 required
                                 autofocus />
-                            @error('form.first_name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
                         </div>
 
                         <div>
@@ -83,7 +80,6 @@
                                 type="text"
                                 wire:model.defer="form.last_name"
                                 :label="__('user.last_name')" />
-                            {{-- Errors rendered by the flux input component --}}
                         </div>
 
                         <div>
@@ -93,7 +89,6 @@
                                 wire:model.defer="form.username"
                                 :label="__('admins.username')"
                                 required />
-                            {{-- Errors rendered by the flux input component --}}
                         </div>
 
                         <div>
@@ -103,7 +98,6 @@
                                 wire:model.defer="form.email"
                                 :label="__('user.email')"
                                 required />
-                            {{-- Errors rendered by the flux input component --}}
                         </div>
 
                         
@@ -120,9 +114,6 @@
                                     type="password"
                                     wire:model.defer="form.password"
                                     :required="!$editingId" />
-                                @error('form.password')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
                             </div>
 
                         <div class="md:col-span-2">
@@ -135,7 +126,6 @@
                                     wire:model.defer="form.active"
                                     :label="__('user.active')" />
                             </div>
-                            {{-- Errors rendered by the flux checkbox component --}}
                         </div>
 
                         {{-- Organisation is managed via OrganisationsManager; admins are tied to the organisation in session. --}}
