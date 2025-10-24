@@ -3,7 +3,7 @@ name: Deploy Test Production Environment
 on:
   push:
     branches:
-      - 'prod-test-env'
+      - 'production-test'
   workflow_dispatch:
     
 concurrency:
@@ -51,7 +51,7 @@ jobs:
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             code/mpi-employment-interest-tool.tar \
             code/custom-nginx.tar \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_TESTING }}:~/
     
     # Copy the .env.test.prod file to the vm and copy it to .env and .env.test.prod
     - name: Copy .env.test.prod to VM and setup environment
@@ -60,11 +60,11 @@ jobs:
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             code/.env.test.prod \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/.env.test.prod
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_TESTING }}:~/.env.test.prod
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_TESTING }} \
             "if [ -f /etc/laravel/app_key ]; then cat /etc/laravel/app_key >> .env.test.prod; else echo 'ERROR: /etc/laravel/app_key not found on server' >&2; exit 2; fi && \
             if [ -f /etc/laravel/mail ]; then cat /etc/laravel/mail >> .env.test.prod; else echo 'ERROR: /etc/laravel/mail not found on server' >&2; exit 2; fi && \
             cp .env.test.prod .env"
@@ -75,7 +75,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_TESTING }} \
             "docker import \
               --change 'ENTRYPOINT [\"/usr/local/bin/php-entrypoint\"]' \
               --change 'CMD [\"php-fpm\"]' \
@@ -93,7 +93,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_TESTING }} \
             "docker compose down"
     
      # Copy the compose.test.prod.yml to the vm
@@ -103,7 +103,7 @@ jobs:
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
             code/compose.test.prod.yml \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/compose.yml
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_TESTING }}:~/compose.yml
     
     # Start the compose on the vm
     - name: Start Docker Compose on VM
@@ -111,7 +111,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_TESTING }} \
             "docker compose up -d"
     
     # Clean up docker images on the vm
@@ -120,5 +120,5 @@ jobs:
         ssh -o StrictHostKeyChecking=no \
             -o ProxyCommand="cloudflared access ssh --hostname %h --service-token-id ${{ secrets.SERVICE_TOKEN_ID }} --service-token-secret ${{ secrets.SERVICE_TOKEN_SECRET }}" \
             -i ${{ secrets.SSH_PRIVATE_KEY_FILENAME }} \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_TESTING }} \
             "docker image prune -f"
