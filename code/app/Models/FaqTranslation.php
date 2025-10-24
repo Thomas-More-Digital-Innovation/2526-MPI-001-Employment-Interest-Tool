@@ -10,7 +10,7 @@ class FaqTranslation extends Model
     protected $primaryKey = 'faq_translation_id';
 
     protected $fillable = [
-        'frequently_asked_question_id',
+        'faq_id',
         'language_id',
         'question',
         'answer',
@@ -18,7 +18,7 @@ class FaqTranslation extends Model
 
     public function faq()
     {
-        return $this->belongsTo(Faq::class, 'frequently_asked_question_id');
+        return $this->belongsTo(Faq::class, 'faq_id');
     }
 
     public function language()

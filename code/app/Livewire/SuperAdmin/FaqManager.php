@@ -42,8 +42,8 @@ class FaqManager extends Component
 
     public function startEdit($id)
     {
-        $faq = Faq::where('frequently_asked_question_id', $id)->firstOrFail();
-        $englishTranslation = FaqTranslation::where('frequently_asked_question_id', $id)
+        $faq = Faq::where('faq_id', $id)->firstOrFail();
+        $englishTranslation = FaqTranslation::where('faq_id', $id)
             ->first();
         $this->editingId = $id;
         $this->form['question_nl'] = $faq->question;
@@ -57,12 +57,12 @@ class FaqManager extends Component
     {
         $this->validate();
         if ($this->editingId) {
-            $faq = Faq::where('frequently_asked_question_id', $this->editingId)->firstOrFail();
+            $faq = Faq::where('faq_id', $this->editingId)->firstOrFail();
             $faq->update([
                 'question' => $this->form['question_nl'],
                 'answer' => $this->form['answer_nl'],
             ]);
-            $englishTranslation = FaqTranslation::where('frequently_asked_question_id', $this->editingId)
+            $englishTranslation = FaqTranslation::where('faq_id', $this->editingId)
                 ->where('language_id', Language::where('language_code', 'en')->value('language_id'))
                 ->first();
             if ($englishTranslation) {
@@ -72,7 +72,7 @@ class FaqManager extends Component
                 ]);
             } else {
                 FaqTranslation::create([
-                    'frequently_asked_question_id' => $this->editingId,
+                    'faq_id' => $this->editingId,
                     'language_id' => Language::where('language_code', 'en')->value('language_id'),
                     'question' => $this->form['question_en'],
                     'answer' => $this->form['answer_en'],
@@ -85,7 +85,7 @@ class FaqManager extends Component
                 'answer' => $this->form['answer_nl'],
             ]);
             FaqTranslation::create([
-                'frequently_asked_question_id' => $faq->frequently_asked_question_id,
+                'faq_id' => $faq->faq_id,
                 'language_id' => Language::where('language_code', 'en')->value('language_id'),
                 'question' => $this->form['question_en'],
                 'answer' => $this->form['answer_en'],
@@ -105,8 +105,8 @@ class FaqManager extends Component
 
     public function deleteFaq()
     {
-        Faq::where('frequently_asked_question_id', $this->editingId)->firstOrFail()->delete();
-        FaqTranslation::where('frequently_asked_question_id', $this->editingId)->delete();
+        Faq::where('faq_id', $this->editingId)->firstOrFail()->delete();
+        FaqTranslation::where('faq_id', $this->editingId)->delete();
         $this->resetFormState();
         $this->dispatch('modal-close', name: 'delete-faq-confirmation');
     }
@@ -133,7 +133,7 @@ class FaqManager extends Component
             $query->where('question', 'like', '%'.$this->search.'%')
                   ->orWhere('answer', 'like', '%'.$this->search.'%');
         }
-        return $query->orderBy('frequently_asked_question_id', 'desc')->paginate(10);
+        return $query->orderBy('faq_id', 'desc')->paginate(10);
     }
 
     public function render()

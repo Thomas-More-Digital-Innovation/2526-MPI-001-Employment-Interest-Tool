@@ -10,13 +10,13 @@ class Faq extends Model
 {
     use HasFactory;
     protected $table = 'frequently_asked_question';
-    protected $primaryKey = 'frequently_asked_question_id';
+    protected $primaryKey = 'faq_id';
 
     protected $fillable = ['question', 'answer'];
 
     public function translations()
     {
-        return $this->hasMany(FaqTranslation::class, 'frequently_asked_question_id');
+        return $this->hasMany(FaqTranslation::class, 'faq_id');
     }
 
     public function translationForLanguage($languageId)
