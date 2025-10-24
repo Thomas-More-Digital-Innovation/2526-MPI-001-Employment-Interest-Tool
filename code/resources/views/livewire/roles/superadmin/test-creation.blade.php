@@ -316,7 +316,7 @@ $isExternalLink =
                                 style="background: {{ $question['circleFill'] ?? 'red' }}"></div>
                         </div>
                         {{-- Button that assigns the clicked question as the selected one and displays the values on the main container, text is truncated and shows up on hover as a tooltip :-) --}}
-                        <span class="w-full justify-start text-left truncate whitespace-nowrap overflow-hidden">
+                        <span class="hover:cursor-pointer w-full justify-start text-left truncate whitespace-nowrap overflow-hidden flex items-center gap-1">
                             @php
                                 $questionInterestId = $question['interest'] ?? -1;
                                 $questionInterest = $interestFields->firstWhere(
@@ -327,7 +327,8 @@ $isExternalLink =
                                     ? $questionInterest->getName(app()->getLocale())
                                     : null;
                             @endphp
-                            {{ $interestName ? __('testcreation.question_title', ['number' => $index + 1, 'title' => $interestName]) : __('testcreation.question_undefined', ['number' => $index + 1]) }}
+                            <span class="truncate">{{ $interestName ? __('testcreation.question_title', ['number' => $index + 1, 'title' => $interestName]) : __('testcreation.question_undefined', ['number' => $index + 1]) }}</span>
+                            <flux:icon.pencil variant="solid" class="w-4 h-4 flex-shrink-0" />
                         </span>
                         {{-- Button + svg of a trashcan that removes the question from the array :) --}}
                         <flux:button variant="ghost" icon="trash"
