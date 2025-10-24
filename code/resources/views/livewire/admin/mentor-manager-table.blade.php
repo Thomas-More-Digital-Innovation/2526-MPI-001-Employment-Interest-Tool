@@ -43,7 +43,7 @@
         @empty
             <tr>
                 <td colspan="7" class="px-4 py-6 text-center text-sm text-gray-500">
-                    {{ __('manage-mentors.NoMentorsFound') }}
+                    {{ __('manage-researchers.noResearchersFound') }}
                 </td>
             </tr>
         @endforelse
