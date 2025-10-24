@@ -87,7 +87,7 @@ class Question extends Model
         }
 
         $translation = $this->getTranslation($languageCode);
-        return $translation && $translation->sound_link ? $translation->sound_link : $this->sound_link;
+        return $translation && $translation->sound_link ? route('question.sound', ['filename' => $translation->sound_link]) : route('question.sound', ['filename' => $this->sound_link]);
     }
 
     public function getImageDescription($languageCode = null)
