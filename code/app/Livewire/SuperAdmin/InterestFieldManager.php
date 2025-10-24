@@ -458,7 +458,8 @@ class InterestFieldManager extends BaseCrudComponent
         $this->form = $this->defaultFormState();
 
         // Fetch available languages from the database, excluding Dutch
-        $this->availableLanguages = Language::where('language_code', '!=', 'nl')
+        $this->availableLanguages = Language::getEnabledLanguages()
+            ->where('language_code', '!=', 'nl')
             ->pluck('language_name', 'language_code')
             ->toArray();
     }
