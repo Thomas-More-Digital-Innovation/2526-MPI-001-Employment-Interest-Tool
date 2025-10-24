@@ -1,4 +1,7 @@
-@props(['position' => 'top-right'])
+@props([
+    'position' => 'top-right',
+    'displayedLanguages' => null,
+])
 
 <div class="relative" x-data="{ open: false }">
     <button
@@ -24,15 +27,17 @@
     >
         <div class="py-1 max-h-60 overflow-y-auto">
             @foreach($languages as $language)
-                <a
-                    href="{{ route('locale.change', $language->language_code) }}"
-                    class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150 {{ app()->getLocale() === $language->language_code ? 'bg-gray-50 font-semibold' : '' }}"
-                >
-                    <span class="truncate">{{ $language->language_name }}</span>
-                    @if(app()->getLocale() === $language->language_code)
-                        <flux:icon.check-circle class="w-4 h-4 text-mpi " />
-                    @endif
-                </a>
+                @if($displayedLanguages === null || in_array($language->language_code, $displayedLanguages))
+                    <a
+                        href="{{ route('locale.change', $language->language_code) }}"
+                        class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150 {{ app()->getLocale() === $language->language_code ? 'bg-gray-50 font-semibold' : '' }}"
+                    >
+                        <span class="truncate">{{ $language->language_name }}</span>
+                        @if(app()->getLocale() === $language->language_code)
+                            <flux:icon.check-circle class="w-4 h-4 text-mpi " />
+                        @endif
+                    </a>
+                @endif
             @endforeach
         </div>
     </div>

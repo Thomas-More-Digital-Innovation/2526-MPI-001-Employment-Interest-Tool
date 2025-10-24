@@ -22,7 +22,7 @@
 
 <body>
     <div class="absolute top-4 right-4 z-50">
-        <x-language-selector />
+        <x-language-selector :displayedLanguages="['en', 'nl']" />
     </div>
 
     <section class="flex min-h-screen">
