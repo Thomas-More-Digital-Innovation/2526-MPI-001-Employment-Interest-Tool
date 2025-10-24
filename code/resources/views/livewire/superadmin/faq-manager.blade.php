@@ -42,14 +42,14 @@
             </thead>
             <tbody class="divide-y divide-gray-800 text-sm text-gray-700 dark:bg-zinc-900 dark:text-gray-50">
                 @forelse ($records as $faq)
-                <tr wire:key="faq-{{ $faq->frequently_asked_question_id  }}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
+                <tr wire:key="faq-{{ $faq->faq_id  }}" class="hover:bg-gray-50 hover:dark:bg-zinc-600">
                     <td class="px-4 py-3">{{ $faq->question }}</td>
                     <td class="px-4 py-3">{{ $faq->answer }}</td>
                     <td class="px-4 py-3 text-right">
-                        <flux:button type="button" icon="pencil" wire:click="startEdit({{ $faq->frequently_asked_question_id }})" class="mr-2">
+                        <flux:button type="button" icon="pencil" wire:click="startEdit({{ $faq->faq_id }})" class="mr-2">
                             {{ __('Edit') }}
                         </flux:button>
-                        <flux:button type="button" icon="trash" variant="danger" wire:click="confirmDelete({{ $faq->frequently_asked_question_id }})">
+                        <flux:button type="button" icon="trash" variant="danger" wire:click="confirmDelete({{ $faq->faq_id }})">
                             {{ __('Delete') }}
                         </flux:button>
                     </td>

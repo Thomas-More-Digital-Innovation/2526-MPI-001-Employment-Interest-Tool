@@ -137,7 +137,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         FaqTranslation::create([
-            'frequently_asked_question_id' => $faq1->frequently_asked_question_id,
+            'faq_id' => $faq1->faq_id,
             'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
             'question' => 'What is the interest test?',
             'answer' => 'The interest test is a tool to map a person\'s interests and preferences.'
@@ -149,7 +149,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         FaqTranslation::create([
-            'frequently_asked_question_id' => $faq2->frequently_asked_question_id,
+            'faq_id' => $faq2->faq_id,
             'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
             'question' => 'Who is the test intended for?',
             'answer' => 'The test is primarily intended for people with an intellectual disability.'
@@ -161,7 +161,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         FaqTranslation::create([
-            'frequently_asked_question_id' => $faq3->frequently_asked_question_id,
+            'faq_id' => $faq3->faq_id,
             'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
             'question' => 'Why should I take this test?',
             'answer' => 'The test helps in identifying career opportunities.'
@@ -173,7 +173,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         FaqTranslation::create([
-            'frequently_asked_question_id' => $faq4->frequently_asked_question_id,
+            'faq_id' => $faq4->faq_id,
             'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
             'question' => 'How can I register as an organisation?',
             'answer' => 'Contact Raf.Hensbergen@mpi-oosterlo.be to discuss registration.'
@@ -185,7 +185,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         FaqTranslation::create([
-            'frequently_asked_question_id' => $faq5->frequently_asked_question_id,
+            'faq_id' => $faq5->faq_id,
             'language_id' => \App\Models\Language::where('language_code', 'en')->value('language_id'),
             'question' => 'How can I register as a user?',
             'answer' => 'Ask your mentor or caregiver to create an account for you.'

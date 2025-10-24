@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class FaqTranslation extends Model
 {
     protected $table = 'frequently_asked_question_translation';
-    protected $primaryKey = 'frequently_asked_question_translation_id';
+    protected $primaryKey = 'faq_translation_id';
 
     protected $fillable = [
-        'frequently_asked_question_id',
+        'faq_id',
         'language_id',
         'question',
         'answer',
@@ -18,7 +18,7 @@ class FaqTranslation extends Model
 
     public function faq()
     {
-        return $this->belongsTo(Faq::class, 'frequently_asked_question_id');
+        return $this->belongsTo(Faq::class, 'faq_id');
     }
 
     public function language()
