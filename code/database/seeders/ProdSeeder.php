@@ -57,14 +57,18 @@ class ProdSeeder extends Seeder
         ]);
 
         // Create test users with different roles
+        // Read super admin credentials from environment variables with sensible defaults
+        $superAdminUsername = env('SEED_SUPERADMIN_USERNAME', 'superadmin');
+        $superAdminPassword = env('SEED_SUPERADMIN_PASSWORD', 'password');
+
         $superAdmin = User::factory()->create([
             'first_name' => 'Super',
             'last_name' => 'Admin',
-            'username' => 'superadmin',
+            'username' => $superAdminUsername,
             'email' => 'superadmin@example.com',
             'vision_type' => 'normal',
             'is_sound_on' => false,
-            'password' => bcrypt('password'),
+            'password' => bcrypt($superAdminPassword),
             'organisation_id' => $organisation->organisation_id,
             'language_id' => $language->language_id,
             'profile_picture_url' => 'default.png',
