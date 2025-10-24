@@ -174,7 +174,7 @@ $isExternalLink =
                                                     <div class="text-xs text-zinc-500 dark:text-zinc-400">
                                                         @if ($hasContent)
                                                             <span class="text-green-600 dark:text-green-400">
-                                                                ✓
+                                                                <flux:icon name="check" class="w-4 h-4 inline-block text-green-600 dark:text-green-400" />
                                                                 @if ($hasTitle)
                                                                     {{ __('testcreation.title_label') }}
                                                                 @endif
@@ -233,7 +233,7 @@ $isExternalLink =
                                                 $translationRecorderKey = "recorder-{$selectedQuestion}-lang-{$language->language_id}";
                                             @endphp
                                             <div>
-                                                <flux:label>{{ __('testcreation.translated_audio_label') }}
+                                                <flux:label class="pb-2">{{ __('testcreation.translated_audio_label') }}
                                                 </flux:label>
                                                 <livewire:components.audio-recorder :key="$translationRecorderKey" :existingAudioUrl="$translationSoundUrl"
                                                     :wireModel="'questions.' .

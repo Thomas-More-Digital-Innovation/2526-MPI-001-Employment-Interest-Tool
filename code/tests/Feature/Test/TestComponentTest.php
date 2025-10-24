@@ -58,7 +58,7 @@ class TestComponentTest extends TestCase
             ->assertSet('title', $question->question)
             ->assertSet('image', $question->media_link)
             ->assertSet('imageDescription', $question->image_description)
-            ->assertSet('audio', $question->sound_link);
+            ->assertSet('audio', $question->getAudioUrl());
     }
 
     public function test_next_question_increments_question_number()

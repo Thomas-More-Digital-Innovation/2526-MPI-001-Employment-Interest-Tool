@@ -1,5 +1,25 @@
-<div class="flex flex-col h-full p-6">
-
+<div class="flex flex-col h-full p-6"
+     x-data="{
+         playAudio(refName){
+             let audio = this.$refs[refName];
+             if(!audio) return;
+             try{
+                 audio.pause();
+                 audio.currentTime = 0;
+                 audio.load();
+                 audio.play();
+             }catch(e){
+                 console.debug('audio play failed', e);
+             }
+         },
+         buttonsDisabled: false,
+         handleButtonClick(action) {
+             if (this.buttonsDisabled) return;
+             this.buttonsDisabled = true;
+             action();
+             setTimeout(() => { this.buttonsDisabled = false; }, 1000);
+         }
+     }">
         @php
             $firstUrl = $mainInterestImg ?? null;
             $secondUrl = $secondInterestImg ?? null;
@@ -29,12 +49,22 @@
                 </x-text>
 
                 @if($firstUrl)
-                    <x-question-image 
+                    <x-question-image
                         :imageUrl="$firstUrl"
                         alt="Main Field Image"
                         class="rounded-lg mt-3"
                         style="width:400px;height:auto;object-fit:cover;"
                     />
+                    @if(!empty($mainInterest['sound_link']))
+                        <div class="mt-2">
+                            <button class="text-2xl" @click="playAudio('main-audio')">
+                                <flux:icon.speaker-wave class="size-8 md:size-24" />
+                            </button>
+                            <audio x-ref="main-audio">
+                                <source src="{{ $mainInterest['sound_link'] }}" type="audio/mpeg" />
+                            </audio>
+                        </div>
+                    @endif
                 @endif
             </div>
         @endif
@@ -52,12 +82,22 @@
                 </x-text>
 
                 @if($secondUrl)
-                    <x-question-image 
+                    <x-question-image
                         :imageUrl="$secondUrl"
                         alt="Second Field Image"
                         class="rounded-lg mt-3"
                         style="width:350px;height:auto;object-fit:cover;"
                     />
+                    @if(!empty($secondInterest['sound_link']))
+                        <div class="mt-2">
+                            <button class="text-2xl" @click="playAudio('second-audio')">
+                                <flux:icon.speaker-wave class="size-8 md:size-24" />
+                            </button>
+                            <audio x-ref="second-audio">
+                                <source src="{{ $secondInterest['sound_link'] }}" type="audio/mpeg" />
+                            </audio>
+                        </div>
+                    @endif
                 @endif
             </div>
         @endif
@@ -75,12 +115,22 @@
                 </x-text>
 
                 @if($lastUrl)
-                    <x-question-image 
+                    <x-question-image
                         :imageUrl="$lastUrl"
                         alt="Last Field Image"
                         class="rounded-lg mt-3"
                         style="width:300px;height:auto;object-fit:cover;"
                     />
+                    @if(!empty($lastInterest['sound_link']))
+                        <div class="mt-2">
+                            <button class="text-2xl" @click="playAudio('last-audio')">
+                                <flux:icon.speaker-wave class="size-8 md:size-24" />
+                            </button>
+                            <audio x-ref="last-audio">
+                                <source src="{{ $lastInterest['sound_link'] }}" type="audio/mpeg" />
+                            </audio>
+                        </div>
+                    @endif
                 @endif
             </div>
         @endif

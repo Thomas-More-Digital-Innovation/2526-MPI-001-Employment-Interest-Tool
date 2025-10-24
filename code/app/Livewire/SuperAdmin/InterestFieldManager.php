@@ -6,9 +6,15 @@ use App\Livewire\Crud\BaseCrudComponent;
 use App\Models\InterestField;
 use App\Models\Language;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Lang;
 
 class InterestFieldManager extends BaseCrudComponent
 {
+    protected $listeners = [
+        'sound-updated' => 'handleSoundUpdated',
+        'sound-cleared' => 'handleSoundCleared',
+    ];
+
     public string $newTranslationLanguage = '';
 
     public array $availableLanguages = [];
@@ -48,24 +54,44 @@ class InterestFieldManager extends BaseCrudComponent
                 'name' => $this->form['name'],
                 'description' => $this->form['description'],
                 'active' => $this->form['active'] ?? true,
+                'sound_link' => $this->form['sound_link'] ?? null,
             ]);
 
-            // Update translations
+            // Update translations: only create/update when there is content, delete if translation exists but cleared
             foreach ($this->form['translations'] as $languageCode => $translation) {
+                // Normalize values
+                $name = trim((string) ($translation['name'] ?? ''));
+                $description = trim((string) ($translation['description'] ?? ''));
+                $sound = $translation['sound_link'] ?? null;
+
                 $interestFieldTranslation = $interestField->interestFieldTranslations()
                     ->whereHas('language', function ($query) use ($languageCode) {
                         $query->where('language_code', $languageCode);
                     })
                     ->first();
 
-                if ($interestFieldTranslation) {
-                    $interestFieldTranslation->update($translation);
-                } else {
-                    $interestField->interestFieldTranslations()->create([
-                        'language_code' => $languageCode,
-                        'name' => $translation['name'],
-                        'description' => $translation['description'],
-                    ]);
+                // If no content and translation exists, delete it
+                if ($interestFieldTranslation && $name === '' && $description === '' && empty($sound)) {
+                    $interestFieldTranslation->delete();
+                    continue;
+                }
+
+                // If there's content, create or update
+                if ($name !== '' || $description !== '' || ! empty($sound)) {
+                    if ($interestFieldTranslation) {
+                        $interestFieldTranslation->update([
+                            'name' => $name,
+                            'description' => $description,
+                            'sound_link' => $sound ?? $interestFieldTranslation->sound_link,
+                        ]);
+                    } else {
+                        $interestField->interestFieldTranslations()->create([
+                            'language_id' => Language::where('language_code', $languageCode)->value('language_id'),
+                            'name' => $name,
+                            'description' => $description,
+                            'sound_link' => $sound ?? null,
+                        ]);
+                    }
                 }
             }
         } else {
@@ -74,6 +100,7 @@ class InterestFieldManager extends BaseCrudComponent
                 'name' => $this->form['name'],
                 'description' => $this->form['description'],
                 'active' => $this->form['active'] ?? true,
+                'sound_link' => $this->form['sound_link'] ?? null,
             ]);
 
             $wasActive = null; // newly created
@@ -103,6 +130,67 @@ class InterestFieldManager extends BaseCrudComponent
         $this->dispatch('modal-close', name: 'create-interest-field-form');
     }
 
+    /**
+     * Handle sound updated event from AudioRecorder component
+     * Expected $data contains 'wireModel' => string and 'filename' => string
+     */
+    public function handleSoundUpdated($data): void
+    {
+        $wireModel = $data['wireModel'] ?? null;
+        $filename = $data['filename'] ?? null;
+
+        if (! $wireModel || ! $filename) {
+            return;
+        }
+
+        // Expecting wireModel like: form.translations.en.uploaded_sound OR form.uploaded_sound
+        if (preg_match('/form\.translations\.([a-zA-Z_-]+)\.uploaded_sound/', $wireModel, $matches)) {
+            $lang = $matches[1];
+            if (! isset($this->form['translations'][$lang])) {
+                // Ensure structure exists
+                $this->form['translations'][$lang] = [
+                    'name' => '',
+                    'description' => '',
+                    'sound_link' => null,
+                ];
+            }
+
+            $this->form['translations'][$lang]['sound_link'] = $filename;
+            return;
+        }
+
+        // Base interest field audio
+        if (preg_match('/form\.uploaded_sound/', $wireModel)) {
+            $this->form['sound_link'] = $filename;
+            return;
+        }
+    }
+
+    /**
+     * Handle sound cleared event from AudioRecorder component
+     */
+    public function handleSoundCleared($data): void
+    {
+        $wireModel = $data['wireModel'] ?? null;
+
+        if (! $wireModel) {
+            return;
+        }
+
+        if (preg_match('/form\.translations\.([a-zA-Z_-]+)\.uploaded_sound/', $wireModel, $matches)) {
+            $lang = $matches[1];
+            if (isset($this->form['translations'][$lang])) {
+                $this->form['translations'][$lang]['sound_link'] = null;
+            }
+            return;
+        }
+
+        if (preg_match('/form\.uploaded_sound/', $wireModel)) {
+            $this->form['sound_link'] = null;
+            return;
+        }
+    }
+
     protected function view(): string
     {
         return 'livewire.superadmin.interest-field-manager';
@@ -112,11 +200,20 @@ class InterestFieldManager extends BaseCrudComponent
     {
         $languages = Language::getEnabledLanguages();
 
+        $translations = [];
+        foreach ($languages as $lang) {
+            $translations[$lang->language_code] = [
+                'name' => '',
+                'description' => '',
+                'sound_link' => null,
+            ];
+        }
+
         $form = [
             'name' => '',
             'description' => '',
             'active' => true,
-            'translations' => [],
+            'translations' => $translations,
         ];
 
         return $form;
@@ -143,6 +240,7 @@ class InterestFieldManager extends BaseCrudComponent
             'name' => $record->name,
             'description' => $record->description,
             'active' => $record->active ?? true,
+            'sound_link' => $record->sound_link ?? null,
             'translations' => [],
         ];
 
@@ -150,7 +248,20 @@ class InterestFieldManager extends BaseCrudComponent
             $form['translations'][$translation->language->language_code] = [
                 'name' => $translation->name,
                 'description' => $translation->description,
+                'sound_link' => $translation->getAudioUrl() ?? null,
             ];
+        }
+
+        // Ensure all enabled languages are present in the translations array (empty if missing)
+        $languages = Language::getEnabledLanguages();
+        foreach ($languages as $lang) {
+            if (! isset($form['translations'][$lang->language_code])) {
+                $form['translations'][$lang->language_code] = [
+                    'name' => '',
+                    'description' => '',
+                    'sound_link' => null,
+                ];
+            }
         }
 
         return $form;
@@ -343,14 +454,12 @@ class InterestFieldManager extends BaseCrudComponent
 
     public function mount(): void
     {
-        $this->form = [
-            'name' => '',
-            'description' => '',
-            'translations' => [],
-        ];
+        // Initialize form state with translations for all enabled languages
+        $this->form = $this->defaultFormState();
 
         // Fetch available languages from the database, excluding Dutch
-        $this->availableLanguages = Language::where('language_code', '!=', 'nl')
+        $this->availableLanguages = Language::getEnabledLanguages()
+            ->where('language_code', '!=', 'nl')
             ->pluck('language_name', 'language_code')
             ->toArray();
     }

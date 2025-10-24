@@ -125,4 +125,14 @@ class Question extends Model
 
         return route('question.image', ['filename' => $filename]);
     }
+
+    public function getAudioUrl($languageCode = null)
+    {
+        $filename = $this->getSoundLink($languageCode);
+        if (!$filename) {
+            return null;
+        }
+
+        return route('question.sound', ['filename' => $filename]);
+    }
 }

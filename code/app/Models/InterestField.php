@@ -17,6 +17,7 @@ class InterestField extends Model
         'name',
         'description',
         'active',
+        'sound_link',
     ];
 
     protected $casts = [
@@ -62,5 +63,24 @@ class InterestField extends Model
 
         $translation = $this->getTranslation($languageCode);
         return $translation && $translation->description ? $translation->description : $this->description;
+    }
+
+    public function getSoundLink($languageCode = null)
+    {
+        if (!$languageCode) {
+            return $this->sound_link;
+        }
+        $translation = $this->getTranslation($languageCode);
+        return $translation && $translation->sound_link ? $translation->sound_link : $this->sound_link;
+    }
+
+    public function getAudioUrl($languageCode = null)
+    {
+        $filename = $this->getSoundLink($languageCode);
+        if (!$filename) {
+            return null;
+        }
+
+        return route('question.sound', ['filename' => $filename]);
     }
 }

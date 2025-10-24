@@ -207,148 +207,217 @@
     <!-- Add Interest Field Modal -->
     <flux:modal
         name="create-interest-field-form"
-        class="max-w-2xl"
+        class="w-full h-full"
+        :closable="false"
         x-on:close="$wire.call('cancelForm')">
-        <div class="space-y-6">
-            <flux:heading size="lg">
-                {{ $editingId ? __('interestfield.edit') : __('interestfield.add') }}
-            </flux:heading>
+        <form wire:submit.prevent="save" class="w-full h-full flex flex-col">
+            <div class="relative flex items-center mb-auto border-b border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
+                <h1 class="absolute text-lg font-medium">
+                    {{ $editingId ? __('interestfield.edit') : __('interestfield.add') }}
+                </h1>
 
-            <form wire:submit.prevent="save" class="space-y-6">
-                <div class="space-y-4">
-                    <div>
-                        <flux:input
-                            id="interest-field-name-default"
-                            type="text"
-                            wire:model.defer="form.name"
-                            :label="__('interestfield.name') . ' (' . __('interestfield.default') . ')'"
-                            required
-                        />
-                        @error('form.name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <div class="flex-1"></div>
 
-                    <div>
-                        <flux:textarea
-                            id="interest-field-description-default"
-                            wire:model.defer="form.description"
-                            :label="__('interestfield.description') . ' (' . __('interestfield.default') . ')'"
-                            rows="3"
-                            required
-                        />
-                        @error('form.description')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <div class="flex-shrink-0">
+                    <flux:modal.close>
+                        <flux:button icon="x-mark" variant="subtle"/>
+                    </flux:modal.close>
+                </div>
+            </div>
+            <div class="flex-1 overflow-auto space-y-4 pt-4 px-1">
+                <div>
+                    <flux:input
+                        id="interest-field-name-default"
+                        type="text"
+                        wire:model.defer="form.name"
+                        :label="__('interestfield.name') . ' (' . __('interestfield.default') . ')'"
+                        required
+                    />
+                    @error('form.name')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
 
-                    <div>
-                        <flux:checkbox
-                            id="interest-field-active"
-                            wire:model.defer="form.active"
-                            :label="__('interestfield.active_label')"
-                        />
-                        @error('form.active')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <div>
+                    <flux:textarea
+                        id="interest-field-description-default"
+                        wire:model.defer="form.description"
+                        :label="__('interestfield.description') . ' (' . __('interestfield.default') . ')'"
+                        rows="3"
+                        required
+                    />
+                    @error('form.description')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
 
-                    @if ($editingId)
-                        <div>
-                            <h1>{{ __('interestfield.add_translation') }}</h1>
-                            <div class="flex justify-end items-center gap-2">
-                                <flux:select
-                                    id="new-translation-language"
-                                    wire:model="newTranslationLanguage">
-                                    <option value="" disabled selected>{{ __('interestfield.select_language') }}</option>
-                                    @foreach ($availableLanguages as $languageCode => $languageName)
-                                        @if (!isset($form['translations'][$languageCode]))
-                                            <option value="{{ $languageCode }}">
-                                                {{ $languageName }}
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </flux:select>
+                @if ($editingId)
+                    <p class="mb-2">{{ __('interestfield.audio_label') . ' (' . __('interestfield.default') . ')' }}</p>
+                        @php
+                        $recorderKeyBase = 'interest-field-' . ($editingId ?? 'new') . '-recorder-base';
+                        $baseSoundUrl = $form['sound_link'] ?? null;
+                    @endphp
+                    <livewire:components.audio-recorder
+                            :key="$recorderKeyBase"
+                            :existing-audio-url="$baseSoundUrl ? route('question.sound', ['filename' => $baseSoundUrl]) : null"
+                            :wire-model="'form.uploaded_sound'"
+                            :recorder-id="$recorderKeyBase" />
+                @endif
+                <div>
+                    <flux:checkbox
+                        id="interest-field-active"
+                        wire:model.defer="form.active"
+                        :label="__('interestfield.active_label')"
+                    />
+                    @error('form.active')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
 
-                                <flux:button
-                                    type="button"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white"
-                                    wire:click="addTranslation">
-                                    {{ __('Add') }}
-                                </flux:button>
+                @if ($editingId)
+                    @foreach ($availableLanguages as $languageCode => $languageName)
+                        @php
+                            $translation = $form['translations'][$languageCode];
+                            $hasName = !empty($translation['name']);
+                            $hasDescription = !empty($translation['description']);
+                            $soundUrl = $translation['sound_link'] ?? null;
+                            $hasAudio = !empty($soundUrl);
+                            $hasContent = $hasName || $hasDescription || $hasAudio;
+                        @endphp
+                        <div class="border border-zinc-300 dark:border-zinc-600 rounded-lg overflow-hidden" x-data="{ open: false }">
+                            <button type="button" x-show="!open" class="w-full px-4 py-3 flex items-center justify-between bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors" x-on:click="open = true">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                                        {{ strtoupper(substr($languageCode, 0, 2)) }}
+                                    </div>
+                                    {{-- <h2 class="text-lg font-medium">{{ $languageName }}</h2> --}}
+                                    <div class="text-left">
+                                        <div class="font-semibold text-zinc-900 dark:text-zinc-100">
+                                            {{ $languageName }}
+                                        </div>
+                                        <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                                            @if ($hasContent)
+                                                <span class="text-green-600 dark:text-green-400">
+                                                    <flux:icon name="check" class="w-4 h-4 inline-block text-green-600 dark:text-green-400" />
+                                                    @if ($hasName && $hasDescription && $hasAudio)
+                                                        {{ __('interestfield.title_label') . ', ' . __('interestfield.description_label') . ', ' . __('interestfield.audio_label') }}
+                                                    @elseif ($hasName && $hasDescription)
+                                                        {{ __('interestfield.title_label') . ', ' . __('interestfield.description_label') }}
+                                                    @elseif ($hasName && $hasAudio)
+                                                        {{ __('interestfield.title_label') . ', ' . __('interestfield.audio_label') }}
+                                                    @elseif ($hasDescription && $hasAudio)
+                                                        {{ __('interestfield.description_label') . ', ' . __('interestfield.audio_label') }}
+                                                    @elseif ($hasDescription)
+                                                        {{ __('interestfield.description_label') }}
+                                                    @elseif ($hasAudio)
+                                                        {{ __('interestfield.audio_label') }}
+                                                    @else
+                                                        {{ __('interestfield.title_label') }}
+                                                    @endif
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="text-zinc-400">{{ __('testcreation.no_translation') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <flux:icon name="chevron-down" class="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
+                            </button>
+
+                            <button type="button" x-show="open" class="w-full px-4 py-3 flex items-center justify-between bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors" x-on:click="open = false">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                                        {{ strtoupper(substr($languageCode, 0, 2)) }}
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="font-semibold text-zinc-900 dark:text-zinc-100">
+                                            {{ $languageName }}
+                                        </div>
+                                        <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                                            @if ($hasContent)
+                                                <span class="text-green-600 dark:text-green-400">
+                                                    <flux:icon name="check" class="w-4 h-4 inline-block text-green-600 dark:text-green-400" />
+                                                    @if ($hasName && $hasDescription && $hasAudio)
+                                                        {{ __('interestfield.title_label') . ', ' . __('interestfield.description_label') . ', ' . __('interestfield.audio_label') }}
+                                                    @elseif ($hasName && $hasDescription)
+                                                        {{ __('interestfield.title_label') . ', ' . __('interestfield.description_label') }}
+                                                    @elseif ($hasName && $hasAudio)
+                                                        {{ __('interestfield.title_label') . ', ' . __('interestfield.audio_label') }}
+                                                    @elseif ($hasDescription && $hasAudio)
+                                                        {{ __('interestfield.description_label') . ', ' . __('interestfield.audio_label') }}
+                                                    @elseif ($hasDescription)
+                                                        {{ __('interestfield.description_label') }}
+                                                    @elseif ($hasAudio)
+                                                        {{ __('interestfield.audio_label') }}
+                                                    @else
+                                                        {{ __('interestfield.title_label') }}
+                                                    @endif
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="text-zinc-400">{{ __('testcreation.no_translation') }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <flux:icon name="chevron-up" class="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
+                            </button>
+
+
+                            <div x-show="open" class="mt-4 space-y-4 mx-4 mb-4">
+                                <div>
+                                    <flux:input
+                                        wire:model.live.debounce.300ms="form.translations.{{ $languageCode }}.name"
+                                        :label="__('interestfield.name')"
+                                    />
+                                    @error('form.translations.' . $languageCode . '.name')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-2">
+                                    <flux:textarea
+                                        wire:model.live.debounce.300ms="form.translations.{{ $languageCode }}.description"
+                                        :label="__('interestfield.description')"
+                                        rows="3"
+                                    />
+                                    @error('form.translations.' . $languageCode . '.description')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    @php
+                                        $recorderKey = 'interest-field-' . ($editingId ?? 'new') . '-recorder-' . $languageCode;
+                                    @endphp
+                                    <flux:label class="pb-2">{{ __('interestfield.audio_label') }}</flux:label>
+                                    <livewire:components.audio-recorder
+                                        :key="$recorderKey"
+                                        :existing-audio-url="$soundUrl"
+                                        :wire-model="'form.translations.' . $languageCode . '.uploaded_sound'"
+                                        :recorder-id="$recorderKey" />
+                                </div>
                             </div>
                         </div>
+                    @endforeach
+                @endif
+            </div>
 
-                        @foreach ($form['translations'] as $languageCode => $translation)
-                            <div class="border rounded-md p-4 mb-4" x-data="{ open: false }">
-                                <div class="flex justify-between items-center">
-                                    <div x-show="!open" class="flex items-center gap-2">
-                                        <flux:button
-                                            type="button"
-                                            icon="chevron-down"
-                                            x-on:click="open = true">
-                                        </flux:button>
-                                        <h2 class="text-lg font-medium">{{ $availableLanguages[$languageCode] ?? $languageCode }}</h2>
-                                    </div>
-                                    <div x-show="open" class="flex items-center gap-2">
-                                        <flux:button
-                                            type="button"
-                                            icon="chevron-up"
-                                            x-on:click="open = false">
-                                        </flux:button>
-                                        <h2 class="text-lg font-medium">{{ $availableLanguages[$languageCode] ?? $languageCode }}</h2>
-                                    </div>
-                                    <flux:button
-                                        type="button"
-                                        icon="x-mark"
-                                        variant="danger"
-                                        size="sm"
-                                        class="ml-auto"
-                                        wire:click="removeTranslation('{{ $languageCode }}')"/>
-                                </div>
-
-                                <div x-show="open" class="mt-4 space-y-4">
-                                    <div>
-                                        <flux:input
-                                            wire:model.defer="form.translations.{{ $languageCode }}.name"
-                                            :label="__('interestfield.name')"
-                                            required
-                                        />
-                                        @error('form.translations.' . $languageCode . '.name')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-
-                                    <div>
-                                        <flux:textarea
-                                            wire:model.defer="form.translations.{{ $languageCode }}.description"
-                                            :label="__('interestfield.description')"
-                                            rows="3"
-                                            required
-                                        />
-                                        @error('form.translations.' . $languageCode . '.description')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-
-                <div class="flex justify-end space-x-2 rtl:space-x-reverse">
-                    <flux:modal.close>
-                        <flux:button type="button" variant="filled">
-                            {{ __('Cancel') }}
-                        </flux:button>
-                    </flux:modal.close>
-
-                    <flux:button type="submit" class="bg-color-mpi">
-                        {{ $editingId ? __('interestfield.updatebtn') : __('interestfield.addbtn') }}
+            <div class="flex justify-end space-x-2 mt-auto border-t border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 pt-2">
+                <flux:modal.close>
+                    <flux:button type="button" variant="filled">
+                        {{ __('Cancel') }}
                     </flux:button>
-                </div>
-            </form>
-        </div>
+                </flux:modal.close>
+
+                <flux:button type="submit" class="bg-color-mpi">
+                    {{ $editingId ? __('interestfield.updatebtn') : __('interestfield.addbtn') }}
+                </flux:button>
+            </div>
+        </form>
     </flux:modal>
 
     <!-- Delete Interest Field Confirmation Modal -->
