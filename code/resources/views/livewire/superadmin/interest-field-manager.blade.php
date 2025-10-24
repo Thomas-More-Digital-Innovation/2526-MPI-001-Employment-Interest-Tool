@@ -207,6 +207,7 @@
     <!-- Add Interest Field Modal -->
     <flux:modal
         name="create-interest-field-form"
+        class="w-full h-full"
         :closable="false"
         x-on:close="$wire.call('cancelForm')">
         <form wire:submit.prevent="save" class="w-full h-full flex flex-col">
@@ -322,6 +323,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <flux:icon name="chevron-down" class="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
                             </button>
 
                             <button type="button" x-show="open" class="w-full px-4 py-3 flex items-center justify-between bg-zinc-50 dark:bg-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-colors" x-on:click="open = false">
@@ -361,6 +363,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <flux:icon name="chevron-up" class="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
                             </button>
 
 
