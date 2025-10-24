@@ -251,7 +251,7 @@
                     @enderror
                 </div>
 
-                @if ($editingId)
+              
                     <p class="mb-2">{{ __('interestfield.audio_label') . ' (' . __('interestfield.default') . ')' }}</p>
                         @php
                         $recorderKeyBase = 'interest-field-' . ($editingId ?? 'new') . '-recorder-base';
@@ -262,7 +262,6 @@
                             :existing-audio-url="$baseSoundUrl ? route('question.sound', ['filename' => $baseSoundUrl]) : null"
                             :wire-model="'form.uploaded_sound'"
                             :recorder-id="$recorderKeyBase" />
-                @endif
                 <div>
                     <flux:checkbox
                         id="interest-field-active"
@@ -274,7 +273,6 @@
                     @enderror
                 </div>
 
-                @if ($editingId)
                     @foreach ($availableLanguages as $languageCode => $languageName)
                         @php
                             $translation = $form['translations'][$languageCode];
@@ -403,7 +401,6 @@
                             </div>
                         </div>
                     @endforeach
-                @endif
             </div>
 
             <div class="flex justify-end space-x-2 mt-auto border-t border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 pt-2">
