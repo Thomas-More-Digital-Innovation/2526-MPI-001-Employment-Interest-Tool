@@ -104,7 +104,7 @@
                         <!-- Footer -->
                         <tr>
                             <td style="padding:0 24px 20px 24px; border-top:1px solid #f3f4f6; text-align:left;">
-                                <p style="margin:12px 0 0 0; font-size:12px; color:#9ca3af;">Dit bericht was verstuurd van InteresseTest.</p>
+                                <p style="margin:12px 0 0 0; font-size:12px; color:#9ca3af;">Dit bericht werd verstuurd door InteresseTest.</p>
                             </td>
                         </tr>
                     </table>
