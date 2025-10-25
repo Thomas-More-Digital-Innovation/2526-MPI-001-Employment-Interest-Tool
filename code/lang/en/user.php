@@ -11,8 +11,8 @@ return [
     'language' => 'Language',
     'profile' => 'Profile',
     'update_settings' => 'Update settings',
-    'sound_on' => 'Sound On',
-    'sound_off' => 'Sound Off',
+    'sound_on' => 'Automatic Sound On',
+    'sound_off' => 'Automatic Sound Off',
     'status'  => 'Status',
     'actions' => 'Actions',
     'active' => 'Active',
@@ -40,4 +40,5 @@ return [
     'return_to_dashboard' => 'Return to dashboard',
     'view_results' => 'View results',
     'chooseNewPassword' => 'Choose your password',
+    'informationSoundAutomatic' => 'During the test the sound will be played automatic',
 ];

@@ -11,8 +11,8 @@ return [
     'language' => 'Taal',
     'profile' => 'Profiel',
     'update_settings' => 'Instellingen bijwerken',
-    'sound_on' => 'Geluid Aan',
-    'sound_off' => 'Geluid Uit',
+    'sound_on' => 'Automatisch Geluid Aan',
+    'sound_off' => 'Automatisch Geluid Uit',
     'status'  => 'Status',
     'actions' => 'Acties',
     'active' => 'Actief',
@@ -40,4 +40,5 @@ return [
     'return_to_dashboard' => 'Terug naar dashboard',
     'view_results' => 'Bekijk resultaten',
     'chooseNewPassword' => 'Kies uw wachtwoord',
+    'informationSoundAutomatic' => 'Tijdens het maken van een test wordt het geluid automatisch afgespeeld',
 ];
