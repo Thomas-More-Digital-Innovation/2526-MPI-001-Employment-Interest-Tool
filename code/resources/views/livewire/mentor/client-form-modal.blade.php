@@ -90,10 +90,10 @@
                         wire:model.defer="form.language_id"
                         :label="__('Language')"
                         required>
-                        @foreach ($languages as $language)
-                        <option value="{{ $language['id'] }}" {{ $language['id'] === $form['language_id'] ? 'selected' : '' }}>
-                            {{ $language['label'] }}
-                        </option>
+                        @foreach($this->languages as $lang)
+                            <option value="{{ $lang->language_id }}">
+                                {{ __("user.language_{$lang->language_code}") !== "user.language_{$lang->language_code}" ? __("user.language_{$lang->language_code}") : $lang->language_name }}
+                            </option>
                         @endforeach
                     </flux:select>
                     @error('form.language_id')
