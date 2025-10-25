@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class ClientFormModal extends Component
@@ -24,7 +25,7 @@ class ClientFormModal extends Component
     public array $form = [];
     public ?int $editingId = null;
     public string $mode = 'create';
-    public array $languages = [];
+    public Collection $languages;
     public array $visionTypes = [];
 
     protected $listeners = [
@@ -162,14 +163,7 @@ class ClientFormModal extends Component
 
     protected function loadLanguages(): void
     {
-        $this->languages = Language::orderBy('language_name')
-            ->get()
-            ->map(fn(Language $language) => [
-                'id' => $language->language_id,
-                'label' => $language->language_name,
-                'code' => $language->language_code,
-            ])
-            ->all();
+        $this->languages = Language::orderBy('language_name')->get();
     }
 
     protected function normalizeVision(?string $vision): string

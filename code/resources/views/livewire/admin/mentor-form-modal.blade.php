@@ -16,9 +16,6 @@
                         :label="__('user.first_name')"
                         required
                         autofocus />
-                    @error('form.first_name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div>
@@ -28,9 +25,6 @@
                         wire:model.defer="form.last_name"
                         :label="__('user.last_name')" 
                         required/>
-                    @error('form.last_name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div>
@@ -40,9 +34,6 @@
                         wire:model.defer="form.username"
                         :label="__('user.username')"
                         required />
-                    @error('form.username')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div>
@@ -52,9 +43,6 @@
                         wire:model.defer="form.password"
                         :label="$editingId ? __('user.new_password_optional') : __('user.password')"
                         :required="!$editingId" />
-                    @error('form.password')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="md:col-span-2">
@@ -63,15 +51,12 @@
                         wire:model.defer="form.language_id"
                         :label="__('Language')"
                         required>
-                        @foreach ($languages as $language)
-                        <option value="{{ $language['id'] }}" {{ $language['id'] === $form['language_id'] ? 'selected' : '' }}>
-                            {{ $language['label'] }}
-                        </option>
+                        @foreach($languages as $lang)
+                            <option value="{{ $lang->language_id }}">
+                                {{ __("user.language_{$lang->language_code}") !== "user.language_{$lang->language_code}" ? __("user.language_{$lang->language_code}") : $lang->language_name }}
+                            </option>
                         @endforeach
                     </flux:select>
-                    @error('form.language_id')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="md:col-span-2">
@@ -84,9 +69,6 @@
                             wire:model.defer="form.active"
                             :label="__('manage-mentors.MentorCanSignIn')" />
                     </div>
-                    @error('form.active')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
             </div>
 

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class ResearcherFormModal extends Component
@@ -17,7 +18,7 @@ class ResearcherFormModal extends Component
     public array $form = [];
     public ?int $editingId = null;
     public string $mode = 'create';
-    public array $languages = [];
+    public Collection $languages;
 
     protected ?int $organisationId = null;
     protected ?int $defaultLanguageId = 1;
@@ -43,17 +44,10 @@ class ResearcherFormModal extends Component
 
     protected function loadLanguages(): void
     {
-        $languageCollection = Language::orderBy('language_name')->get();
-        $this->languages = $languageCollection
-            ->map(fn(Language $language) => [
-                'id' => $language->language_id,
-                'label' => $language->language_name,
-                'code' => $language->language_code,
-            ])->all();
-
-        $this->defaultLanguageId = $languageCollection
+        $this->languages = Language::orderBy('language_name')->get();
+        $this->defaultLanguageId = $this->languages
             ->firstWhere('language_code', 'nl')?->language_id
-            ?? $languageCollection->first()?->language_id;
+            ?? $this->languages->first()?->language_id;
     }
 
     public function openForm(?int $researcherId = null): void
@@ -125,6 +119,20 @@ class ResearcherFormModal extends Component
             ]),
             'form.language_id' => ['required', 'integer', 'exists:language,language_id'],
             'form.active' => ['boolean'],
+        ];
+    }
+
+    /**
+     * Provide custom validation messages for this component.
+     * This ensures the password min rule emits our localized message
+     * instead of the generic validator message that shows the raw key.
+     */
+    public function messages()
+    {
+        return [
+            'form.password.min' => __('user.password_length_error'),
+            'form.password.min.string' => __('user.password_length_error'),
+            'form.password.required' => __('user.password_length_error'),
         ];
     }
 

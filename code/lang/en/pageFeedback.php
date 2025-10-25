@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'Feedback' => 'Feedback',
-    'send_feedback'=> 'Send Feedback',
+    'send_feedback'=> 'Send Feedback To The Superadministrator',
     'feedback_to_superadmin' =>'Send feedback to the superadministrator.',
     'Test' => 'Test',
     'Question' => 'Question',

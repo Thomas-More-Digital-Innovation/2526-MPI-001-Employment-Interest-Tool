@@ -292,7 +292,7 @@
                                     {{-- <h2 class="text-lg font-medium">{{ $languageName }}</h2> --}}
                                     <div class="text-left">
                                         <div class="font-semibold text-zinc-900 dark:text-zinc-100">
-                                            {{ $languageName }}
+                                            {{ __("user.language_{$languageCode}") !== "user.language_{$languageCode}" ? __("user.language_{$languageCode}") : $languageName }}
                                         </div>
                                         <div class="text-xs text-zinc-500 dark:text-zinc-400">
                                             @if ($hasContent)
@@ -332,7 +332,7 @@
                                     </div>
                                     <div class="text-left">
                                         <div class="font-semibold text-zinc-900 dark:text-zinc-100">
-                                            {{ $languageName }}
+                                            {{ __("user.language_{$languageCode}") !== "user.language_{$languageCode}" ? __("user.language_{$languageCode}") : $languageName }}
                                         </div>
                                         <div class="text-xs text-zinc-500 dark:text-zinc-400">
                                             @if ($hasContent)

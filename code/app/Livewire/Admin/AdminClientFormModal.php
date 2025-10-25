@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
+use Illuminate\Support\Collection;
 
 class AdminClientFormModal extends Component
 {
@@ -24,7 +25,7 @@ class AdminClientFormModal extends Component
     public array $form = [];
     public ?int $editingId = null;
     public string $mode = 'create';
-    public array $languages = [];
+    public Collection $languages;
     public array $visionTypes = [];
     public array $mentorOptions = [];
 
@@ -34,6 +35,8 @@ class AdminClientFormModal extends Component
 
     public function mount(): void
     {
+        // Initialize as empty collection to ensure view always receives a Collection
+        $this->languages = collect();
         $this->loadLanguages();
         $this->loadMentors();
         $this->visionTypes = $this->visionTypeOptions();
@@ -56,6 +59,21 @@ class AdminClientFormModal extends Component
         }
 
         $this->dispatch('modal-open', name: 'admin-client-form');
+    }
+
+
+    /**
+     * Provide custom validation messages for this component.
+     * This ensures the password min rule emits our localized message
+     * instead of the generic validator message that shows the raw key.
+     */
+    public function messages()
+    {
+        return [
+            'form.password.min' => __('user.password_length_error'),
+            'form.password.min.string' => __('user.password_length_error'),
+            'form.password.required' => __('user.password_length_error'),
+        ];
     }
 
     public function save(): void
@@ -179,14 +197,8 @@ class AdminClientFormModal extends Component
 
     protected function loadLanguages(): void
     {
-        $this->languages = Language::orderBy('language_name')
-            ->get()
-            ->map(fn(Language $language) => [
-                'id' => $language->language_id,
-                'label' => $language->language_name,
-                'code' => $language->language_code,
-            ])
-            ->all();
+        // Keep languages as Eloquent models (Collection) so views can access properties
+        $this->languages = Language::orderBy('language_name')->get();
     }
 
     protected function loadMentors(): void
@@ -234,11 +246,7 @@ class AdminClientFormModal extends Component
                 'max:255',
                 Rule::unique('users', 'username')->ignore($this->editingId, 'user_id'),
             ],
-            'form.password' => array_filter([
-                $this->editingId ? 'nullable' : 'required',
-                'string',
-                Password::defaults(),
-            ]),
+            'form.password' => [$this->editingId ? 'nullable' : 'required', 'string', Password::defaults()],
             'form.language_id' => ['required', 'integer', 'exists:language,language_id'],
             'form.active' => ['boolean'],
             'form.is_sound_on' => ['boolean'],

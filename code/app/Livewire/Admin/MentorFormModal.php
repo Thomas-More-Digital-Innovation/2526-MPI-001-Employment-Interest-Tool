@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Language;
+use Illuminate\Support\Collection;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class MentorFormModal extends Component
     public array $form = [];
     public ?int $editingId = null;
     public string $mode = 'create';
-    public array $languages = [];
+    public Collection $languages;
 
     protected ?int $organisationId = null;
     protected ?int $defaultLanguageId = 1;
@@ -43,17 +44,11 @@ class MentorFormModal extends Component
 
     protected function loadLanguages(): void
     {
-        $languageCollection = Language::orderBy('language_name')->get();
-        $this->languages = $languageCollection
-            ->map(fn(Language $language) => [
-                'id' => $language->language_id,
-                'label' => $language->language_name,
-                'code' => $language->language_code,
-            ])->all();
+        $this->languages = Language::orderBy('language_name')->get();
 
-        $this->defaultLanguageId = $languageCollection
+        $this->defaultLanguageId = $this->languages
             ->firstWhere('language_code', 'nl')?->language_id
-            ?? $languageCollection->first()?->language_id;
+            ?? $this->languages->first()?->language_id;
     }
 
     public function openForm(?int $mentorId = null): void
@@ -125,6 +120,20 @@ class MentorFormModal extends Component
             ]),
             'form.language_id' => ['required', 'integer', 'exists:language,language_id'],
             'form.active' => ['boolean'],
+        ];
+    }
+
+    /**
+     * Provide custom validation messages for this component.
+     * This ensures the password min rule emits our localized message
+     * instead of the generic validator message that shows the raw key.
+     */
+    public function messages()
+    {
+        return [
+            'form.password.min' => __('user.password_length_error'),
+            'form.password.min.string' => __('user.password_length_error'),
+            'form.password.required' => __('user.password_length_error'),
         ];
     }
 
