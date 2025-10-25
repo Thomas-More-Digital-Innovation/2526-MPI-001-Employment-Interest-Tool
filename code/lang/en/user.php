@@ -40,4 +40,5 @@ return [
     'return_to_dashboard' => 'Return to dashboard',
     'view_results' => 'View results',
     'chooseNewPassword' => 'Choose your password',
+    'informationSoundAutomatic' => 'During the test the sound will be played automatic',
 ];

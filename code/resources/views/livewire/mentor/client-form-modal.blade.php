@@ -59,8 +59,13 @@
 
                 <div x-data="{ soundOn: @entangle('form.is_sound_on') }" class="flex items-center space-x-3">
                     <label class="flex items-center space-x-2 cursor-pointer">
-                        <flux:checkbox wire:model="form.is_sound_on" :label="''" type="checkbox" required autofocus class="!p-0" />
-                        <span class="select-none" x-text="soundOn ? @js(__('user.sound_on')) : @js(__('user.sound_off'))"></span>
+                        <flux:label class="flex items-center space-x-2 cursor-pointer">
+                            <flux:checkbox wire:model="form.is_sound_on" :label="''" type="checkbox" required autofocus class="!p-0" />
+                            <span class="select-none" x-text="soundOn ? @js(__('user.sound_on')) : @js(__('user.sound_off'))"></span>
+                            <flux:tooltip content="{{__('user.informationSoundAutomatic')}}" class="ml-1">
+                                <flux:icon name="information-circle" variant="outline" />
+                            </flux:tooltip>
+                        </flux:label>
                     </label>
                 </div>
 

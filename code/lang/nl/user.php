@@ -40,4 +40,5 @@ return [
     'return_to_dashboard' => 'Terug naar dashboard',
     'view_results' => 'Bekijk resultaten',
     'chooseNewPassword' => 'Kies uw wachtwoord',
+    'informationSoundAutomatic' => 'Tijdens het maken van een test wordt het geluid automatisch afgespeeld',
 ];
