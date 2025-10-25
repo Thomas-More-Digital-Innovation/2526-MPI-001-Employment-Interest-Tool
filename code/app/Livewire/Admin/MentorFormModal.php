@@ -123,6 +123,20 @@ class MentorFormModal extends Component
         ];
     }
 
+    /**
+     * Provide custom validation messages for this component.
+     * This ensures the password min rule emits our localized message
+     * instead of the generic validator message that shows the raw key.
+     */
+    public function messages()
+    {
+        return [
+            'form.password.min' => __('user.password_length_error'),
+            'form.password.min.string' => __('user.password_length_error'),
+            'form.password.required' => __('user.password_length_error'),
+        ];
+    }
+
     public function save(): void
     {
         $this->ensureContext();

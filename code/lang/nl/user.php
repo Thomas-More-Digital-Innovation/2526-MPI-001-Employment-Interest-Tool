@@ -21,6 +21,7 @@ return [
     'password' => 'Wachtwoord',
     'new_password' => 'Nieuw wachtwoord',
     'new_password_optional' => 'Nieuw wachtwoord (laat leeg om huidige wachtwoord te behouden)',
+    'password_length_error' => 'Wachtwoord moet minimaal 8 tekens lang zijn.',
     'change_profile_settings' => 'Wijzig uw profielinstellingen',
     'vision_type_normal' => 'Normaal',
     'vision_type_protanopia' => 'Protanopie',

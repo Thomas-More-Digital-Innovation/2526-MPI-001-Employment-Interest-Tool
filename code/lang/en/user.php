@@ -21,6 +21,7 @@ return [
     'password' => 'Password',
     'new_password' => 'New password',
     'new_password_optional' => 'New password (leave empty to keep current password)',
+    'password_length_error' => 'Password must be at least 8 characters long.',
     'change_profile_settings' => 'Change your profile settings',
     'vision_type_normal' => 'Normal',
     'vision_type_protanopia' => 'Protanopia',

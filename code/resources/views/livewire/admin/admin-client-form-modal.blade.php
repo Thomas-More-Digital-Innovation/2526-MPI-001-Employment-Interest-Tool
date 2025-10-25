@@ -17,9 +17,6 @@
                         :label="__('user.first_name')"
                         required
                         autofocus />
-                    @error('form.first_name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div>
@@ -28,9 +25,6 @@
                         type="text"
                         wire:model.defer="form.last_name"
                         :label="__('user.last_name')" />
-                    @error('form.last_name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div>
@@ -40,9 +34,6 @@
                         wire:model.defer="form.username"
                         :label="__('user.username')"
                         required />
-                    @error('form.username')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div>
@@ -52,9 +43,6 @@
                         wire:model.defer="form.password"
                         :label="$editingId ? __('user.new_password_optional') : __('user.password')"
                         :required="!$editingId" />
-                    @error('form.password')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div x-data="{ soundOn: @entangle('form.is_sound_on') }" class="flex items-center space-x-3">
@@ -84,9 +72,6 @@
                         </option>
                         @endforeach
                     </flux:select>
-                    @error('form.mentor_id')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="md:col-span-2">
@@ -99,9 +84,6 @@
                         <option value="{{ $value }}">{{ $label }}</option>
                         @endforeach
                     </flux:select>
-                    @error('form.vision_type')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="md:col-span-2">
@@ -116,9 +98,6 @@
                             </option>
                         @endforeach
                     </flux:select>
-                    @error('form.language_id')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <div class="md:col-span-2">
@@ -126,9 +105,6 @@
                         id="admin-client-active"
                         wire:model.defer="form.active"
                         :label="$form['active'] ? __('user.active') : __('user.inactive')" />
-                    @error('form.active')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
                 </div>
             </div>
 
