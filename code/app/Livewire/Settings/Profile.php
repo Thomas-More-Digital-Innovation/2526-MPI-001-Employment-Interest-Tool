@@ -61,7 +61,7 @@ class Profile extends Component
         $user = Auth::user();
         $this->first_name = $user->first_name;
         $this->last_name = $user->last_name;
-        $this->email = $user->email;
+        $this->email = $user->isClient() ? '' : $user->email;
         $this->is_sound_on = $user->is_sound_on;
         $this->vision_type = $user->vision_type;
         $this->language_id = $user->language_id;
