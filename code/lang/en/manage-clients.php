@@ -35,4 +35,6 @@ return [
     'selectClientFirst' => 'Select a client to assign tests.',
     'assign' => 'Assign',
     'testsAssignedSuccess' => 'Tests assigned successfully!',
+    'informationInactive' => 'You can find inactive users by clicking on the button show inactivated. Then you get a table with inactivated users.',
+    'titleInfomationInactive' => 'Where can you find inactive users?'
 ];

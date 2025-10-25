@@ -121,11 +121,17 @@
                     @enderror
                 </div>
 
-                <div class="md:col-span-2">
-                    <flux:checkbox
-                        id="admin-client-active"
-                        wire:model.defer="form.active"
-                        :label="$form['active'] ? __('user.active') : __('user.inactive')" />
+                <div x-data="{ active: @entangle('form.active') }" class="flex items-center space-x-3">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <flux:label class="flex items-center space-x-2 cursor-pointer">
+                            <flux:checkbox wire:model="form.active" :label="''" type="checkbox"/>
+                            <span class="select-none" x-text="active ? @js(__('user.active')) : @js(__('user.inactive'))"></span>
+                            <flux:tooltip content="{{__('user.informationInactive')}}" class="ml-1">
+                                <flux:icon name="information-circle" variant="outline" />
+                            </flux:tooltip>
+                        </flux:label>
+                    </label>
+
                     @error('form.active')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

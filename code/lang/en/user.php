@@ -41,4 +41,5 @@ return [
     'view_results' => 'View results',
     'chooseNewPassword' => 'Choose your password',
     'informationSoundAutomatic' => 'During the test the sound will be played automatic',
+    'informationInactive' => 'You can find inactive clients by clicking on the button show inactivated.',
 ];

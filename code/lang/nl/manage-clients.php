@@ -35,4 +35,6 @@ return [
     'selectClientFirst' => 'Selecteer eerst een cliënt om tests toe te wijzen.',
     'assign' => 'Toewijzen',
     'testsAssignedSuccess' => 'Tests succesvol toegewezen!',
+    'informationInactive' => 'U kunt de inactieve personen terugvinden door op de knop te klikken toon gedeactiveerde. Dan krijgt u een tabel met de gedeactiveerde personen.',
+    'titleInfomationInactive' => 'Waar kunt u inactieve personen terugvinden?'
 ];

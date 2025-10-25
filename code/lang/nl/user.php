@@ -41,4 +41,5 @@ return [
     'view_results' => 'Bekijk resultaten',
     'chooseNewPassword' => 'Kies uw wachtwoord',
     'informationSoundAutomatic' => 'Tijdens het maken van een test wordt het geluid automatisch afgespeeld',
+    'informationInactive' => 'U kan inactieve klanten vinden door op de knop te klikken toon inactieve.',
 ];
