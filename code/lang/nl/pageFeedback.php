@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 return [
     'Feedback' => 'Feedback',
-    'send_feedback'=> 'Stuur Feedback',
+    'send_feedback'=> 'Stuur Feedback Naar De Superadministrator',
     'feedback_to_superadmin' =>'Stuur feedback naar de superadministrator.',
-    'Feedback' => 'Feedback',
     'Test' => 'Test',
     'Question' => 'Vraag',
     'Media' => 'Media',
