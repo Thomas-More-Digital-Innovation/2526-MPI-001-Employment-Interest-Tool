@@ -15,7 +15,7 @@ return [
     'interest_field_label' => 'Interest Field',
     'choose_interest_field' => 'Choose interest field...',
     'choose_image' => 'Choose Image',
-    'choose_sound' => 'Upload Sound File',
+    'choose_sound' => 'Upload',
     'record' => 'Record',
     'stop' => 'Stop',
     'play' => 'Play',
