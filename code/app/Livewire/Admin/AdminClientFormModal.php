@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
+use Illuminate\Support\Collection;
 
 class AdminClientFormModal extends Component
 {
@@ -24,7 +25,7 @@ class AdminClientFormModal extends Component
     public array $form = [];
     public ?int $editingId = null;
     public string $mode = 'create';
-    public array $languages = [];
+    public Collection $languages;
     public array $visionTypes = [];
     public array $mentorOptions = [];
 
@@ -34,6 +35,8 @@ class AdminClientFormModal extends Component
 
     public function mount(): void
     {
+        // Initialize as empty collection to ensure view always receives a Collection
+        $this->languages = collect();
         $this->loadLanguages();
         $this->loadMentors();
         $this->visionTypes = $this->visionTypeOptions();
@@ -179,14 +182,8 @@ class AdminClientFormModal extends Component
 
     protected function loadLanguages(): void
     {
-        $this->languages = Language::orderBy('language_name')
-            ->get()
-            ->map(fn(Language $language) => [
-                'id' => $language->language_id,
-                'label' => $language->language_name,
-                'code' => $language->language_code,
-            ])
-            ->all();
+        // Keep languages as Eloquent models (Collection) so views can access properties
+        $this->languages = Language::orderBy('language_name')->get();
     }
 
     protected function loadMentors(): void

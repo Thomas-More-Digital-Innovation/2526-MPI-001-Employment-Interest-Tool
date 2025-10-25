@@ -26,6 +26,8 @@ class AdminClientsManager extends MentorClientsManager
 
     public string $deleteModalName = '';
 
+    public Collection $languages;
+
     /**
      * Listen for admin client saved event to refresh the list
      */
@@ -53,15 +55,9 @@ class AdminClientsManager extends MentorClientsManager
         }
 
         if ($force || empty($this->languages)) {
-            $languageCollection = Language::orderBy('language_name')->get();
-            $this->languages = $languageCollection
-                ->map(fn(Language $language) => [
-                    'id' => $language->language_id,
-                    'label' => $language->language_name,
-                    'code' => $language->language_code,
-                ])->all();
+            $this->languages = Language::orderBy('language_name')->get();
 
-            $this->defaultLanguageId = $languageCollection
+            $this->defaultLanguageId = $this->languages
                 ->firstWhere('language_code', 'nl')?->language_id
                 ?? $this->mentorLanguageId;
         } elseif (!$this->defaultLanguageId) {

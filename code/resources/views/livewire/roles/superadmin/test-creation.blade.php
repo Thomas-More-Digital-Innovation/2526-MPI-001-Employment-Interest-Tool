@@ -169,7 +169,7 @@ $isExternalLink =
                                                 {{-- Language Name --}}
                                                 <div class="text-left">
                                                     <div class="font-semibold text-zinc-900 dark:text-zinc-100">
-                                                        {{ $language->language_name }}
+                                                        {{ __("user.language_{$language->language_code}") !== "user.language_{$language->language_code}" ? __("user.language_{$language->language_code}") : $language->language_name }}
                                                     </div>
                                                     <div class="text-xs text-zinc-500 dark:text-zinc-400">
                                                         @if ($hasContent)

@@ -4,6 +4,7 @@ namespace App\Livewire\Mentor;
 
 use App\Livewire\Crud\BaseCrudComponent;
 use App\Models\Language;
+use Illuminate\Support\Collection;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -43,7 +44,7 @@ class ClientsManager extends BaseCrudComponent
     /**
      * Languages available for selection (for Admin/backwards compatibility).
      */
-    public array $languages = [];
+    public Collection $languages;
 
     protected ?int $defaultLanguageId = null;
 
@@ -279,7 +280,7 @@ class ClientsManager extends BaseCrudComponent
         $client = $this->findRecord($recordId);
         $client->active = !$client->active;
         $client->save();
-        
+
         session()->flash('status', $client->active ? __('Client enabled successfully.') : __('Client inactivated successfully.'));
     }
 
@@ -314,15 +315,9 @@ class ClientsManager extends BaseCrudComponent
         }
 
         if ($force || empty($this->languages)) {
-            $languageCollection = Language::orderBy('language_name')->get();
-            $this->languages = $languageCollection
-                ->map(fn(Language $language) => [
-                    'id' => $language->language_id,
-                    'label' => $language->language_name,
-                    'code' => $language->language_code,
-                ])->all();
+            $this->languages = Language::orderBy('language_name')->get();
 
-            $this->defaultLanguageId = $languageCollection
+            $this->defaultLanguageId = $this->languages
                 ->firstWhere('language_code', 'nl')?->language_id
                 ?? $this->mentorLanguageId;
         } elseif (!$this->defaultLanguageId) {

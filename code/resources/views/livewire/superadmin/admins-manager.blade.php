@@ -133,7 +133,9 @@
                         <div class="md:col-span-2">
                             <flux:select wire:model.defer="form.language_id" :label="__('user.language')" required>
                                 @foreach($this->languages as $lang)
-                                    <option value="{{ $lang->language_id }}">{{ $lang->language_name }}</option>
+                                    <option value="{{ $lang->language_id }}">
+                                        {{ __("user.language_{$lang->language_code}") !== "user.language_{$lang->language_code}" ? __("user.language_{$lang->language_code}") : $lang->language_name }}
+                                    </option>
                                 @endforeach
                             </flux:select>
                         </div>
