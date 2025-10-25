@@ -18,11 +18,11 @@ class JoinUsForm extends Component
     public $organisation = '';
 
     protected $rules = [
-        'fullName' => 'required|min:3',
+        'fullName' => 'required',
         'emailAddress' => 'required|email',
         'heardFrom' => 'required',
         'joinUs' => 'required',
-        'organisation' => 'required|min:3',
+        'organisation' => 'required',
     ];
 
     public function sendMail()
