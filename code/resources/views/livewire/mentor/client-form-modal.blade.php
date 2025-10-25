@@ -83,17 +83,16 @@
                         @endforeach
                     </flux:select>
                 </div>
-
-                <div class="md:col-span-2">
-                    <flux:label for="client-active" class="block text-sm font-medium">
-                        {{ __('user.account_status') }}
-                    </flux:label>
-                    <div class="mt-2">
-                        <flux:checkbox
-                            id="client-active"
-                            wire:model.defer="form.active"
-                            :label="__('manage-clients.ClientCanSignIn')" />
-                    </div>
+                <div x-data="{ active: @entangle('form.active') }" class="flex items-center space-x-3">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <flux:label class="flex items-center space-x-2 cursor-pointer">
+                            <flux:checkbox wire:model="form.active" :label="''" type="checkbox"/>
+                            <span class="select-none" x-text="active ? @js(__('user.active')) : @js(__('user.inactive'))"></span>
+                            <flux:tooltip content="{{__('user.informationInactive')}}" class="ml-1">
+                                <flux:icon name="information-circle" variant="outline" />
+                            </flux:tooltip>
+                        </flux:label>
+                    </label>
                 </div>
             </div>
 
