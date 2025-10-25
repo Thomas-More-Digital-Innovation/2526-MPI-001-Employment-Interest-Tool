@@ -8,6 +8,8 @@ return [
     'name' => 'Name',
     'status' => 'Status',
     'expire_date' => 'Expiry date',
+    'org_expires' => 'Organisations expires',
+    'expires' => 'Expires',
     'active' => 'Active',
     'actions' => 'Actions',
     'manage_admins' => 'Manage organisation admins',

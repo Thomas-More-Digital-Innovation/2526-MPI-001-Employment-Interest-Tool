@@ -108,6 +108,7 @@ class OrganisationsManagerTest extends TestCase
             ->test(OrganisationsManager::class)
             ->call('startCreate')
             ->set('form.name', 'Expiry Org')
+            ->set('form.expire_enabled', true)
             ->set('form.expire_date', '2025-12-31')
             ->call('save')
             ->assertHasNoErrors();

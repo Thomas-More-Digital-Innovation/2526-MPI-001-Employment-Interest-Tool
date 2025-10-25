@@ -83,7 +83,8 @@
             </flux:heading>
 
             <form wire:submit.prevent="save" class="space-y-6">
-                <div class="grid gap-4 md:grid-cols-2">
+                <div class="grid gap-4 md:grid-cols-2" x-data="{ expireEnabled: @entangle('form.expire_enabled') }"
+                             x-init="$watch('expireEnabled', value => { if (!value) { $wire.set('form.expire_date', null) } })">
                     <div>
                         <flux:input
                             id="org-name"
@@ -103,14 +104,27 @@
                             type="date"
                             wire:model.defer="form.expire_date"
                             :label="__('organisations.expire_date')"
-                            placeholder="DD/MM/YYYY" />
+                            placeholder="DD/MM/YYYY"
+                            x-bind:disabled="!expireEnabled" />
                         @error('form.expire_date')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-
                     <div class="md:col-span-2">
-                        <flux:label for="org-active" class="block text-sm font-medium">
+                        <flux:label for="org-expire" class="block text-sm font-medium mt-4">
+                            {{ __('organisations.org_expires') }}
+                        </flux:label>
+                        <div class="mt-2">
+                            <flux:checkbox
+                                id="org-expire"
+                                wire:model.defer="form.expire_enabled"
+                                x-model="expireEnabled"
+                                :label="__('organisations.expires')" />
+                        </div>
+
+
+
+                        <flux:label for="org-active" class="block text-sm font-medium mt-4">
                             {{ __('organisations.status') }}
                         </flux:label>
                         <div class="mt-2">
