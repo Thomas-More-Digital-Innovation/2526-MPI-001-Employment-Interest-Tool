@@ -15,7 +15,7 @@ return [
     'interest_field_label' => 'Interessegebied',
     'choose_interest_field' => 'Selecteer interessegebied...',
     'choose_image' => 'Kies afbeelding',
-    'choose_sound' => 'Kies geluid',
+    'choose_sound' => 'Upload',
     'record' => 'Opnemen',
     'stop' => 'Stop',
     'play' => 'Afspelen',

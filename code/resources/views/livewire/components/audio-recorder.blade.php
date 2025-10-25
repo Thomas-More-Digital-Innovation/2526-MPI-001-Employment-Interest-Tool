@@ -73,7 +73,7 @@
             <!-- Upload Sound File Button -->
             <flux:button 
                 type="button" 
-                icon="speaker-wave"
+                icon="arrow-up-tray"
                 @click="$refs.fileInput.click()">
                 {{ __('testcreation.choose_sound') }}
             </flux:button>
