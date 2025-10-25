@@ -8,6 +8,8 @@ return [
     'name' => 'Naam',
     'status' => 'Status',
     'expire_date' => 'Vervaldatum',
+    'org_expires' => 'Organisatie vervalt',
+    'expires' => 'Vervalt',
     'active' => 'Actief',
     'actions' => 'Acties',
     'manage_admins' => 'Beheer organisatiebeheerders',

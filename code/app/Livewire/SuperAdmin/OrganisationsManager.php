@@ -53,6 +53,8 @@ class OrganisationsManager extends BaseCrudComponent
             'name' => '',
             'active' => true,
             'expire_date' => null,
+            // whether the organisation has an expiry date set (controls visibility)
+            'expire_enabled' => false,
             // tests keyed by test_id => bool
             'tests' => [],
         ];
@@ -160,7 +162,9 @@ class OrganisationsManager extends BaseCrudComponent
         return [
             'name' => $record->name,
             'active' => (bool) $record->active,
+            // If the record has an expire_date, mark expire_enabled true so the UI shows the field
             'expire_date' => $record->expire_date ? $record->expire_date->format('Y-m-d') : null,
+            'expire_enabled' => $record->expire_date ? true : false,
             'tests' => $testsMap,
         ];
     }
@@ -185,6 +189,7 @@ class OrganisationsManager extends BaseCrudComponent
             'form.name' => ['required', 'string', 'max:255', Rule::unique('organisation', 'name')->ignore($orgId, 'organisation_id')],
             'form.active' => ['boolean'],
             'form.expire_date' => ['nullable', 'date'],
+            'form.expire_enabled' => ['boolean'],
             'form.tests' => ['nullable', 'array'],
             'form.tests.*' => ['boolean'],
         ];
@@ -193,6 +198,11 @@ class OrganisationsManager extends BaseCrudComponent
     public function save(): void
     {
         $this->validate();
+
+        // If the expiry toggle is disabled, ensure expire_date is null before saving
+        if (empty($this->form['expire_enabled'])) {
+            $this->form['expire_date'] = null;
+        }
 
         $isEditing = (bool) $this->editingId;
 
