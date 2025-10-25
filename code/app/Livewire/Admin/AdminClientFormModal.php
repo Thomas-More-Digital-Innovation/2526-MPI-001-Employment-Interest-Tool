@@ -58,6 +58,21 @@ class AdminClientFormModal extends Component
         $this->dispatch('modal-open', name: 'admin-client-form');
     }
 
+
+    /**
+     * Provide custom validation messages for this component.
+     * This ensures the password min rule emits our localized message
+     * instead of the generic validator message that shows the raw key.
+     */
+    public function messages()
+    {
+        return [
+            'form.password.min' => __('user.password_length_error'),
+            'form.password.min.string' => __('user.password_length_error'),
+            'form.password.required' => __('user.password_length_error'),
+        ];
+    }
+
     public function save(): void
     {
         $admin = Auth::user();
@@ -234,11 +249,7 @@ class AdminClientFormModal extends Component
                 'max:255',
                 Rule::unique('users', 'username')->ignore($this->editingId, 'user_id'),
             ],
-            'form.password' => array_filter([
-                $this->editingId ? 'nullable' : 'required',
-                'string',
-                Password::defaults(),
-            ]),
+            'form.password' => [$this->editingId ? 'nullable' : 'required', 'string', Password::defaults()],
             'form.language_id' => ['required', 'integer', 'exists:language,language_id'],
             'form.active' => ['boolean'],
             'form.is_sound_on' => ['boolean'],

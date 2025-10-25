@@ -114,6 +114,9 @@
                                     type="password"
                                     wire:model.defer="form.password"
                                     :required="!$editingId" />
+                                @error('form.password')
+                                    <p class="mt-1 text-sm text-red-600">{{ __('user.password_length_error') }}</p>
+                                @enderror
                             </div>
 
                         <div class="md:col-span-2">
