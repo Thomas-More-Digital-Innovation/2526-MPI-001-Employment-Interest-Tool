@@ -63,10 +63,17 @@
                         {{ __('user.account_status') }}
                     </flux:label>
                     <div class="mt-2">
-                        <flux:checkbox
-                            id="researcher-active"
-                            wire:model.defer="form.active"
-                            :label="__('manage-researchers.ResearcherCanSignIn')" />
+                        <div x-data="{ active: @entangle('form.active') }" class="flex items-center space-x-3">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <flux:label class="flex items-center space-x-2 cursor-pointer">
+                                    <flux:checkbox wire:model="form.active" :label="''" type="checkbox"/>
+                                    <span class="select-none" x-text="active ? @js(__('user.active')) : @js(__('user.inactive'))"></span>
+                                    <flux:tooltip content="{{ __('user.informationInactive_entity', ['entity' => __('user.entity_researchers')]) }}" class="ml-1">
+                                        <flux:icon name="information-circle" variant="outline" />
+                                    </flux:tooltip>
+                                </flux:label>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

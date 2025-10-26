@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 return [
-    'clientsManager' => 'Beheer klanten',
+    'clientsManager' => 'Beheer Cliënten',
     'SearchClients' => 'Zoek cliënten',
     'SearchClientBy' => 'Zoek alle cliënten op naam of gebruikersnaam',
     'SearchClientByAndActive' => 'Zoek actieve cliënten op naam of gebruikersnaam',
     'addClient' => 'Cliënt toevoegen',
-    'HideInactive' => 'Verberg gedeactiveerde cliënten',
-    'ShowInactive' => 'Toon gedeactiveerde cliënten',
-    'NoInactiveFound' => 'Geen gedeactiveerde cliënten gevonden.',
+    'HideInactive' => 'Verberg inactieve cliënten',
+    'ShowInactive' => 'Toon inactieve cliënten',
+    'NoInactiveFound' => 'Geen inactieve cliënten gevonden.',
     'NoClientsFound' => 'Nog geen cliënten gevonden.',
     'CreateClient' => 'Cliënt aanmaken',
     'EditClient' => 'Cliënt bewerken',
@@ -35,6 +35,6 @@ return [
     'selectClientFirst' => 'Selecteer eerst een cliënt om tests toe te wijzen.',
     'assign' => 'Toewijzen',
     'testsAssignedSuccess' => 'Tests succesvol toegewezen!',
-    'informationInactive' => 'U kunt de inactieve personen terugvinden door op de knop te klikken toon gedeactiveerde. Dan krijgt u een tabel met de gedeactiveerde personen.',
+    'informationInactive' => 'U kunt de inactieve personen terugvinden door onder de tabel op de voorziene knop te klikken. Dan krijgt u een tabel met de inactieve personen.',
     'titleInfomationInactive' => 'Waar kunt u inactieve personen terugvinden?'
 ];
