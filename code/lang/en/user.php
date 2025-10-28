@@ -42,5 +42,12 @@ return [
     'view_results' => 'View results',
     'chooseNewPassword' => 'Choose your password',
     'informationSoundAutomatic' => 'During the test the sound will be played automatic',
-    'informationInactive' => 'You can find inactive clients by clicking on the button show inactivated.',
+    'informationInactive' => 'You can find inactive users by clicking on the button provided.',
+    // Generic, entity-aware inactive hint. Use :entity to substitute (e.g. "clients", "mentors").
+    'informationInactive_entity' => 'You can find inactive :entity by clicking on the button provided.',
+    'entity_clients' => 'clients',
+    'entity_mentors' => 'mentors',
+    'entity_researchers' => 'researchers',
+    'entity_interestfields' => 'interest fields',
+    'entity_organisations' => 'organisations',
 ];

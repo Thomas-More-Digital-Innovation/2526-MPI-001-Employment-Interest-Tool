@@ -167,7 +167,7 @@
 
                                                     <!-- Heading -->
                                                     <h1 style="margin:0; font-family:Inter,Arial,sans-serif; font-size:24px; font-weight:600; color:#111111; line-height:28px; text-align:center;">
-                                                        Onduidelijke vraag gemeld bij één van uw klanten
+                                                        Onduidelijke vraag gemeld bij één van uw cliënten
                                                     </h1>
 
                                                     <div style="line-height:17px; font-size:1px;">&nbsp;</div>

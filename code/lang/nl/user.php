@@ -224,5 +224,12 @@ return [
     'view_results' => 'Bekijk resultaten',
     'chooseNewPassword' => 'Kies uw wachtwoord',
     'informationSoundAutomatic' => 'Tijdens het maken van een test wordt het geluid automatisch afgespeeld',
-    'informationInactive' => 'U kan inactieve klanten vinden door op de knop te klikken toon inactieve.',
+    'informationInactive' => 'U kan inactieve gebruikers terugvinden door op de voorziene knop te klikken.',
+    // Generieke, entiteit-gebonden hint. Gebruik :entity om te vervangen (bv. "cliënten", "mentoren").
+    'informationInactive_entity' => 'U kunt inactieve :entity terugvinden door op de voorziene knop te klikken.',
+    'entity_clients' => 'cliënten',
+    'entity_mentors' => 'mentors',
+    'entity_researchers' => 'onderzoekers',
+    'entity_interestfields' => 'interessegebieden',
+    'entity_organisations' => 'organisaties',
 ];

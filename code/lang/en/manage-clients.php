@@ -8,8 +8,8 @@ return [
     'SearchClientBy' =>'Search all clients by name or username',
     'SearchClientByAndActive' =>'Search active clients by name or username',
     'addClient' =>'Add client',
-    'HideInactive' => 'Hide inactivated clients',
-    'ShowInactive' =>'Show inactivated clients',
+    'HideInactive' => 'Hide inactive clients',
+    'ShowInactive' =>'Show inactive clients',
     'NoInactiveFound' => 'No inactive clients found.',
     'NoClientsFound' => 'No clients found yet.',
     'CreateClient' => 'Create client',
@@ -35,6 +35,6 @@ return [
     'selectClientFirst' => 'Select a client to assign tests.',
     'assign' => 'Assign',
     'testsAssignedSuccess' => 'Tests assigned successfully!',
-    'informationInactive' => 'You can find inactive users by clicking on the button show inactivated. Then you get a table with inactivated users.',
+    'informationInactive' => 'You can find inactive users by clicking on the button provided below the table. Then you get a table with inactive users.',
     'titleInfomationInactive' => 'Where can you find inactive users?'
 ];

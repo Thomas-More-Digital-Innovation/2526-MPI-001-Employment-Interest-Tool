@@ -88,7 +88,7 @@
                         <flux:label class="flex items-center space-x-2 cursor-pointer">
                             <flux:checkbox wire:model="form.active" :label="''" type="checkbox"/>
                             <span class="select-none" x-text="active ? @js(__('user.active')) : @js(__('user.inactive'))"></span>
-                            <flux:tooltip content="{{__('user.informationInactive')}}" class="ml-1">
+                            <flux:tooltip content="{{ __('user.informationInactive_entity', ['entity' => __('user.entity_clients')]) }}" class="ml-1">
                                 <flux:icon name="information-circle" variant="outline" />
                             </flux:tooltip>
                         </flux:label>
