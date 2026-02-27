@@ -68,6 +68,7 @@ class MentorFormModal extends Component
                 'last_name' => $mentor->last_name ?? '',
                 'username' => $mentor->username,
                 'password' => '',
+                'email' => $mentor->email,
                 'language_id' => $mentor->language_id,
                 'active' => (bool) $mentor->active,
             ];
@@ -91,6 +92,7 @@ class MentorFormModal extends Component
             'last_name' => '',
             'username' => '',
             'password' => '',
+            'email' => '',
             'language_id' => $this->defaultLanguageId,
             'active' => true,
         ];
@@ -118,6 +120,11 @@ class MentorFormModal extends Component
                 'string',
                 Password::defaults(),
             ]),
+            'form.email' => [
+                'required',
+                'email',
+                'max:255',
+            ],
             'form.language_id' => ['required', 'integer', 'exists:language,language_id'],
             'form.active' => ['boolean'],
         ];
@@ -146,6 +153,7 @@ class MentorFormModal extends Component
             'first_name' => trim($this->form['first_name']),
             'last_name' => trim($this->form['last_name']),
             'username' => trim($this->form['username']),
+            'email' => trim($this->form['email']),
             'language_id' => (int) $this->form['language_id'],
             'active' => (bool) $this->form['active'],
             'vision_type' => 'normal',

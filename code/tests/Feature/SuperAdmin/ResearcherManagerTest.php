@@ -75,6 +75,7 @@ class ResearcherManagerTest extends TestCase
             ->set('form.first_name', 'New')
             ->set('form.last_name', 'Researcher')
             ->set('form.username', 'new_researcher')
+            ->set('form.email', fake()->email())
             ->set('form.password', 'password123')
             ->set('form.language_id', $this->language->language_id)
             ->set('form.active', true)
