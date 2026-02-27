@@ -27,3 +27,9 @@
 - dnf install composer
 - dnf install php-pdo
 - dnf install php-mysqlnd
+
+### when using Sail
+
+all `php` commands -> `sail` (make sure that sail is running)
+
+example: `sail artisan migrate --force`
