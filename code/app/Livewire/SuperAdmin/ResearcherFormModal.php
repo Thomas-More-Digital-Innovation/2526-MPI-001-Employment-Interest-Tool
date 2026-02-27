@@ -67,6 +67,7 @@ class ResearcherFormModal extends Component
                 'last_name' => $researcher->last_name ?? '',
                 'username' => $researcher->username,
                 'password' => '',
+                'email' => $researcher->email,
                 'language_id' => $researcher->language_id,
                 'active' => (bool) $researcher->active,
             ];
@@ -90,6 +91,7 @@ class ResearcherFormModal extends Component
             'last_name' => '',
             'username' => '',
             'password' => '',
+            'email' => '',
             'language_id' => $this->defaultLanguageId,
             'active' => true,
         ];
@@ -117,6 +119,11 @@ class ResearcherFormModal extends Component
                 'string',
                 Password::defaults(),
             ]),
+            'form.email' => [
+                'required',
+                'email',
+                'max:255',
+            ],
             'form.language_id' => ['required', 'integer', 'exists:language,language_id'],
             'form.active' => ['boolean'],
         ];
@@ -145,6 +152,7 @@ class ResearcherFormModal extends Component
             'first_name' => trim($this->form['first_name']),
             'last_name' => trim($this->form['last_name']),
             'username' => trim($this->form['username']),
+            'email' => trim($this->form['email']),
             'language_id' => (int) $this->form['language_id'],
             'active' => (bool) $this->form['active'],
             'vision_type' => 'normal',
