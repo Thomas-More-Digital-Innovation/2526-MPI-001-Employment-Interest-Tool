@@ -22,3 +22,5 @@ yarn-error.log
 /.vscode
 /.zed
 package-lock.json
+test-results*
+playwright-report
